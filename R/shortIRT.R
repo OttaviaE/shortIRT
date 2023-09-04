@@ -1,13 +1,17 @@
-#' shortIRT
+#' Select item for the short forms using observed data
 #'
-#' @param data
-#' @param num_item
-#' @param strategy
-#' @param fixed.a
-#' @param fxed.b
-#' @import TAM
-#' @importFrom tidyr
-#' @return
+#'
+#' @param data data frame with observed responses
+#' @param num_item number of desired items for the short version
+#' @param strategy which strategy for selecting the items?
+#' @param fixed.a vector of fixed discrimination parameters
+#' @param fixed.b vector of fixed difficulty parameters
+#' @param true_theta vector of respondent parameters
+#'
+#' @importFrom  TAM tam.mml tam.mml.2pl IRT.informationCurves
+#' @import tidyr
+#' @import stats
+#' @return a data set
 #' @export
 #'
 #' @examples
@@ -27,7 +31,7 @@ shortIRT <- function(data,
       diff_true <- matrix(cbind(1:length(fixed.b),
                                 fixed.b),  ncol = 2)
       # estimate starting model
-      start_model = tam.mml(resp=data, xsi.fixed = matrix(cbind(1:length(fixed.b),
+      start_model = TAM::tam.mml(resp=data, xsi.fixed = matrix(cbind(1:length(fixed.b),
                                                                 fixed.b),  ncol = 2))
       }
   } else if (is.null(fixed.b) & !is.null(fixed.a)) {
@@ -42,7 +46,7 @@ shortIRT <- function(data,
                                          c("Cat0", "Cat1"),
                                          "Dim01"))
       # estimate starting model
-      start_model = tam.mml(resp=data, xsi.fixed = discr_true)
+      start_model = TAM::tam.mml(resp=data, xsi.fixed = discr_true)
     }
   } else if (!is.null(fixed.b) & !is.null(fixed.a)) {
     if (is.data.frame(fixed.a) | is.matrix(fixed.a) | is.factor(fixed.a) |
@@ -57,11 +61,11 @@ shortIRT <- function(data,
                                          c("Cat0", "Cat1"),
                                          "Dim01"))
       # estimate starting model
-      start_model = tam.mml(resp=data, xsi.fixed = diff_true,
+      start_model = TAM::tam.mml(resp=data, xsi.fixed = diff_true,
                             B = discr_true)
     }
   } else {
-      start_model = tam.mml.2pl(data)
+      start_model = TAM::tam.mml.2pl(data)
   }
   # set starting theta, whether observed or not
   if (is.null(true_theta)) {
@@ -79,11 +83,11 @@ shortIRT <- function(data,
     num_clusters <- num_item
     # la divisione in cluster è fatta sulla base dei theta simulati
     theta_mat <- matrix(theta, ncol = 1)
-    info_start <- mean(IRT.informationCurves(start_model,
+    info_start <- mean(TAM::IRT.informationCurves(start_model,
                                              theta = seq(-3,3,
                                                          length = 1000))$test_info_curve)
     # generate cluster
-    cluster <- kmeans(theta_mat, centers = num_clusters)
+    cluster <- stats::kmeans(theta_mat, centers = num_clusters)
 
     # calcola l'informatività per ogni theta per ogni item
 
@@ -97,13 +101,13 @@ shortIRT <- function(data,
     for(i in 1:length(lab_item)) {
       for(j in 1:length(value_k)) {
 
-        temp_k_data   <- data.frame(theta_target = IRT.informationCurves(start_model,
+        temp_k_data   <- data.frame(theta_target = TAM::IRT.informationCurves(start_model,
                                                                          theta = value_k[j],
                                                                          iIndex = lab_item[i])$theta,
-                                    test_info = mean(IRT.informationCurves(start_model,
+                                    test_info = mean(TAM::IRT.informationCurves(start_model,
                                                                            theta = value_k[j],
                                                                            iIndex = lab_item[i])$test_info_curve),
-                                    item_info = colSums(IRT.informationCurves(start_model,
+                                    item_info = colSums(TAM::IRT.informationCurves(start_model,
                                                                               theta = value_k[j],
                                                                               iIndex = lab_item[i])$info_curves_item),
                                     item = lab_item[i],
@@ -120,7 +124,7 @@ shortIRT <- function(data,
 
     for (i in 1:length(unique(info_data_k$num_item))){
       temp_data <- info_data_k[info_data_k$num_item %in% unique(info_data_k$num_item)[i], ]
-      temp_maxcluster <- aggregate(test_info ~ item + theta_target,
+      temp_maxcluster <- stats::aggregate(test_info ~ item + theta_target,
                                    data = temp_data, max)
       temp_maxcluster$cluster_name <- unique(temp_data$num_item)
 
@@ -140,11 +144,11 @@ shortIRT <- function(data,
                                              "item"])]
 
     if (!is.null(fixed.b) & is.null(fixed.a)) {
-      model_out_cluster <- tam.mml.2pl(out_cluster,
+      model_out_cluster <- TAM::tam.mml.2pl(out_cluster,
                                          xsi.fixed = cbind(1:ncol(out_cluster),
                                                            diff_true[tidyr::extract_numeric(colnames(out_cluster)), 2]))
     } else if (is.null(fixed.b) & !is.null(fixed.a)) {
-      model_out_cluster <- tam.mml(out_cluster,
+      model_out_cluster <- TAM::tam.mml(out_cluster,
 
                                          B= array(c(rep(0, ncol(out_cluster)),
                                                     discr_true[,2,][tidyr::extract_numeric(colnames(out_cluster))]),
@@ -154,7 +158,7 @@ shortIRT <- function(data,
                                                                   "Dim01")))
     } else if (!is.null(fixed.b) & !is.null(fixed.a)) {
       # set both discrimination and difficulties parameters
-      model_out_cluster <- tam.mml(out_cluster,
+      model_out_cluster <- TAM::tam.mml(out_cluster,
                                          xsi.fixed = cbind(1:ncol(out_cluster),
                                                            diff_true[tidyr::extract_numeric(colnames(out_cluster)), 2]),
                                          B= array(c(rep(0, ncol(out_cluster)),
@@ -165,9 +169,9 @@ shortIRT <- function(data,
                                                                   "Dim01")))
 
     } else {
-      model_out_cluster <- tam.mml.2pl(out_cluster)
+      model_out_cluster <- TAM::tam.mml.2pl(out_cluster)
     }
-    info_out_cluster <- IRT.informationCurves(model_out_cluster,
+    info_out_cluster <- TAM::IRT.informationCurves(model_out_cluster,
                                               theta = seq(-3, 3, length = 1000))
 
     info_summary_cluster <- data.frame(info_test = mean(info_out_cluster$test_info_curve),

@@ -1,11 +1,21 @@
 Package: shortIRT
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Use IRT To Select Items For Test Short Form (Title Case)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Ottavia M. Epifania [aut, cre],
+    Pasquale Anselmi [ctb], 
+    Egidio Robusto [ctb]
+Maintainer: Ottavia M. Epifania <otta.epifania@gmail.com> 
+Description: A tool for obtaining the most informative combiantion of items given respondent and items parameters in an Item Response Theory (IRT) framework. 
+    The item selection is made following one of three different strategies: (i) smart (i.e., the most informative items across the latent trait are selected), (ii) guided (i.e., the latent trait is partitioned in intervals defining the theta target), and (iii) cluster (i.e., the latent trait is partitioned in clusters defining the theta target). 
+    In the latter two cases, the items that maximize the information at the theta targets are selected.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports: 
+    ggplot2,
+    rlang,
+    stats,
+    TAM,
+    tidyr
+RoxygenNote: 7.1.1
