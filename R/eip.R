@@ -1,0 +1,145 @@
+eip <- function(data,
+                fixed.b = NULL,
+                fixed.a = NULL,
+                seed = 999,
+                true_theta = NULL,
+                num_item = NULL) {
+  if (is.null(num_item)) {
+    stop("You must specify a number of items for the STFs")
+  }
+
+
+
+  if(is.null(fixed.a) & is.null(fixed.b)) {
+    start_model <- TAM::tam.mml(data)
+  } else {
+    b_true <- matrix(cbind(1:length(fixed.b),
+                           fixed.b),
+                     ncol = 2)
+    a_true <- array(c(rep(0, length(fixed.a)), fixed.a),
+                    c(length(fixed.a),2,1),
+                    dimnames = list(paste0("I", 1:length(fixed.a)),
+                                    c("Cat0", "Cat1"),
+                                    "Dim01"))
+
+    start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
+  }
+
+  info_start <- mean(IRT.informationCurves(start_model,
+                                           theta = true_theta)$test_info_curve)
+
+  lab_item <- 1:ncol(data)
+  num_item <- num_item
+
+  if (!is.null(true_theta)) {
+    if (length(true_theta) != nrow(data)) {
+      stop("True theta must be equal to the number of subjects in the data frame")
+    }
+  } else {
+    true_theta <- start_model$EAP
+  }
+  intervals <- NULL
+  groups <- NULL
+  cut_value <- NULL
+  cut_value_temp <- NULL
+
+  for (i in 1:(length(num_item))) {
+    intervals <- seq(min(true_theta), max(true_theta),
+                     length =num_item[i])
+    groups <- cut(intervals, num_item[i], include.lowest = TRUE)
+    cut_value_temp <- cut_borders(groups)
+    cut_value = rbind(cut_value_temp, cut_value)
+  }
+  cut_value$mean_theta <- rowMeans(cut_value)
+
+  # Compute IIF for each theta target
+  info_test <- NULL
+  temp <- list()
+  value <- list()
+  temp_data <- NULL
+  info_data <- NULL
+
+
+    for(i in 1:length(lab_item)) {
+      for(j in 1:nrow(cut_value)) {
+
+        temp_data <- data.frame(theta_target = IRT.informationCurves(start_model,
+                                                                     theta = cut_value[j,
+                                                                                        "mean_theta"],
+                                                                     iIndex = lab_item[i])$theta,
+                                item_info = mean(colSums(IRT.informationCurves(start_model,
+                                                                               theta = cut_value[j,
+                                                                                                  "mean_theta"],
+                                                                               iIndex = lab_item[i])$info_curves_item)),
+                                item = lab_item[i],
+                                num_item = paste("number", nrow(cut_value), sep = ""))
+
+        info_data <- rbind(info_data, temp_data)
+      }
+    }
+
+  # select the item with highest IIF for each theta target
+
+
+    temp_maxinfo <- aggregate(item_info ~ item + theta_target,
+                              data = info_data, max)
+    temp_maxinfo$eip_name <- unique(info_data$num_item)
+
+    temp <- NULL
+    max_temp <- NULL
+
+    for (i in 1:length(unique(temp_maxinfo$theta_target))) {
+      temp <- temp_maxinfo[which(temp_maxinfo$item_info == max(temp_maxinfo$item_info)), ]
+      temp_maxinfo <- temp_maxinfo[which(temp_maxinfo$item != temp$item &
+                                           temp_maxinfo$theta_target != temp$theta_target), ]
+      max_temp <-rbind(max_temp, temp)
+
+    }
+
+  selected_eip = max_temp[order(max_temp$theta_target), ]
+
+  # given the number(s) of items in num_item, filter out the selected ones from the
+  # full-length test, estimate the model on the resulting short form(s), and
+  # compute the IIF and TIF
+
+
+
+    out_eip <- data[, c(max_temp[max_temp$eip_name %in%unique(max_temp$eip_name),
+                                      "item"])]
+    model_out_eip <- tam.mml(out_eip,
+                                  xsi.fixed = cbind(1:ncol(out_eip),
+                                                    b_true[as.integer(gsub("I00|I0|I", '',
+                                                                              colnames(out_eip))), 2]),
+                                  B= array(c(rep(0, ncol(out_eip)),
+                                             a_true[,2,][as.integer(gsub("I00|I0|I", "",
+                                                                             colnames(out_eip)))]),
+                                           c(ncol(out_eip),2,1),
+                                           dimnames = list(colnames(out_eip),
+                                                           c("Cat0", "Cat1"),
+                                                           "Dim01")),
+                             verbose = FALSE)
+    info_out_eip <- IRT.informationCurves(model_out_eip,
+                                               theta = true_theta)
+    #names(info_out_eip)[[i]] <- unique(max_temp$eip_name)[
+
+
+  # Summary
+  info_summary_eip <- NULL
+
+
+  info_summary_eip <- data.frame(info_test = mean(info_out_eip$test_info_curve),
+
+
+                       eip_name = unique(max_temp$eip_name),
+                       item = paste(colnames(out_eip), collapse = ", "))
+
+  info_summary_eip <-  rbind(info_summary_eip,
+                             data.frame(info_test = (info_start),
+                                        eip_name = "all",
+                                        item = "all"))
+  info_summary_eip$selection <- "EIP"
+  eip_results = list(item_stf = selected_eip,
+                     summary = info_summary_eip,
+                     info_stf = info_out_eip)
+  return(eip_results)
+}

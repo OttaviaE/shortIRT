@@ -17,10 +17,12 @@
 #' @examples
 shortIRT <- function(data,
                      num_item = NULL,
-                     strategy = c("smart", "cluster", "guided"),
+                     strategy = c("EIP", "UIP", "typical"),
                      fixed.b = NULL,
                      fixed.a = NULL,
-                     true_theta = NULL) {
+                     true_theta = NULL, seed = 999) {
+  seed <- seed
+  set.seed(seed)
   strategy <- match.arg(strategy)
 
   if (!is.null(fixed.b) & is.null(fixed.a)) {
@@ -46,7 +48,8 @@ shortIRT <- function(data,
                                          c("Cat0", "Cat1"),
                                          "Dim01"))
       # estimate starting model
-      start_model = TAM::tam.mml(resp=data, xsi.fixed = discr_true)
+      start_model = TAM::tam.mml(resp=data,  xsi.fixed = diff_true,
+                                 B = discr_true)
     }
   } else if (!is.null(fixed.b) & !is.null(fixed.a)) {
     if (is.data.frame(fixed.a) | is.matrix(fixed.a) | is.factor(fixed.a) |
@@ -78,7 +81,7 @@ shortIRT <- function(data,
     }
   }
 
-  if (strategy == "cluster") {
+  if (strategy == "UIP") {
     lab_item <- 1:ncol(data)
     num_clusters <- num_item
     # la divisione in cluster è fatta sulla base dei theta simulati
@@ -107,9 +110,6 @@ shortIRT <- function(data,
                                     test_info = mean(TAM::IRT.informationCurves(start_model,
                                                                            theta = value_k[j],
                                                                            iIndex = lab_item[i])$test_info_curve),
-                                    item_info = colSums(TAM::IRT.informationCurves(start_model,
-                                                                              theta = value_k[j],
-                                                                              iIndex = lab_item[i])$info_curves_item),
                                     item = lab_item[i],
                                     num_item = paste("number", length(value_k), sep = ""))
 
