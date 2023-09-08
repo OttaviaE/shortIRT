@@ -1,3 +1,18 @@
+#' bp
+#'
+#' Create a Short Test Form (STF) using the typical IRT procedure for shortening test
+#'
+#' @param data a subject x item matrix
+#' @param fixed.b a vector of fixed difficulty parameters. If empty, the item parameters estimated from the data will be used.
+#' @param fixed.a a vector of fixed discrimination parameters. If empty, the item parameters estimated from the data will be used.
+#' @param seed a random seed (default is 999)
+#' @param true_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
+#' @param num_item the number of item to included in the short test form
+#'
+#' @return A list of length 3
+#' @export
+#'
+#' @examples
 bp <- function(data,
                 fixed.b = NULL,
                 fixed.a = NULL,
@@ -85,7 +100,7 @@ bp <- function(data,
   temp <- NULL
 
   info_summary_bp <- data.frame(info_test = mean(info_out_bp$test_info_curve),
-                       bp_name = paste0("number", num_item),
+                       bp_name = paste0("STF-", num_item),
                        item = paste(colnames(out_bp), collapse = ","))
 
   info_summary_bp <-  rbind(info_summary_bp,

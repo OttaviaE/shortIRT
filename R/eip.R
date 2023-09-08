@@ -1,3 +1,18 @@
+#' eip
+#'
+#' Create a Short Test Form (STF) using the theta-target procedure based on the equal segmentation of the latent trait
+#'
+#' @param data a subject x item matrix
+#' @param fixed.b a vector of fixed difficulty parameters. If empty, the item parameters estimated from the data will be used.
+#' @param fixed.a a vector of fixed discrimination parameters. If empty, the item parameters estimated from the data will be used.
+#' @param seed a random seed (default is 999)
+#' @param true_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
+#' @param num_item the number of item to included in the short test form
+#'
+#' @return A list of length 3
+#' @export
+#'
+#' @examples
 eip <- function(data,
                 fixed.b = NULL,
                 fixed.a = NULL,
@@ -72,7 +87,7 @@ eip <- function(data,
                                                                                                   "mean_theta"],
                                                                                iIndex = lab_item[i])$info_curves_item)),
                                 item = lab_item[i],
-                                num_item = paste("number", nrow(cut_value), sep = ""))
+                                num_item = paste("STF-", nrow(cut_value), sep = ""))
 
         info_data <- rbind(info_data, temp_data)
       }
