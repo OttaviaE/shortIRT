@@ -26,7 +26,15 @@ bp <- function(data,
 
 
   if(is.null(fixed.a) & is.null(fixed.b)) {
-    start_model <- TAM::tam.mml(data)
+    start_model <- TAM::tam.mml.2pl(data, verbose = FALSE, irtmodel = "2PL")
+    b_true <- matrix(cbind(1:length(start_model$item$xsi.item),
+                           start_model$item$xsi.item),
+                     ncol = 2)
+    a_true <- array(c(rep(0, length(start_model$item$B.Cat1.Dim1)), start_model$item$B.Cat1.Dim1),
+                    c(length(start_model$item$B.Cat1.Dim1),2,1),
+                    dimnames = list(paste0("I", 1:length(start_model$item$B.Cat1.Dim1)),
+                                    c("Cat0", "Cat1"),
+                                    "Dim01"))
   } else {
     b_true <- matrix(cbind(1:length(fixed.b),
                            fixed.b),
