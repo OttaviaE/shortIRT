@@ -9,6 +9,10 @@
 #' @param true_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
 #' @param num_item the number of item to included in the short test form
 #'
+#' @import TAM
+#' @importFrom sirt sim.raschtype
+#' @importFrom dplyr distinct
+#'
 #'
 #' @return A list of length 3
 #' @export
@@ -19,13 +23,11 @@ uip <- function(data,
                 fixed.a = NULL,
                 seed = 999,
                 true_theta = NULL,
-                num_item = NULL) {
-  if (is.null(num_item)) {
-    stop("You must specify a number of items for the STFs")
+                num_item = NULL,
+                theta_targets = NULL) {
+  if (is.null(num_item) & is.null(theta_targets)) {
+    stop("You must specify either a number of items for the STFs or the theta targets!")
   }
-
-
-
   if(is.null(fixed.a) & is.null(fixed.b)) {
     start_model <- TAM::tam.mml(data, verbose = FALSE)
   } else {
@@ -42,56 +44,61 @@ uip <- function(data,
   }
 
 
-  info_start <- mean(IRT.informationCurves(start_model,
+  info_start <- mean(TAM::IRT.informationCurves(start_model,
                                            theta = true_theta)$test_info_curve)
 
   lab_item <- 1:ncol(data)
-  num_clusters <- num_item
+
 
   if (!is.null(true_theta)) {
     if (length(true_theta) != nrow(data)) {
       stop("True theta must be equal to the number of subjects in the data frame")
     }
   } else {
-    true_theta <- start_model$EAP
+    true_theta <- start_model$person$EAP
   }
-  theta_mat <- matrix(true_theta, ncol = 1)
+  if (!is.null(theta_targets)) {
+    cluster <- theta_targets
+  } else {
+    num_clusters <- num_item
+    theta_mat <- matrix(true_theta, ncol = 1)
     cluster <- kmeans(theta_mat,
-                           centers = num_clusters)
-
+                      centers = num_clusters)
+    cluster <- cluster$centers[,1]
+  }
 
   cluster_data   <- NULL
   info_data_cluster <- NULL
 
-  value_cluster <- cluster$centers[,1]
+  value_cluster <- cluster
     for(i in 1:length(lab_item)) {
       for(j in 1:length(value_cluster)) {
 
-        temp_cluster_data   <- data.frame(theta_target = IRT.informationCurves(start_model,
+        temp_cluster_data   <- data.frame(theta_target = TAM::IRT.informationCurves(start_model,
                                                                                theta = value_cluster[j],
                                                                                iIndex = lab_item[i])$theta,
 
-                                          item_info = colSums(IRT.informationCurves(start_model,
+                                          item_info = colSums(TAM::IRT.informationCurves(start_model,
                                                                                     theta = value_cluster[j],
                                                                                     iIndex = lab_item[i])$info_curves_item),
                                           item = lab_item[i],
-                                          num_item = paste("STF-", num_item, sep = ""))
+                                          num_item = paste("STF-",
+                                                           num_item, sep = ""))
 
         info_data_cluster <- rbind(info_data_cluster, temp_cluster_data  )
       }
     }
 
 
-
-  temp_data_cluster <- NULL
-  temp_maxcluster <- NULL
-  temp <- NULL
-  max_temp_cluster <- NULL
+  if (length(unique(cluster)) > 1) {
+    temp_data_cluster <- NULL
+    temp_maxcluster <- NULL
+    temp <- NULL
+    max_temp_cluster <- NULL
 
     temp_maxcluster <- aggregate(item_info ~ item + theta_target,
                                  data = info_data_cluster, max)
     temp_maxcluster$cluster_name <- unique(info_data_cluster$num_item)
-
     for (i in 1:length(unique(temp_maxcluster$theta_target))) {
       temp <- temp_maxcluster[which(temp_maxcluster$item_info == max(temp_maxcluster$item_info)), ]
       temp_maxcluster <- temp_maxcluster[which(temp_maxcluster$item != temp$item &
@@ -99,16 +106,23 @@ uip <- function(data,
       max_temp_cluster <-rbind(max_temp_cluster, temp)
 
     }
+  } else {
+    info_data_cluster <- info_data_cluster[order(info_data_cluster$item_info, decreasing = TRUE),]
+    max_temp_cluster <- dplyr::distinct(info_data_cluster)
+    max_temp_cluster <- max_temp_cluster[1:length(theta_targets), ]
+    max_temp_cluster$cluster_name <- unique(info_data_cluster$num_item)
+  }
+
+
   selected_uip = max_temp_cluster[order(max_temp_cluster$theta_target), ]
 
   # given the number(s) of items in num_item, filter out the selected ones from the
   # full-length test, estimate the model on the resulting short form(s), and
   # compute the IIF and TIF
 
-
     out_cluster <- data[, c(max_temp_cluster[max_temp_cluster$cluster_name %in% unique(max_temp_cluster$cluster_name),
                                                   "item"])]
-    model_out_cluster <- tam.mml(out_cluster,
+    model_out_cluster <- TAM::tam.mml(out_cluster,
                                       xsi.fixed = cbind(1:ncol(out_cluster),
                                                         b_true[as.integer(gsub("I00|I0|I", '',
                                                                                colnames(out_cluster))), 2]),
@@ -120,7 +134,7 @@ uip <- function(data,
                                                                c("Cat0", "Cat1"),
                                                                "Dim01")),
                                  verbose = FALSE)
-    info_out_cluster <- IRT.informationCurves(model_out_cluster,
+    info_out_cluster <- TAM::IRT.informationCurves(model_out_cluster,
                                                    theta = true_theta)
 
   # summary

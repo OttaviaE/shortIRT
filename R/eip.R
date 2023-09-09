@@ -9,6 +9,9 @@
 #' @param true_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
 #' @param num_item the number of item to included in the short test form
 #'
+#' @import TAM
+#' @importFrom sirt sim.raschtype
+#'
 #' @return A list of length 3
 #' @export
 #'
@@ -18,12 +21,11 @@ eip <- function(data,
                 fixed.a = NULL,
                 seed = 999,
                 true_theta = NULL,
-                num_item = NULL) {
-  if (is.null(num_item)) {
-    stop("You must specify a number of items for the STFs")
+                num_item = NULL,
+                theta_targets = NULL) {
+  if (is.null(num_item) & is.null(theta_targets)) {
+    stop("You must specify a number of items for the STFs or a vector of theta targets!")
   }
-
-
 
   if(is.null(fixed.a) & is.null(fixed.b)) {
     start_model <- TAM::tam.mml(data)
@@ -40,7 +42,7 @@ eip <- function(data,
     start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
   }
 
-  info_start <- mean(IRT.informationCurves(start_model,
+  info_start <- mean(TAM::IRT.informationCurves(start_model,
                                            theta = true_theta)$test_info_curve)
 
   lab_item <- 1:ncol(data)
@@ -53,19 +55,26 @@ eip <- function(data,
   } else {
     true_theta <- start_model$EAP
   }
-  intervals <- NULL
-  groups <- NULL
-  cut_value <- NULL
-  cut_value_temp <- NULL
 
-  for (i in 1:(length(num_item))) {
-    intervals <- seq(min(true_theta), max(true_theta),
-                     length =num_item[i])
-    groups <- cut(intervals, num_item[i], include.lowest = TRUE)
-    cut_value_temp <- cut_borders(groups)
-    cut_value = rbind(cut_value_temp, cut_value)
+  if (!is.null(theta_targets)) {
+    cut_value <- theta_targets
+  } else {
+    intervals <- NULL
+    groups <- NULL
+    cut_value <- NULL
+    cut_value_temp <- NULL
+
+    for (i in 1:(length(num_item))) {
+      intervals <- seq(min(true_theta), max(true_theta),
+                       length =num_item[i])
+      groups <- cut(intervals, num_item[i], include.lowest = TRUE)
+      cut_value_temp <- cut_borders(groups)
+      cut_value = rbind(cut_value_temp, cut_value)
+    }
+    cut_value$mean_theta <- rowMeans(cut_value)
+    cut_value <- cut_value$mean_theta
   }
-  cut_value$mean_theta <- rowMeans(cut_value)
+
 
   # Compute IIF for each theta target
   info_test <- NULL
@@ -76,15 +85,24 @@ eip <- function(data,
 
 
     for(i in 1:length(lab_item)) {
-      for(j in 1:nrow(cut_value)) {
+      for(j in 1:length(cut_value)) {
 
-        temp_data <- data.frame(theta_target = IRT.informationCurves(start_model,
-                                                                     theta = cut_value[j,
-                                                                                        "mean_theta"],
+        # temp_data <- data.frame(theta_target = IRT.informationCurves(start_model,
+        #                                                              theta = cut_value[j,
+        #                                                                                 "mean_theta"],
+        #                                                              iIndex = lab_item[i])$theta,
+        #                         item_info = mean(colSums(IRT.informationCurves(start_model,
+        #                                                                        theta = cut_value[j,
+        #                                                                                           "mean_theta"],
+        #                                                                        iIndex = lab_item[i])$info_curves_item)),
+        #                         item = lab_item[i],
+        #                         num_item = paste("STF-", nrow(cut_value), sep = ""))
+
+        temp_data <- data.frame(theta_target = TAM::IRT.informationCurves(start_model,
+                                                                     theta = cut_value[j],
                                                                      iIndex = lab_item[i])$theta,
-                                item_info = mean(colSums(IRT.informationCurves(start_model,
-                                                                               theta = cut_value[j,
-                                                                                                  "mean_theta"],
+                                item_info = mean(colSums(TAM::IRT.informationCurves(start_model,
+                                                                               theta = cut_value[j],
                                                                                iIndex = lab_item[i])$info_curves_item)),
                                 item = lab_item[i],
                                 num_item = paste("STF-", nrow(cut_value), sep = ""))
@@ -94,8 +112,7 @@ eip <- function(data,
     }
 
   # select the item with highest IIF for each theta target
-
-
+  if (length(unique(cut_value)) > 1) {
     temp_maxinfo <- aggregate(item_info ~ item + theta_target,
                               data = info_data, max)
     temp_maxinfo$eip_name <- unique(info_data$num_item)
@@ -111,6 +128,15 @@ eip <- function(data,
 
     }
 
+    } else {
+    info_data <- info_data[order(info_data$item_info, decreasing = TRUE),]
+    max_temp <- dplyr::distinct(info_data)
+    max_temp <- max_temp[1:length(theta_targets), ]
+    max_temp$eip_name <- unique(info_data$num_item)
+  }
+
+
+
   selected_eip = max_temp[order(max_temp$theta_target), ]
 
   # given the number(s) of items in num_item, filter out the selected ones from the
@@ -121,7 +147,7 @@ eip <- function(data,
 
     out_eip <- data[, c(max_temp[max_temp$eip_name %in%unique(max_temp$eip_name),
                                       "item"])]
-    model_out_eip <- tam.mml(out_eip,
+    model_out_eip <- TAM::tam.mml(out_eip,
                                   xsi.fixed = cbind(1:ncol(out_eip),
                                                     b_true[as.integer(gsub("I00|I0|I", '',
                                                                               colnames(out_eip))), 2]),
@@ -133,7 +159,7 @@ eip <- function(data,
                                                            c("Cat0", "Cat1"),
                                                            "Dim01")),
                              verbose = FALSE)
-    info_out_eip <- IRT.informationCurves(model_out_eip,
+    info_out_eip <- TAM::IRT.informationCurves(model_out_eip,
                                                theta = true_theta)
     #names(info_out_eip)[[i]] <- unique(max_temp$eip_name)[
 
