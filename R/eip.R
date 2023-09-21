@@ -3,22 +3,43 @@
 #' Create a Short Test Form (STF) using the theta-target procedure based on the equal segmentation of the latent trait
 #'
 #' @param data a subject x item matrix
-#' @param fixed.b a vector of fixed difficulty parameters. If empty, the item parameters estimated from the data will be used.
-#' @param fixed.a a vector of fixed discrimination parameters. If empty, the item parameters estimated from the data will be used.
+#' @param item_par Two column matrix with the item parameters. The first column must contain the difficulty parameters, the second column must contain the discrimination parameters.
 #' @param seed a random seed (default is 999)
 #' @param true_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
 #' @param num_item the number of item to included in the short test form
+#' @param theta_targets A vector of length n > 2 (where n is the number of item to be included in the short test form) with specific theta targets. Might also be the same theta target repeated for as many time as the number of item to be included in the short test form
 #'
 #' @import TAM
-#' @importFrom sirt sim.raschtype
+#' @import sirt
+#' @import dplyr
 #'
-#' @return A list of length 3
+#' @return A list of length 3:
+#'          - item_stf: data frame with as many rows as the the number of items to be included in the STF.
+#'          - summary: contains the list of items included in the STF and the total information, along with the information of the full length test
+#'          - info_stf: contains the information for each level of the latent trait. used for plotting
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # Simulate person and item parameters
+#' true_theta = rnorm(100)
+#' b <- runif(100, -3, 3)
+#' a <- runif(100, 0.6, 2)
+#' parameters <- data.frame(b, a)
+#' # simulate data
+#' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+#' stf <- eip(data, true_theta = true_theta, item_par = parameters, num_item = 5)
+#' # check the obtained short test form
+#' stf$item_stf
+#' # check the comparison between the short test form and the full-length test
+#' stf$summary
+#'
+#' # Short test form with cut off values
+#' stf_cutoff <- eip(data, true_theta = true_theta, item_par = parameters, theta_targets = rep(2, 5))
+#' stf_cutoff$item_stf
+#' }
 eip <- function(data,
-                fixed.b = NULL,
-                fixed.a = NULL,
+                item_par = NULL,
                 seed = 999,
                 true_theta = NULL,
                 num_item = NULL,
@@ -27,7 +48,11 @@ eip <- function(data,
     stop("You must specify a number of items for the STFs or a vector of theta targets!")
   }
 
-  if(is.null(fixed.a) & is.null(fixed.b)) {
+  if (!is.null(theta_targets) & length(theta_targets) == 1) {
+    stop("Theta targets must be a vector of length > 2")
+  }
+
+  if(is.null(item_par)) {
     start_model <- TAM::tam.mml.2pl(data, verbose = FALSE, irtmodel = "2PL")
     b_true <- matrix(cbind(1:length(start_model$item$xsi.item),
                            start_model$item$xsi.item),
@@ -38,20 +63,21 @@ eip <- function(data,
                                     c("Cat0", "Cat1"),
                                     "Dim01"))
   } else {
-    b_true <- matrix(cbind(1:length(fixed.b),
-                           fixed.b),
+    b_true <- matrix(cbind(1:nrow(item_par),
+                           item_par[,1]),
                      ncol = 2)
-    a_true <- array(c(rep(0, length(fixed.a)), fixed.a),
-                    c(length(fixed.a),2,1),
-                    dimnames = list(paste0("I", 1:length(fixed.a)),
+    a_true <- array(c(rep(0, nrow(item_par)), item_par[,2]),
+                    c(nrow(item_par),2,1),
+                    dimnames = list(paste0("I", 1:nrow(item_par)),
                                     c("Cat0", "Cat1"),
                                     "Dim01"))
-
     start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
   }
 
   info_start <- mean(TAM::IRT.informationCurves(start_model,
                                            theta = true_theta)$test_info_curve)
+  info_start_theta <- TAM::IRT.informationCurves(start_model,
+                                                 theta = true_theta)
 
   lab_item <- 1:ncol(data)
   num_item <- num_item
@@ -61,7 +87,7 @@ eip <- function(data,
       stop("True theta must be equal to the number of subjects in the data frame")
     }
   } else {
-    true_theta <- start_model$EAP
+    true_theta <- start_model$person$EAP
   }
 
   if (!is.null(theta_targets)) {
@@ -85,6 +111,7 @@ eip <- function(data,
 
 
   # Compute IIF for each theta target
+
   info_test <- NULL
   temp <- list()
   value <- list()
@@ -113,7 +140,7 @@ eip <- function(data,
                                                                                theta = cut_value[j],
                                                                                iIndex = lab_item[i])$info_curves_item)),
                                 item = lab_item[i],
-                                num_item = paste("STF-", nrow(cut_value), sep = ""))
+                                num_item = paste("STF-", length(cut_value), sep = ""))
 
         info_data <- rbind(info_data, temp_data)
       }
@@ -121,9 +148,9 @@ eip <- function(data,
 
   # select the item with highest IIF for each theta target
   if (length(unique(cut_value)) > 1) {
-    temp_maxinfo <- aggregate(item_info ~ item + theta_target,
+    temp_maxinfo <- stats::aggregate(item_info ~ item + theta_target,
                               data = info_data, max)
-    temp_maxinfo$eip_name <- unique(info_data$num_item)
+    temp_maxinfo$stf_length <- unique(info_data$num_item)
 
     temp <- NULL
     max_temp <- NULL
@@ -140,7 +167,7 @@ eip <- function(data,
     info_data <- info_data[order(info_data$item_info, decreasing = TRUE),]
     max_temp <- dplyr::distinct(info_data)
     max_temp <- max_temp[1:length(theta_targets), ]
-    max_temp$eip_name <- unique(info_data$num_item)
+    max_temp$stf_length <- unique(info_data$num_item)
   }
 
 
@@ -151,10 +178,9 @@ eip <- function(data,
   # full-length test, estimate the model on the resulting short form(s), and
   # compute the IIF and TIF
 
-
-
-    out_eip <- data[, c(max_temp[max_temp$eip_name %in%unique(max_temp$eip_name),
+    out_eip <- data[, c(max_temp[max_temp$stf_length %in%unique(max_temp$stf_length),
                                       "item"])]
+
     model_out_eip <- TAM::tam.mml(out_eip,
                                   xsi.fixed = cbind(1:ncol(out_eip),
                                                     b_true[as.integer(gsub("I00|I0|I", '',
@@ -169,7 +195,7 @@ eip <- function(data,
                              verbose = FALSE)
     info_out_eip <- TAM::IRT.informationCurves(model_out_eip,
                                                theta = true_theta)
-    #names(info_out_eip)[[i]] <- unique(max_temp$eip_name)[
+    #names(info_out_eip)[[i]] <- unique(max_temp$stf_length)[
 
 
   # Summary
@@ -179,16 +205,17 @@ eip <- function(data,
   info_summary_eip <- data.frame(info_test = mean(info_out_eip$test_info_curve),
 
 
-                       eip_name = unique(max_temp$eip_name),
+                                 stf_length = unique(max_temp$stf_length),
                        item = paste(colnames(out_eip), collapse = ", "))
 
   info_summary_eip <-  rbind(info_summary_eip,
                              data.frame(info_test = (info_start),
-                                        eip_name = "all",
+                                        stf_length = "all",
                                         item = "all"))
   info_summary_eip$selection <- "EIP"
   eip_results = list(item_stf = selected_eip,
                      summary = info_summary_eip,
-                     info_stf = info_out_eip)
+                     info_stf = info_out_eip,
+                     info_start = info_start_theta)
   return(eip_results)
 }
