@@ -3,3 +3,6 @@
 export(bp)
 export(eip)
 export(uip)
+import(TAM)
+import(dplyr)
+import(sirt)
