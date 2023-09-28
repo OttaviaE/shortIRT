@@ -1,34 +1,34 @@
 #' uip
 #'
-#' Create a Short Test Form (STF) using the theta-target procedure based on the unequal segmentation of the latent trait
+#' Create a Short Test Form (STF) using the theta-target procedure based on the unequal segmentation of the latent trait (Unequal Interval Procedure, UIP)
 #'
 #' @param data a subject x item matrix
 #' @param item_par Two column matrix with the item parameters. The first column must contain the difficulty parameters, the second column must contain the discrimination parameters.
 #' @param seed a random seed (default is 999)
-#' @param true_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
+#' @param starting_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
 #' @param num_item the number of item to included in the short test form
 #'
-#' @import TAM
-#' @import sirt
-#' @import dplyr
 #'
 #'
-#' @return A list of length 3:
-#'          - item_stf: data frame with as many rows as the the number of items to be included in the STF.
-#'          - summary: contains the list of items included in the STF and the total information, along with the information of the full length test
-#'          - info_stf: contains the information for each level of the latent trait. used for plotting
+#' @return A list of length 5:
+#'          - item_stf: data frame with nrows equal to the number of items included in the STF, contains the items, the theta targets and the IIF in respect to the theta target
+#'          - summary: data frame with two rows, contains the list of items included in the STF and the total information, along with the information of the full length test
+#'          - info_stf: contains the information for each level of the latent trait for the STF
+#'          - info_full: contains the information for each level of the latent trait for the full-length test
+#'          - theta: data frame with the starting theta and the theta estimated with the STF
+#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' # Simulate person and item parameters
-#' true_theta = rnorm(100)
+#' starting_theta = rnorm(100)
 #' b <- runif(100, -3, 3)
 #' a <- runif(100, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
-#' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
-#' stf <- uip(data, true_theta = true_theta, item_par = parameters, num_item = 5)
+#' data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
+#' stf <- uip(data, starting_theta = starting_theta, item_par = parameters, num_item = 5)
 #' # check the obtained short test form
 #' stf$item_stf
 #' # check the comparison between the short test form and the full-length test
@@ -37,7 +37,7 @@
 uip <- function(data,
                 item_par = NULL,
                 seed = 999,
-                true_theta = NULL,
+                starting_theta = NULL,
                 num_item = NULL) {
   if (is.null(num_item)) {
     stop("You must specify the number of items for the STFs!")
@@ -63,23 +63,25 @@ uip <- function(data,
                                     "Dim01"))
     start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
   }
+  item_names <- change_names(data)$item_names
+  data <- change_names(data)$data
 
 
   info_start <- mean(TAM::IRT.informationCurves(start_model,
-                                           theta = true_theta)$test_info_curve)
-  info_start_theta <- TAM::IRT.informationCurves(start_model,
-                                                 theta = true_theta)
+                                           theta = starting_theta)$test_info_curve)
+  info_full <- TAM::IRT.informationCurves(start_model,
+                                                 theta = starting_theta)
 
   lab_item <- 1:ncol(data)
-  if (!is.null(true_theta)) {
-    if (length(true_theta) != nrow(data)) {
+  if (!is.null(starting_theta)) {
+    if (length(starting_theta) != nrow(data)) {
       stop("True theta must be equal to the number of subjects in the data frame")
     }
   } else {
-    true_theta <- start_model$person$EAP
+    starting_theta <- start_model$person$EAP
   }
       num_clusters <- num_item
-    theta_mat <- matrix(true_theta, ncol = 1)
+    theta_mat <- matrix(starting_theta, ncol = 1)
     cluster <- stats::kmeans(theta_mat,
                       centers = num_clusters)
     cluster <- cluster$centers[,1]
@@ -133,10 +135,10 @@ uip <- function(data,
                                                   "item"])]
     model_out_cluster <- TAM::tam.mml(out_cluster,
                                       xsi.fixed = cbind(1:ncol(out_cluster),
-                                                        b_true[as.integer(gsub("I00|I0|I", '',
+                                                        b_true[as.integer(gsub("item", '',
                                                                                colnames(out_cluster))), 2]),
                                       B= array(c(rep(0, ncol(out_cluster)),
-                                                 a_true[,2,][as.integer(gsub("I00|I0|I", "",
+                                                 a_true[,2,][as.integer(gsub("item", "",
                                                                              colnames(out_cluster)))]),
                                                c(ncol(out_cluster),2,1),
                                                dimnames = list(colnames(out_cluster),
@@ -144,13 +146,14 @@ uip <- function(data,
                                                                "Dim01")),
                                  verbose = FALSE)
     info_out_cluster <- TAM::IRT.informationCurves(model_out_cluster,
-                                                   theta = true_theta)
+                                                   theta = starting_theta)
 
   # summary
 
     info_summary_cluster <- data.frame(info_test = mean(info_out_cluster$test_info_curve),
                        stf_length = unique(max_temp_cluster$stf_length),
-                       item = paste(colnames(out_cluster), collapse = ","))
+                       item = paste(item_names[item_names$new_names %in% colnames(out_cluster),
+                                               "old_names"], collapse = ", "))
 
 
 
@@ -159,10 +162,12 @@ uip <- function(data,
                                             stf_length = "all",
                                             item = "all"))
   info_summary_cluster$selection <- "UIP"
-
+  theta <- data.frame(starting_theta = starting_theta,
+                      stf_theta = model_out_cluster$person$EAP)
   uip_results = list(item_stf = selected_uip,
                      summary = info_summary_cluster,
                      info_stf = info_out_cluster,
-                     info_start = info_start_theta)
+                     info_full = info_full,
+                     theta = theta)
   return(uip_results)
 }

@@ -4,7 +4,7 @@
 \alias{bp}
 \title{bp}
 \usage{
-bp(data, item_par = NULL, seed = 999, true_theta = NULL, num_item = NULL)
+bp(data, item_par = NULL, seed = 999, starting_theta = NULL, num_item = NULL)
 }
 \arguments{
 \item{data}{A subject x item matrix}
@@ -13,29 +13,31 @@ bp(data, item_par = NULL, seed = 999, true_theta = NULL, num_item = NULL)
 
 \item{seed}{A random seed (default is 999)}
 
-\item{true_theta}{A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.}
+\item{starting_theta}{A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.}
 
 \item{num_item}{the number of item to included in the short test form}
 }
 \value{
-A list of length 3:
-         - item_stf: data frame with as many rows as the the number of items to be included in the STF.
-         - summary: contains the list of items included in the STF and the total information, along with the information of the full length test
-         - info_stf: contains the information for each level of the latent trait. used for plotting
+A list of length 5:
+         - item_stf: data frame with nrows equal to the number of items included in the STF, contains the items, the theta targets and the IIF in respect to the theta target
+         - summary: data frame with two rows, contains the list of items included in the STF and the total information, along with the information of the full length test
+         - info_stf: contains the information for each level of the latent trait for the STF
+         - info_full: contains the information for each level of the latent trait for the full-length test
+         - theta: data frame with the starting theta and the theta estimated with the STF
 }
 \description{
-Create a Short Test Form (STF) using the typical IRT procedure for shortening test
+Create a Short Test Form (STF) using the typical IRT procedure for shortening test (Benchmark Procedure, BP)
 }
 \examples{
 \dontrun{
 # Simulate person and item parameters
-true_theta = rnorm(100)
+starting_theta = rnorm(100)
 b <- runif(100, -3, 3)
 a <- runif(100, 0.6, 2)
 parameters <- data.frame(b, a)
 # simulate data
-data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
-stf <- bp(data, true_theta = true_theta, item_par = parameters, num_item = 5)
+data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
+stf <- bp(data, starting_theta = starting_theta, item_par = parameters, num_item = 5)
 # check the obtained short test form
 stf$item_stf
 # check the comparison between the short test form and the full-length test

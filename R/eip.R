@@ -1,47 +1,49 @@
 #' eip
 #'
-#' Create a Short Test Form (STF) using the theta-target procedure based on the equal segmentation of the latent trait
+#' Create a Short Test Form (STF) using the theta-target procedure based on the equal segmentation of the latent trait (Equal Interval Procedure, EIP)
 #'
 #' @param data a subject x item matrix
 #' @param item_par Two column matrix with the item parameters. The first column must contain the difficulty parameters, the second column must contain the discrimination parameters.
 #' @param seed a random seed (default is 999)
-#' @param true_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
+#' @param starting_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
 #' @param num_item the number of item to included in the short test form
 #' @param theta_targets A vector of length n > 2 (where n is the number of item to be included in the short test form) with specific theta targets. Might also be the same theta target repeated for as many time as the number of item to be included in the short test form
 #'
-#' @import TAM
-#' @import sirt
-#' @import dplyr
 #'
-#' @return A list of length 3:
-#'          - item_stf: data frame with as many rows as the the number of items to be included in the STF.
-#'          - summary: contains the list of items included in the STF and the total information, along with the information of the full length test
-#'          - info_stf: contains the information for each level of the latent trait. used for plotting
+#' @return A list of length 5:
+#'          - item_stf: data frame with nrows equal to the number of items included in the STF, contains the items, the theta targets and the IIF in respect to the theta target
+#'          - summary: data frame with two rows, contains the list of items included in the STF and the total information, along with the information of the full length test
+#'          - info_stf: contains the information for each level of the latent trait for the STF
+#'          - info_full: contains the information for each level of the latent trait for the full-length test
+#'          - theta: data frame with the starting theta and the theta estimated with the STF
+#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' # Simulate person and item parameters
-#' true_theta = rnorm(100)
+#' starting_theta = rnorm(100)
 #' b <- runif(100, -3, 3)
 #' a <- runif(100, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
-#' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
-#' stf <- eip(data, true_theta = true_theta, item_par = parameters, num_item = 5)
+#' data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
+#' stf <- eip(data, starting_theta = starting_theta,
+#' item_par = parameters, num_item = 5)
 #' # check the obtained short test form
 #' stf$item_stf
 #' # check the comparison between the short test form and the full-length test
 #' stf$summary
 #'
 #' # Short test form with cut off values
-#' stf_cutoff <- eip(data, true_theta = true_theta, item_par = parameters, theta_targets = rep(2, 5))
+#' stf_cutoff <- eip(data, starting_theta = starting_theta,
+#' item_par = parameters, theta_targets = rep(2, 5))
 #' stf_cutoff$item_stf
 #' }
 eip <- function(data,
                 item_par = NULL,
                 seed = 999,
-                true_theta = NULL,
+                starting_theta = NULL,
                 num_item = NULL,
                 theta_targets = NULL) {
   if (is.null(num_item) & is.null(theta_targets)) {
@@ -71,40 +73,38 @@ eip <- function(data,
                     dimnames = list(paste0("I", 1:nrow(item_par)),
                                     c("Cat0", "Cat1"),
                                     "Dim01"))
-    start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
+    start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true,
+                               B = a_true, verbose = FALSE)
   }
 
+  item_names <- change_names(data)$item_names
+  data <- change_names(data)$data
+
+
+
   info_start <- mean(TAM::IRT.informationCurves(start_model,
-                                           theta = true_theta)$test_info_curve)
-  info_start_theta <- TAM::IRT.informationCurves(start_model,
-                                                 theta = true_theta)
+                                           theta = starting_theta)$test_info_curve)
+  info_full <- TAM::IRT.informationCurves(start_model,
+                                                 theta = starting_theta)
 
   lab_item <- 1:ncol(data)
   num_item <- num_item
 
-  if (!is.null(true_theta)) {
-    if (length(true_theta) != nrow(data)) {
-      stop("True theta must be equal to the number of subjects in the data frame")
+  if (!is.null(starting_theta)) {
+    if (length(starting_theta) != nrow(data)) {
+      stop("starting_theta theta must be equal to the number of subjects in the data frame")
     }
   } else {
-    true_theta <- start_model$person$EAP
+    starting_theta <- start_model$person$EAP
   }
 
   if (!is.null(theta_targets)) {
     cut_value <- theta_targets
   } else {
-    intervals <- NULL
-    groups <- NULL
-    cut_value <- NULL
-    cut_value_temp <- NULL
-
-    for (i in 1:(length(num_item))) {
-      intervals <- seq(min(true_theta), max(true_theta),
-                       length =num_item[i])
-      groups <- cut(intervals, num_item[i], include.lowest = TRUE)
-      cut_value_temp <- cut_borders(groups)
-      cut_value = rbind(cut_value_temp, cut_value)
-    }
+      intervals <- seq(min(starting_theta), max(starting_theta),
+                       length =num_item)
+      groups <- cut(intervals, num_item, include.lowest = TRUE)
+      cut_value<- cut_borders(groups)
     cut_value$mean_theta <- rowMeans(cut_value)
     cut_value <- cut_value$mean_theta
   }
@@ -168,11 +168,9 @@ eip <- function(data,
     max_temp <- dplyr::distinct(info_data)
     max_temp <- max_temp[1:length(theta_targets), ]
     max_temp$stf_length <- unique(info_data$num_item)
-  }
-
-
-
-  selected_eip = max_temp[order(max_temp$theta_target), ]
+    }
+  item_names <- item_names[max_temp$item, ]
+  selected_eip <- max_temp[order(max_temp$theta_target), ]
 
   # given the number(s) of items in num_item, filter out the selected ones from the
   # full-length test, estimate the model on the resulting short form(s), and
@@ -183,10 +181,10 @@ eip <- function(data,
 
     model_out_eip <- TAM::tam.mml(out_eip,
                                   xsi.fixed = cbind(1:ncol(out_eip),
-                                                    b_true[as.integer(gsub("I00|I0|I", '',
+                                                    b_true[as.integer(gsub("item", '',
                                                                               colnames(out_eip))), 2]),
                                   B= array(c(rep(0, ncol(out_eip)),
-                                             a_true[,2,][as.integer(gsub("I00|I0|I", "",
+                                             a_true[,2,][as.integer(gsub("item", "",
                                                                              colnames(out_eip)))]),
                                            c(ncol(out_eip),2,1),
                                            dimnames = list(colnames(out_eip),
@@ -194,28 +192,29 @@ eip <- function(data,
                                                            "Dim01")),
                              verbose = FALSE)
     info_out_eip <- TAM::IRT.informationCurves(model_out_eip,
-                                               theta = true_theta)
+                                               theta = starting_theta)
     #names(info_out_eip)[[i]] <- unique(max_temp$stf_length)[
 
 
   # Summary
   info_summary_eip <- NULL
 
-
   info_summary_eip <- data.frame(info_test = mean(info_out_eip$test_info_curve),
-
-
                                  stf_length = unique(max_temp$stf_length),
-                       item = paste(colnames(out_eip), collapse = ", "))
+                       item = paste(item_names[item_names$new_names %in% colnames(out_eip),
+                                               "old_names"], collapse = ", "))
 
   info_summary_eip <-  rbind(info_summary_eip,
                              data.frame(info_test = (info_start),
                                         stf_length = "all",
                                         item = "all"))
+  theta <- data.frame(starting_theta = starting_theta,
+                      stf_theta = model_out_eip$person$EAP)
   info_summary_eip$selection <- "EIP"
   eip_results = list(item_stf = selected_eip,
                      summary = info_summary_eip,
                      info_stf = info_out_eip,
-                     info_start = info_start_theta)
+                     info_full = info_full,
+                     theta = theta)
   return(eip_results)
 }
