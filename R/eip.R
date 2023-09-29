@@ -122,17 +122,6 @@ eip <- function(data,
     for(i in 1:length(lab_item)) {
       for(j in 1:length(cut_value)) {
 
-        # temp_data <- data.frame(theta_target = IRT.informationCurves(start_model,
-        #                                                              theta = cut_value[j,
-        #                                                                                 "mean_theta"],
-        #                                                              iIndex = lab_item[i])$theta,
-        #                         item_info = mean(colSums(IRT.informationCurves(start_model,
-        #                                                                        theta = cut_value[j,
-        #                                                                                           "mean_theta"],
-        #                                                                        iIndex = lab_item[i])$info_curves_item)),
-        #                         item = lab_item[i],
-        #                         num_item = paste("STF-", nrow(cut_value), sep = ""))
-
         temp_data <- data.frame(theta_target = TAM::IRT.informationCurves(start_model,
                                                                      theta = cut_value[j],
                                                                      iIndex = lab_item[i])$theta,
@@ -170,7 +159,9 @@ eip <- function(data,
     max_temp$stf_length <- unique(info_data$num_item)
     }
   item_names <- item_names[max_temp$item, ]
-  selected_eip <- max_temp[order(max_temp$theta_target), ]
+  selected_eip <- max_temp
+  selected_eip$item <- item_names$old_names
+  selected_eip <- selected_eip[order(selected_eip$theta_target), ]
 
   # given the number(s) of items in num_item, filter out the selected ones from the
   # full-length test, estimate the model on the resulting short form(s), and

@@ -18,8 +18,7 @@
 change_names <- function(data) {
   item_names = data.frame(old_names = colnames(data),
                           new_names = gsub('[^0-9.-]', "item", colnames(data)))
-  colnames(data) = gsub("I00|I0|I",
-                        "item", gsub('[^0-9.-]', "item", colnames(data)))
+  colnames(data) = gsub('[^0-9.-]', "item", colnames(data))
   new <- list(item_names = item_names, data = data)
   return(new)
 }

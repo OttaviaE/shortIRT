@@ -124,8 +124,11 @@ uip <- function(data,
       max_temp_cluster <-rbind(max_temp_cluster, temp)
     }
 
+    item_names <- item_names[max_temp_cluster$item, ]
+    selected_uip <- max_temp_cluster
+    selected_uip$item <- item_names$old_names
+    selected_uip <- selected_uip[order(selected_uip$theta_target), ]
 
-  selected_uip = max_temp_cluster[order(max_temp_cluster$theta_target), ]
 
   # given the number(s) of items in num_item, filter out the selected ones from the
   # full-length test, estimate the model on the resulting short form(s), and

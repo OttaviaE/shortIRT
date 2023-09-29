@@ -105,7 +105,12 @@ bp <- function(data,
   # (bp = benchmark procedure)
 
   selected_items <- data_info_bp[1:num_item, ]
-  selected_bp = selected_items
+  item_names <- item_names[selected_items$items, ]
+  selected_bp <- selected_items
+  colnames(selected_bp)[1] <- "item"
+  selected_bp$item <- item_names$old_names
+
+
     out_bp <- data[, selected_items$items]
     model_out_bp <- TAM::tam.mml(out_bp,
                                  xsi.fixed = cbind(1:ncol(out_bp),
