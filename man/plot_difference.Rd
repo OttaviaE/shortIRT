@@ -4,14 +4,14 @@
 \alias{plot_difference}
 \title{plot_difference}
 \usage{
-plot_difference(difference, type = c("difference", "absolute"), n_levels = 4)
+plot_difference(difference, type = c("diff", "absolute_diff"), levels = 4)
 }
 \arguments{
 \item{difference}{data frame obtained with the function diff_theta}
 
-\item{type}{type of difference, either as is (difference) or absolute (absolute)}
+\item{type}{type of difference, either as is (diff) or absolute (absolute_diff)}
 
-\item{n_levels}{number of levels of the starting theta (default is 4)}
+\item{levels}{number of levels of the starting theta (default is 4)}
 }
 \value{
 A ggplot object
@@ -32,8 +32,8 @@ stf <- uip(data, starting_theta = starting_theta, item_par = parameters, num_ite
 # compute the difference between starting theta and that estimated with the stf
 my_diff <- diff_theta(stf)
 # plot the difference with default number of levels
-plot_difference(my_diff, type = "difference")
+plot_difference(my_diff, type = "diff")
 # plot the absolute difference with 10 levels
-plot_difference(my_diff, type = "difference", n_levels = 10)
+plot_difference(my_diff, type = "abs_diff", levels = 10)
 }
 }
