@@ -61,16 +61,10 @@ uip <- function(data,
                     dimnames = list(paste0("I", 1:nrow(item_par)),
                                     c("Cat0", "Cat1"),
                                     "Dim01"))
-    start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
+    start_model <- TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
   }
   item_names <- change_names(data)$item_names
-  data <- change_names(data)$data
-
-
-  info_start <- mean(TAM::IRT.informationCurves(start_model,
-                                           theta = starting_theta)$test_info_curve)
-  info_full <- TAM::IRT.informationCurves(start_model,
-                                                 theta = starting_theta)
+  data <- change_names(data)$dat
 
   lab_item <- 1:ncol(data)
   if (!is.null(starting_theta)) {
@@ -80,6 +74,10 @@ uip <- function(data,
   } else {
     starting_theta <- start_model$person$EAP
   }
+  info_start <- mean(TAM::IRT.informationCurves(start_model,
+                                                theta = starting_theta)$test_info_curve)
+  info_full <- TAM::IRT.informationCurves(start_model,
+                                          theta = starting_theta)
       num_clusters <- num_item
     theta_mat <- matrix(starting_theta, ncol = 1)
     cluster <- stats::kmeans(theta_mat,

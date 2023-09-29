@@ -42,7 +42,7 @@ plot_tif <- function(results, tif = c("stf", "full", "both")) {
 
   graph <- ggplot2::ggplot(data,
                            ggplot2::aes(x = .data$theta,
-                                        y = .data$info)) +
+                                        y = .data$info, group = 1)) +
     ggplot2::geom_line() + facet_wrap(~.data$tif)
   return(graph)
 }

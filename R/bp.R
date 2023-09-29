@@ -59,7 +59,7 @@ bp <- function(data,
                     dimnames = list(paste0("I", 1:nrow(item_par)),
                                     c("Cat0", "Cat1"),
                                     "Dim01"))
-    start_model = TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
+    start_model <- TAM::tam.mml(resp=data, xsi.fixed = b_true, B = a_true, verbose = FALSE)
   }
 
   if (!is.null(starting_theta)) {
@@ -67,7 +67,7 @@ bp <- function(data,
       stop("True theta must be equal to the number of subjects in the data frame")
     }
   } else {
-    starting_theta <- start_model$EAP
+    starting_theta <- start_model$person$EAP
   }
   item_names <- change_names(data)$item_names
   data <- change_names(data)$data

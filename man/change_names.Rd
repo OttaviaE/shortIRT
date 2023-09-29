@@ -20,7 +20,7 @@ Changes the colnames and stores the orginal colnames of a data frame
 \examples{
 \dontrun{
 # original data frame with 5 columns
-data <- matrix(1:20, nrow = 4, ncol = 5)
+data <- data.frame(matrix(1:20, nrow = 4, ncol = 5))
 change_names(data)
 }
 }
