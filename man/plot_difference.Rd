@@ -2,12 +2,12 @@
 % Please edit documentation in R/plot_difference.R
 \name{plot_difference}
 \alias{plot_difference}
-\title{plot_difference}
+\title{Plot the difference between \eqn{\theta}s}
 \usage{
 plot_difference(difference, type = c("diff", "absolute_diff"), levels = 4)
 }
 \arguments{
-\item{difference}{data frame obtained with the function diff_theta}
+\item{difference}{data frame obtained with the function [diff_theta()]}
 
 \item{type}{type of difference, either as is (diff) or absolute (absolute_diff)}
 
@@ -17,23 +17,23 @@ plot_difference(difference, type = c("diff", "absolute_diff"), levels = 4)
 A ggplot object
 }
 \description{
-Plot the difference or the absolute difference between the starting theta and the theta estimated with the stf as a function of different levels of the latent trait
+Plot the difference or the absolute difference between the starting \eqn{\theta} and the \eqn{\theta} estimated with the STF as a function of different levels of the latent trait
 }
 \examples{
-\dontrun{
+# set a seed to replicate the results
+set.seed(999)
 # Simulate person and item parameters
-starting_theta = rnorm(100)
+true_theta <- rnorm(1000)
 b <- runif(100, -3, 3)
 a <- runif(100, 0.6, 2)
 parameters <- data.frame(b, a)
 # simulate data
-data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
-stf <- uip(data, starting_theta = starting_theta, item_par = parameters, num_item = 5)
+data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+stf <- uip(data, starting_theta = true_theta, item_par = parameters, num_item = 5)
 # compute the difference between starting theta and that estimated with the stf
 my_diff <- diff_theta(stf)
 # plot the difference with default number of levels
 plot_difference(my_diff, type = "diff")
 # plot the absolute difference with 10 levels
-plot_difference(my_diff, type = "abs_diff", levels = 10)
-}
+plot_difference(my_diff, type = "absolute_diff", levels = 10)
 }

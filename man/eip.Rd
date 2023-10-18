@@ -20,7 +20,7 @@ eip(
 
 \item{seed}{A random seed (default is 999)}
 
-\item{starting_theta}{A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the \eqn{\theta} values will be estimated from the data.}
+\item{starting_theta}{A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the \eqn{\theta} values will be estimated from the data}
 
 \item{num_item}{The number of item to include in the short test form}
 
@@ -43,22 +43,23 @@ A list of length 5:
 Create a Short Test Form (STF) using the theta-target procedure based on the equal segmentation of the latent trait (Equal Interval Procedure, EIP)
 }
 \examples{
+# set a seed to replicate the results
+set.seed(999)
 # Simulate person and item parameters
-starting_theta <- rnorm(100)
+true_theta <- rnorm(1000)
 b <- runif(100, -3, 3)
 a <- runif(100, 0.6, 2)
 parameters <- data.frame(b, a)
 # simulate data
-data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
-stf <- eip(data, starting_theta = starting_theta,
-item_par = parameters, num_item = 5)
+data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+stf <- eip(data, starting_theta = true_theta, item_par = parameters, num_item = 5)
 # check the obtained short test form
 stf$item_stf
 # check the comparison between the short test form and the full-length test
 stf$summary
 
 # Short test form with cut off values
-stf_cutoff <- eip(data, starting_theta = starting_theta,
+stf_cutoff <- eip(data, starting_theta = true_theta,
 item_par = parameters, theta_targets = rep(2, 5))
 stf_cutoff$item_stf
 }

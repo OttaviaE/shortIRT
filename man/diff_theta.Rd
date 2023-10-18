@@ -2,33 +2,35 @@
 % Please edit documentation in R/diff_theta.R
 \name{diff_theta}
 \alias{diff_theta}
-\title{diff_theta}
+\title{Difference between \eqn{\theta}}
 \usage{
 diff_theta(results, true_theta = NULL)
 }
 \arguments{
 \item{results}{The object obtained from the stf-generating functions}
 
-\item{true_theta}{Default is NULL, optional vector with the true theta of the respondents}
+\item{true_theta}{Default is NULL, optional vector of length equal to the number of rows in the original data frame with the true \eqn{\theta} of the respondents. If not available, the \eqn{\theta} estimated with the full-length test will be considered as the starting \eqn{\theta}.}
 }
 \value{
-A data frame with nrows equal to the number of respondents and 3 columns, one with the strating/true theta, one with the theta estimated with the STF, and the difference between the strtaing/true and the estimated one.
+A data frame with number of rows equal to the number of respondents and 3 columns, one with the starting/true theta, one with the theta estimated with the STF, and the difference between the starting/true and the estimated one.
 }
 \description{
-Computes the difference between a starting value of theta and the theta estimated with the STF (view details)
+Computes the difference between a starting value of \eqn{\theta} and the \eqn{\theta} estimated with the STF (view details)
 }
 \examples{
-\dontrun{
+# set a seed to replicate the results
+set.seed(999)
 # Simulate person and item parameters
-starting_theta = rnorm(100)
+true_theta <- rnorm(1000)
 b <- runif(100, -3, 3)
 a <- runif(100, 0.6, 2)
 parameters <- data.frame(b, a)
 # simulate data
-data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
-stf <- uip(data, starting_theta = starting_theta, item_par = parameters, num_item = 5)
+data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+# simulate data
+data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+stf <- uip(data, starting_theta = true_theta, item_par = parameters, num_item = 5)
 # without starting theta
 my_diff <- diff_theta(stf)
 head(my_diff)
-}
 }

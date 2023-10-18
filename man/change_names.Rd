@@ -2,7 +2,7 @@
 % Please edit documentation in R/change_names.R
 \name{change_names}
 \alias{change_names}
-\title{change_names}
+\title{Change column names}
 \usage{
 change_names(data)
 }
@@ -11,16 +11,16 @@ change_names(data)
 }
 \value{
 A list of length two:
-           1. a data frame with the original colnames and the corresponding new names
-           2. a data frame with the changed colnames
+
+1. a data frame with the original column names and the corresponding new names
+
+2. a data frame with the changed column names
 }
 \description{
-Changes the colnames and stores the orginal colnames of a data frame
+Changes the columns names of a data frame and stores the original colum names
 }
 \examples{
-\dontrun{
 # original data frame with 5 columns
 data <- data.frame(matrix(1:20, nrow = 4, ncol = 5))
 change_names(data)
-}
 }

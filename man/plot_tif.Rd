@@ -2,14 +2,14 @@
 % Please edit documentation in R/plot_tif.R
 \name{plot_tif}
 \alias{plot_tif}
-\title{plot_tif}
+\title{Plot Test Information Functions}
 \usage{
 plot_tif(results, tif = c("stf", "full", "both"))
 }
 \arguments{
-\item{results}{A list of length 4 obtained with the functions for shortening tests}
+\item{results}{The object obtained from the stf-generating functions}
 
-\item{tif}{character to indicate the TIF to plot, either stf (default), full test or both}
+\item{tif}{character to indicate the TIF to plot, either stf (stf, default), full test (full) or both (both)}
 }
 \value{
 A ggplot object
@@ -18,18 +18,18 @@ A ggplot object
 Plot the test information function of the short test form (default), of the full length test or of both versions
 }
 \examples{
-\dontrun{
+# set a seed to replicate the results
+set.seed(999)
 # Simulate person and item parameters
-true_theta <- rnorm(100)
+true_theta <- rnorm(1000)
 b <- runif(100, -3, 3)
 a <- runif(100, 0.6, 2)
 parameters <- data.frame(b, a)
 # simulate data
 data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
-stf <- uip(data, true_theta = true_theta, item_par = parameters, num_item = 5)
+stf <- uip(data, starting_theta = true_theta, item_par = parameters, num_item = 5)
 # plot the test information function of the full-length test
-plot(stf, tif = "full")
+plot_tif(stf, tif = "full")
 # plot the test information of the full-length test and of the short test form
-plot(stf, tif = "both")
-}
+plot_tif(stf, tif = "both")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/cut_borders.R
 \name{cut_borders}
 \alias{cut_borders}
-\title{cut_borders}
+\title{Cut borders}
 \usage{
 cut_borders(x)
 }
@@ -10,14 +10,13 @@ cut_borders(x)
 \item{x}{numeric/integer vector}
 }
 \value{
-a data frame
+A data frame with two columns. the first column contains the lower bounds of each interval. The second column contains the upper bound of each interval
 }
 \description{
-Extract the limits of the intervals obtained from subsetting a vector
+Extract the limits of the intervals obtained from sub setting a vector
 }
 \examples{
-\dontrun{
 x <- seq(-3, 3, length = 5)
 groups <- cut(x, 5, include.lowest = TRUE)
-boundaries <- cut_borders(groups)}
+boundaries <- cut_borders(groups)
 }
