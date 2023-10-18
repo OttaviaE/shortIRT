@@ -1,28 +1,29 @@
-#' eip
+#' Equal Interval Procedure
 #'
 #' Create a Short Test Form (STF) using the theta-target procedure based on the equal segmentation of the latent trait (Equal Interval Procedure, EIP)
 #'
-#' @param data a subject x item matrix
-#' @param item_par Two column matrix with the item parameters. The first column must contain the difficulty parameters, the second column must contain the discrimination parameters.
-#' @param seed a random seed (default is 999)
-#' @param starting_theta a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.
-#' @param num_item the number of item to included in the short test form
+#' @inheritParams bp
 #' @param theta_targets A vector of length n > 2 (where n is the number of item to be included in the short test form) with specific theta targets. Might also be the same theta target repeated for as many time as the number of item to be included in the short test form
 #'
 #'
-#' @return A list of length 5:
-#'          - item_stf: data frame with nrows equal to the number of items included in the STF, contains the items, the theta targets and the IIF in respect to the theta target
-#'          - summary: data frame with two rows, contains the list of items included in the STF and the total information, along with the information of the full length test
-#'          - info_stf: contains the information for each level of the latent trait for the STF
-#'          - info_full: contains the information for each level of the latent trait for the full-length test
-#'          - theta: data frame with the starting theta and the theta estimated with the STF
+#' @returns
+#' A list of length 5:
+#'
+#' - item_stf: data frame with a number of rows equal to the number of items included in the STF, contains the items, the \eqn{\theta} targets and the information functions of each item in respect to the \eqn{\theta} target
+#'
+#' - summary: data frame with two rows with the list of items included in the STF and the test information on both the full-length test and the STF
+#'
+#' - info_stf: list with the item information functions of the STF
+#'
+#' - info_full: list with the item information functions of the full-length test
+#'
+#' - theta: data frame with the starting theta and the theta estimated with the STF
 #'
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Simulate person and item parameters
-#' starting_theta = rnorm(100)
+#' starting_theta <- rnorm(100)
 #' b <- runif(100, -3, 3)
 #' a <- runif(100, 0.6, 2)
 #' parameters <- data.frame(b, a)
@@ -39,7 +40,6 @@
 #' stf_cutoff <- eip(data, starting_theta = starting_theta,
 #' item_par = parameters, theta_targets = rep(2, 5))
 #' stf_cutoff$item_stf
-#' }
 eip <- function(data,
                 item_par = NULL,
                 seed = 999,
