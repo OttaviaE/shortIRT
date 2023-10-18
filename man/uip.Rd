@@ -7,31 +7,35 @@
 uip(data, item_par = NULL, seed = 999, starting_theta = NULL, num_item = NULL)
 }
 \arguments{
-\item{data}{a subject x item matrix}
+\item{data}{A subject \eqn{\times} item matrix}
 
-\item{item_par}{Two column matrix with the item parameters. The first column must contain the difficulty parameters, the second column must contain the discrimination parameters.}
+\item{item_par}{Two columns matrix containing the item parameters. The first column must contain the difficulty parameters \eqn{b_i}, the second column must contain the discrimination parameters \eqn{a_i}.}
 
-\item{seed}{a random seed (default is 999)}
+\item{seed}{A random seed (default is 999)}
 
-\item{starting_theta}{a vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the theta values will be estimated from the data.}
+\item{starting_theta}{A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the \eqn{\theta} values will be estimated from the data.}
 
-\item{num_item}{the number of item to included in the short test form}
+\item{num_item}{The number of item to include in the short test form}
 }
 \value{
 A list of length 5:
-         - item_stf: data frame with nrows equal to the number of items included in the STF, contains the items, the theta targets and the IIF in respect to the theta target
-         - summary: data frame with two rows, contains the list of items included in the STF and the total information, along with the information of the full length test
-         - info_stf: contains the information for each level of the latent trait for the STF
-         - info_full: contains the information for each level of the latent trait for the full-length test
-         - theta: data frame with the starting theta and the theta estimated with the STF
+
+- item_stf: data frame with a number of rows equal to the number of items included in the STF, contains the items, the \eqn{\theta} targets and the information functions of each item in respect to the \eqn{\theta} target
+
+- summary: data frame with two rows with the list of items included in the STF and the test information on both the full-length test and the STF
+
+- info_stf: list with the item information functions of the STF
+
+- info_full: list with the item information functions of the full-length test
+
+- theta: data frame with the starting theta and the theta estimated with the STF
 }
 \description{
 Create a Short Test Form (STF) using the theta-target procedure based on the unequal segmentation of the latent trait (Unequal Interval Procedure, UIP)
 }
 \examples{
-\dontrun{
 # Simulate person and item parameters
-starting_theta = rnorm(100)
+starting_theta <- rnorm(100)
 b <- runif(100, -3, 3)
 a <- runif(100, 0.6, 2)
 parameters <- data.frame(b, a)
@@ -42,5 +46,4 @@ stf <- uip(data, starting_theta = starting_theta, item_par = parameters, num_ite
 stf$item_stf
 # check the comparison between the short test form and the full-length test
 stf$summary
-}
 }
