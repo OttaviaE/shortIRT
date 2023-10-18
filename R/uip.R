@@ -21,18 +21,20 @@
 #' @export
 #'
 #' @examples
+#' # set a seed to replicate the results
+#' set.seed(999)
 #' # Simulate person and item parameters
-#' starting_theta <- rnorm(100)
+#' true_theta <- rnorm(1000)
 #' b <- runif(100, -3, 3)
 #' a <- runif(100, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
-#' data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
-#' stf <- uip(data, starting_theta = starting_theta, item_par = parameters, num_item = 5)
+#' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+#' stf_uip = uip(data, starting_theta = true_theta, item_par = parameters, num_item = 10)
 #' # check the obtained short test form
-#' stf$item_stf
+#' stf_uip$item_stf
 #' # check the comparison between the short test form and the full-length test
-#' stf$summary
+#' stf_uip$summary
 uip <- function(data,
                 item_par = NULL,
                 seed = 999,

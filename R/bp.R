@@ -5,7 +5,7 @@
 #' @param data A subject \eqn{\times} item matrix
 #' @param item_par Two columns matrix containing the item parameters. The first column must contain the difficulty parameters \eqn{b_i}, the second column must contain the discrimination parameters \eqn{a_i}.
 #' @param seed A random seed (default is 999)
-#' @param starting_theta A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the \eqn{\theta} values will be estimated from the data.
+#' @param starting_theta A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the \eqn{\theta} values will be estimated from the data
 #' @param num_item The number of item to include in the short test form
 #'
 #' @returns
@@ -25,14 +25,16 @@
 #'
 #'
 #' @examples
+#' # set a seed to replicate the results
+#' set.seed(999)
 #' # Simulate person and item parameters
-#' starting_theta <- rnorm(100)
+#' true_theta <- rnorm(1000)
 #' b <- runif(100, -3, 3)
 #' a <- runif(100, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
-#' data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
-#' stf <- bp(data, starting_theta = starting_theta, item_par = parameters, num_item = 5)
+#' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+#' stf <- bp(data, starting_theta = true_theta, item_par = parameters, num_item = 5)
 #' # check the obtained short test form
 #' stf$item_stf
 #' # check the comparison between the short test form and the full-length test

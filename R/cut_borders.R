@@ -1,17 +1,18 @@
-#' cut_borders
+#' Cut borders
 #'
-#' Extract the limits of the intervals obtained from subsetting a vector
+#' Extract the limits of the intervals obtained from sub setting a vector
 #'
 #' @param x numeric/integer vector
 #'
-#' @return a data frame
+#' @returns
+#'
+#' A data frame with two columns. the first column contains the lower bounds of each interval. The second column contains the upper bound of each interval
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' x <- seq(-3, 3, length = 5)
 #' groups <- cut(x, 5, include.lowest = TRUE)
-#' boundaries <- cut_borders(groups)}
+#' boundaries <- cut_borders(groups)
 cut_borders <- function(x){
   pattern <- "(\\(|\\[)(-*[0-9]+\\.*[0-9]*),(-*[0-9]+\\.*[0-9]*)(\\)|\\])"
 

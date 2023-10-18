@@ -22,22 +22,23 @@
 #' @export
 #'
 #' @examples
+#' # set a seed to replicate the results
+#' set.seed(999)
 #' # Simulate person and item parameters
-#' starting_theta <- rnorm(100)
+#' true_theta <- rnorm(1000)
 #' b <- runif(100, -3, 3)
 #' a <- runif(100, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
-#' data <- sirt::sim.raschtype(starting_theta, b = b, fixed.a = a)
-#' stf <- eip(data, starting_theta = starting_theta,
-#' item_par = parameters, num_item = 5)
+#' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
+#' stf <- eip(data, starting_theta = true_theta, item_par = parameters, num_item = 5)
 #' # check the obtained short test form
 #' stf$item_stf
 #' # check the comparison between the short test form and the full-length test
 #' stf$summary
 #'
 #' # Short test form with cut off values
-#' stf_cutoff <- eip(data, starting_theta = starting_theta,
+#' stf_cutoff <- eip(data, starting_theta = true_theta,
 #' item_par = parameters, theta_targets = rep(2, 5))
 #' stf_cutoff$item_stf
 eip <- function(data,

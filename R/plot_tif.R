@@ -1,29 +1,29 @@
-#' plot_tif
+#' Plot Test Information Functions
 #'
 #' Plot the test information function of the short test form (default), of the full length test or of both versions
 #'
-#' @param results A list of length 4 obtained with the functions for shortening tests
-#' @param tif character to indicate the TIF to plot, either stf (default), full test or both
+#' @param results The object obtained from the stf-generating functions
+#' @param tif character to indicate the TIF to plot, either stf (stf, default), full test (full) or both (both)
 #'
 #' @return A ggplot object
 #' @export
 #' @import ggplot2
 #'
 #' @examples
-#' \dontrun{
+#' # set a seed to replicate the results
+#' set.seed(999)
 #' # Simulate person and item parameters
-#' true_theta <- rnorm(100)
+#' true_theta <- rnorm(1000)
 #' b <- runif(100, -3, 3)
 #' a <- runif(100, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
 #' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
-#' stf <- uip(data, true_theta = true_theta, item_par = parameters, num_item = 5)
+#' stf <- uip(data, starting_theta = true_theta, item_par = parameters, num_item = 5)
 #' # plot the test information function of the full-length test
-#' plot(stf, tif = "full")
+#' plot_tif(stf, tif = "full")
 #' # plot the test information of the full-length test and of the short test form
-#' plot(stf, tif = "both")
-#' }
+#' plot_tif(stf, tif = "both")
 plot_tif <- function(results, tif = c("stf", "full", "both")) {
   stf <- data.frame(theta = results$info_stf$theta,
                      info =  results$info_stf$test_info_curve,
