@@ -22,19 +22,18 @@ framework. Specifically, two main procedures are considered:
     be further categorized according to the methodology used for the
     definition of the $\theta$ targets:
 
-<!-- -->
-
-1.  Equal interval procedure (EIP): The latent trait is divided in
-    $n + 1$ (where $n$ is the number of items to be included in the STF)
-    intervals of equal width and the central points of each interval are
-    the $\theta$ targets
-2.  Unequal interval procedure (UIP): The latent trait is clustered in
-    $n$ clusters (where $n$ is the number of items to be included in the
-    STF) and centroids of each clusters are the $\theta$ targets
-3.  User defined procedure (UDP): The user manually defines the $\theta$
-    targets to which the STF should tend to. They migth also be the same
-    $\theta$ values (e.g., for the development of a screening STF with a
-    cut-off point).
+    1.  Equal interval procedure (EIP): The latent trait is divided in
+        $n + 1$ (where $n$ is the number of items to be included in the
+        STF) intervals of equal width and the central points of each
+        interval are the $\theta$ targets
+    2.  Unequal interval procedure (UIP): The latent trait is clustered
+        in $n$ clusters (where $n$ is the number of items to be included
+        in the STF) and centroids of each clusters are the $\theta$
+        targets
+    3.  User defined procedure (UDP): The user manually defines the
+        $\theta$ targets to which the STF should tend to. They migth
+        also be the same $\theta$ values (e.g., for the development of a
+        screening STF with a cut-off point).
 
 ## Installation
 

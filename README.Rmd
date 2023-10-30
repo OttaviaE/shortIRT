@@ -24,10 +24,9 @@ The goal of shortIRT is to simple tool for the development of static short test 
 1. The typical IRT-based procedure for the development of STFs (here denoted as benchmark procedure, BP), according to which the most informative items are selected without considering any specific level of the latent trait
 
 2. The IRT procedure based on the definition of levels of interest of the latent trait (i.e., $\theta$ targets, here denoted as $\theta$-target procedure). The selected items are those most informative in respect to the $\theta$ targets. This procedure can be further categorized according to the methodology used for the definition of the $\theta$ targets: 
-
-  a. Equal interval procedure (EIP): The latent trait is divided in $n + 1$ (where $n$ is the number of items to be included in the STF) intervals of equal width and the central points of each interval are the $\theta$ targets
-  b. Unequal interval procedure (UIP): The latent trait is clustered in $n$ clusters (where $n$ is the number of items to be included in the STF) and centroids of each clusters are the $\theta$ targets
-  c. User defined procedure (UDP): The user manually defines the $\theta$ targets to which the STF should tend to. They migth also be the same $\theta$ values (e.g., for the development of a screening STF with a cut-off point).
+    a. Equal interval procedure (EIP): The latent trait is divided in $n + 1$ (where $n$ is the number of items to be included in the STF) intervals of equal width and the central points of each interval are the $\theta$ targets
+    b. Unequal interval procedure (UIP): The latent trait is clustered in $n$ clusters (where $n$ is the number of items to be included in the STF) and centroids of each clusters are the $\theta$ targets
+    c. User defined procedure (UDP): The user manually defines the $\theta$ targets to which the STF should tend to. They migth also be the same $\theta$ values (e.g., for the development of a screening STF with a cut-off point).
 
 ## Installation
 
