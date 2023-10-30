@@ -32,6 +32,11 @@ plot_tif <- function(results, tif = c("stf", "full", "both")) {
                      info =  results$info_full$test_info_curve,
                      tif = "full-length test")
   both <- rbind(stf, full)
+  if (length(tif) > 2) {
+    tif <- "stf"
+  } else {
+    tif <- tif
+  }
   if (tif == "stf") {
     data <- stf
   } else if (tif == "full") {
