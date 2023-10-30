@@ -46,23 +46,28 @@ plot_difference <- function(difference,
   }
   if (type == "diff") {
     graph <- ggplot2::ggplot(mean_diff,
-                    aes( x = .data$levels, y = .data$mean, group = 1)) + geom_line(linewidth = 1.2)
+                    aes( x = .data$levels, y = .data$mean, group = 1)) +
+      geom_line(linewidth = 1.2)
     min_y <- -abs(min(difference[,
                                  grepl("starting|true",
                                        colnames(difference))]))-1
     ylab <- "Difference"
+    a <- 0.00
   } else if (type == "absolute_diff") {
     graph <- ggplot2::ggplot(mean_diff,
                              ggplot2::aes( x = .data$levels,
                                            y = .data$mean_abs, group = 1)) + ggplot2::geom_line(linewidth = 1.2)
     min_y <- 0
     ylab <- "Absolute difference"
+    a <- 1.00
   }
   graph <- graph + ggplot2::ylab(type) + ggplot2::ylim(min_y,
                                      abs(min(difference[,
                                                         grepl("starting|true",
                                                               colnames(difference))]))+1) +
-    ggplot2::ylab(ylab)
+    ggplot2::ylab(ylab) +
+    ggplot2::geom_hline(yintercept = a, linetype = 2,
+                        color = "grey", linewidth = 1.2)
 
   return(graph)
 }

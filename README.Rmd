@@ -7,11 +7,12 @@ output: github_document
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  eval = FALSE,
+  eval = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+library(ggplot2)
 ```
 
 # shortIRT
@@ -26,7 +27,7 @@ The goal of shortIRT is to simple tool for the development of static short test 
 2. The IRT procedure based on the definition of levels of interest of the latent trait (i.e., $\theta$ targets, here denoted as $\theta$-target procedure). The selected items are those most informative in respect to the $\theta$ targets. This procedure can be further categorized according to the methodology used for the definition of the $\theta$ targets: 
     a. Equal interval procedure (EIP): The latent trait is divided in $n + 1$ (where $n$ is the number of items to be included in the STF) intervals of equal width and the central points of each interval are the $\theta$ targets
     b. Unequal interval procedure (UIP): The latent trait is clustered in $n$ clusters (where $n$ is the number of items to be included in the STF) and centroids of each clusters are the $\theta$ targets
-    c. User defined procedure (UDP): The user manually defines the $\theta$ targets to which the STF should tend to. They migth also be the same $\theta$ values (e.g., for the development of a screening STF with a cut-off point).
+    c. User defined procedure (UDP): The user manually defines the $\theta$ targets to which the STF should tend to. They might also be the same $\theta$ values (e.g., for the development of a screening STF with a cut-off point).
 
 ## Installation
 
@@ -64,7 +65,7 @@ Then, use the EIP for the development of the 5-item STF, incuding also the matri
 stf_eip <- eip(data, item_par = parameters, starting_theta = true_theta, num_item = 5)
 # Show the items included in the STF, the theta targets, and the IIFs of 
 # the optimal item for each theta target
-stf$item_stf
+stf_eip$item_stf
 ```
 
 Plot the test information function of both the full-length test and the STF: 
@@ -89,7 +90,7 @@ plot_difference(bias_eip) + theme_light() +
   ylab("Difference") + xlab(expression(theta)) + 
   theme(axis.title = element_text(size = 26), 
         strip.text.x = element_text(size = 28), 
-        axis.text = element_text(size = 22))
+         axis.text = element_text(size = 18, angle = 45, hjust=1))
 ```
 
 But this can be changed by changing the default of the arguments `type` and `levels` to plot, for instance, the absolute difference for 20 levels of the latent trait: 
