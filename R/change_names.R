@@ -1,8 +1,8 @@
 #' Change column names
 #'
-#' Changes the columns names of a data frame and stores the original colum names
+#' Change the columns names of a data frame and stores the original column names
 #'
-#' @param data A data frame
+#' @param data data.frame, A data frame
 #'
 #' @returns
 #' A list of length two:

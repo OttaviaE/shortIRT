@@ -1,9 +1,9 @@
 #' Plot Test Information Functions
 #'
-#' Plot the test information function of the short test form (default), of the full length test or of both versions
+#' Plot the test information functions of the short test form (default), of the full length test or of both versions
 #'
 #' @param results The object obtained from the stf-generating functions
-#' @param tif character to indicate the TIF to plot, either stf (stf, default), full test (full) or both (both)
+#' @param tif character, define the TIF to plot, either "stf" (TIF of the STF), "full", (TIF of the full-length test) or "both" (TIF of both STF and full-length test). Default is "stf"
 #'
 #' @return A ggplot object
 #' @export
@@ -14,8 +14,8 @@
 #' set.seed(999)
 #' # Simulate person and item parameters
 #' true_theta <- rnorm(1000)
-#' b <- runif(100, -3, 3)
-#' a <- runif(100, 0.6, 2)
+#' b <- runif(30, -3, 3)
+#' a <- runif(30, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
 #' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
@@ -43,6 +43,6 @@ plot_tif <- function(results, tif = c("stf", "full", "both")) {
   graph <- ggplot2::ggplot(data,
                            ggplot2::aes(x = .data$theta,
                                         y = .data$info, group = 1)) +
-    ggplot2::geom_line() + facet_wrap(~.data$tif)
+    ggplot2::geom_line(linewidth = 1.2) + facet_wrap(~.data$tif)
   return(graph)
 }

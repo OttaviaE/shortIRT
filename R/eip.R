@@ -1,23 +1,24 @@
 #' Equal Interval Procedure
 #'
-#' Create a Short Test Form (STF) using the theta-target procedure based on the equal segmentation of the latent trait (Equal Interval Procedure, EIP)
+#' Create a Short Test Form (STF) using the \eqn{\theta}-target procedure based on the equal segmentation of the latent trait (Equal Interval Procedure, EIP)
 #'
 #' @inheritParams bp
-#' @param theta_targets A vector of length n > 2 (where n is the number of item to be included in the short test form) with specific theta targets. Might also be the same theta target repeated for as many time as the number of item to be included in the short test form
+#' @param theta_targets vector, define the specific \eqn{\theta} targets for the user defined procedure. Might also be the same \eqn{\theta} target repeated for as many times as the number of items to be included in the short test form
 #'
 #'
 #' @returns
 #' A list of length 5:
 #'
-#' - item_stf: data frame with a number of rows equal to the number of items included in the STF, contains the items, the \eqn{\theta} targets and the information functions of each item in respect to the \eqn{\theta} target
+#' - item_stf: data.frame, contains the items included in the STF. The number of rows is equal to the number of items included in the STF. The \eqn{\theta}-targets and the item information functions of the optimal item for each \eqn{\theta}-target are reported as well
 #'
-#' - summary: data frame with two rows with the list of items included in the STF and the test information on both the full-length test and the STF
+#' - summary: data.frame, contains  the list of items included in the STF and the test information on both the full-length test and the STF
 #'
-#' - info_stf: list with the item information functions of the STF
+#' - info_stf: list, contains the item information functions of the STF
 #'
-#' - info_full: list with the item information functions of the full-length test
+#' - info_full: list, contains the item information functions of the full-length test
 #'
-#' - theta: data frame with the starting theta and the theta estimated with the STF
+#' - theta: data.frame, contains the starting \eqn{\theta} and the \eqn{\theta} estimated with the STF
+#'
 #'
 #' @export
 #'
@@ -26,8 +27,8 @@
 #' set.seed(999)
 #' # Simulate person and item parameters
 #' true_theta <- rnorm(1000)
-#' b <- runif(100, -3, 3)
-#' a <- runif(100, 0.6, 2)
+#' b <- runif(30, -3, 3)
+#' a <- runif(30, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
 #' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)

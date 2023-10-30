@@ -1,6 +1,6 @@
-#' uip
+#' Unequal interval procedure
 #'
-#' Create a Short Test Form (STF) using the theta-target procedure based on the unequal segmentation of the latent trait (Unequal Interval Procedure, UIP)
+#' Create a Short Test Form (STF) using the \eqn{\theta}-target procedure based on the unequal segmentation of the latent trait (Unequal Interval Procedure, EIP)
 #'
 #' @inheritParams bp
 #'
@@ -8,15 +8,16 @@
 #' @returns
 #' A list of length 5:
 #'
-#' - item_stf: data frame with a number of rows equal to the number of items included in the STF, contains the items, the \eqn{\theta} targets and the information functions of each item in respect to the \eqn{\theta} target
+#' - item_stf: data.frame, contains the items included in the STF. The number of rows is equal to the number of items included in the STF. The \eqn{\theta}-targets and the item information functions of the optimal item for each \eqn{\theta}-target are reported as well
 #'
-#' - summary: data frame with two rows with the list of items included in the STF and the test information on both the full-length test and the STF
+#' - summary: data.frame, contains  the list of items included in the STF and the test information on both the full-length test and the STF
 #'
-#' - info_stf: list with the item information functions of the STF
+#' - info_stf: list, contains the item information functions of the STF
 #'
-#' - info_full: list with the item information functions of the full-length test
+#' - info_full: list, contains the item information functions of the full-length test
 #'
-#' - theta: data frame with the starting theta and the theta estimated with the STF
+#' - theta: data.frame, contains the starting \eqn{\theta} and the \eqn{\theta} estimated with the STF
+#'
 #'
 #' @export
 #'
@@ -25,8 +26,8 @@
 #' set.seed(999)
 #' # Simulate person and item parameters
 #' true_theta <- rnorm(1000)
-#' b <- runif(100, -3, 3)
-#' a <- runif(100, 0.6, 2)
+#' b <- runif(30, -3, 3)
+#' a <- runif(30, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
 #' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)

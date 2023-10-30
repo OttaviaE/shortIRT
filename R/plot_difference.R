@@ -2,9 +2,9 @@
 #'
 #' Plot the difference or the absolute difference between the starting \eqn{\theta} and the \eqn{\theta} estimated with the STF as a function of different levels of the latent trait
 #'
-#' @param difference data frame obtained with the function [diff_theta()]
-#' @param type type of difference, either as is (diff) or absolute (absolute_diff)
-#' @param levels number of levels of the starting theta (default is 4)
+#' @param difference data.frame, data frame obtained with the function [diff_theta()]
+#' @param type character, type of difference, either as is ("diff") or absolute ("absolute_diff"). Default is "diff".
+#' @param levels integer, number of levels of the starting \eqn{\theta} Default is 4
 #'
 #' @importFrom dplyr %>%
 #'
@@ -16,8 +16,8 @@
 #' set.seed(999)
 #' # Simulate person and item parameters
 #' true_theta <- rnorm(1000)
-#' b <- runif(100, -3, 3)
-#' a <- runif(100, 0.6, 2)
+#' b <- runif(30, -3, 3)
+#' a <- runif(30, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
 #' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
@@ -39,9 +39,14 @@ plot_difference <- function(difference,
     dplyr::group_by(levels) %>%
     dplyr::summarise(mean = mean(.data$difference),
                      mean_abs = mean(.data$abs_difference))
+  if (length(type) > 1) {
+    type <- "diff"
+  } else {
+    type <- type
+  }
   if (type == "diff") {
     graph <- ggplot2::ggplot(mean_diff,
-                    aes( x = .data$levels, y = .data$mean, group = 1)) + geom_line()
+                    aes( x = .data$levels, y = .data$mean, group = 1)) + geom_line(linewidth = 1.2)
     min_y <- -abs(min(difference[,
                                  grepl("starting|true",
                                        colnames(difference))]))-1
@@ -49,7 +54,7 @@ plot_difference <- function(difference,
   } else if (type == "absolute_diff") {
     graph <- ggplot2::ggplot(mean_diff,
                              ggplot2::aes( x = .data$levels,
-                                           y = .data$mean_abs, group = 1)) + ggplot2::geom_line()
+                                           y = .data$mean_abs, group = 1)) + ggplot2::geom_line(linewidth = 1.2)
     min_y <- 0
     ylab <- "Absolute difference"
   }

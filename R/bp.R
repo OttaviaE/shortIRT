@@ -2,24 +2,24 @@
 #'
 #' Create a Short Test Form (STF) using the typical IRT procedure for shortening test (Benchmark Procedure, BP)
 #'
-#' @param data A subject \eqn{\times} item matrix
-#' @param item_par Two columns matrix containing the item parameters. The first column must contain the difficulty parameters \eqn{b_i}, the second column must contain the discrimination parameters \eqn{a_i}.
-#' @param seed A random seed (default is 999)
-#' @param starting_theta A vector with length equal to the number of rows in data with the true theta values of the subjects. If empty, the \eqn{\theta} values will be estimated from the data
-#' @param num_item The number of item to include in the short test form
+#' @param data data.frame, subject \eqn{\times} item matrix containing the accuracy responses
+#' @param item_par matrix, two-column matrix containing the item parameters. The first column must contain the difficulty parameters \eqn{b_i}, the second column must contain the discrimination parameters \eqn{a_i}.
+#' @param seed integer, define the random seed. Default is 999
+#' @param starting_theta vector, define the starting \eqn{\theta} of the subjects.  If empty, the \eqn{\theta} values will be estimated from the data
+#' @param num_item integer, the number of items to include in the short test form
 #'
 #' @returns
 #' A list of length 5:
 #'
-#' - item_stf: data frame with a number of rows equal to the number of items included in the STF, contains the items, the \eqn{\theta} targets and the information functions of each item in respect to the \eqn{\theta} target
+#' - item_stf: data.frame, contains the items included in the STF. The number of rows is equal to the number of items included in the STF. The \eqn{\theta}-targets and the item information functions of the optimal item for each \eqn{\theta}-target are reported as well
 #'
-#' - summary: data frame with two rows with the list of items included in the STF and the test information on both the full-length test and the STF
+#' - summary: data.frame, contains  the list of items included in the STF and the test information on both the full-length test and the STF
 #'
-#' - info_stf: list with the item information functions of the STF
+#' - info_stf: list, contains the item information functions of the STF
 #'
-#' - info_full: list with the item information functions of the full-length test
+#' - info_full: list, contains the item information functions of the full-length test
 #'
-#' - theta: data frame with the starting theta and the theta estimated with the STF
+#' - theta: data.frame, contains the starting \eqn{\theta} and the \eqn{\theta} estimated with the STF
 #'
 #' @export
 #'
@@ -29,8 +29,8 @@
 #' set.seed(999)
 #' # Simulate person and item parameters
 #' true_theta <- rnorm(1000)
-#' b <- runif(100, -3, 3)
-#' a <- runif(100, 0.6, 2)
+#' b <- runif(30, -3, 3)
+#' a <- runif(30, 0.6, 2)
 #' parameters <- data.frame(b, a)
 #' # simulate data
 #' data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
