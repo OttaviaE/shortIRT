@@ -7,7 +7,7 @@
 change_names(data)
 }
 \arguments{
-\item{data}{A data frame}
+\item{data}{data.frame, A data frame}
 }
 \value{
 A list of length two:
@@ -17,7 +17,7 @@ A list of length two:
 2. a data frame with the changed column names
 }
 \description{
-Changes the columns names of a data frame and stores the original colum names
+Change the columns names of a data frame and stores the original column names
 }
 \examples{
 # original data frame with 5 columns

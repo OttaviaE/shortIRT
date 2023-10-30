@@ -7,11 +7,11 @@
 plot_difference(difference, type = c("diff", "absolute_diff"), levels = 4)
 }
 \arguments{
-\item{difference}{data frame obtained with the function [diff_theta()]}
+\item{difference}{data.frame, data frame obtained with the function [diff_theta()]}
 
-\item{type}{type of difference, either as is (diff) or absolute (absolute_diff)}
+\item{type}{character, type of difference, either as is ("diff") or absolute ("absolute_diff"). Default is "diff".}
 
-\item{levels}{number of levels of the starting theta (default is 4)}
+\item{levels}{integer, number of levels of the starting \eqn{\theta} Default is 4}
 }
 \value{
 A ggplot object
@@ -24,8 +24,8 @@ Plot the difference or the absolute difference between the starting \eqn{\theta}
 set.seed(999)
 # Simulate person and item parameters
 true_theta <- rnorm(1000)
-b <- runif(100, -3, 3)
-a <- runif(100, 0.6, 2)
+b <- runif(30, -3, 3)
+a <- runif(30, 0.6, 2)
 parameters <- data.frame(b, a)
 # simulate data
 data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)

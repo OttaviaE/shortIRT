@@ -10,7 +10,7 @@ cut_borders(x)
 \item{x}{numeric/integer vector}
 }
 \value{
-A data frame with two columns. the first column contains the lower bounds of each interval. The second column contains the upper bound of each interval
+A data frame with two columns. The first column contains the lower bounds of each interval. The second column contains the upper bound of each interval
 }
 \description{
 Extract the limits of the intervals obtained from sub setting a vector
