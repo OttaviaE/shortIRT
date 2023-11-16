@@ -59,7 +59,7 @@ First, generate the responses of 1,000 respondents to the 20 items of the full-l
  data <- sirt::sim.raschtype(true_theta, b = b, fixed.a = a)
 ```
 
-Then, use the EIP for the development of the 5-item STF, incuding also the matrix of the item parameters and the true $\theta$ of the subjects (these arguments are not mandatory).
+Then, use the EIP for the development of the 5-item STF, including also the matrix of the item parameters and the true $\theta$ of the subjects (these arguments are not mandatory).
 
 ```{r}
 stf_eip <- eip(data, item_par = parameters, starting_theta = true_theta, num_item = 5)
