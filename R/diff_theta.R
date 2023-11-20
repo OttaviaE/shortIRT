@@ -27,7 +27,7 @@ diff_theta <- function(results, starting_theta = NULL) {
   if (is.null(starting_theta)) {
     lab <- "starting_theta"
   } else {
-    if (length(true_theta) != nrow(difference)) {
+    if (length(starting_theta) != nrow(difference)) {
       stop("True theta must have the same length as the estimated theta")
     }
     difference$starting_theta <- true_theta
