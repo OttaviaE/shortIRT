@@ -30,7 +30,7 @@ diff_theta <- function(results, starting_theta = NULL) {
     if (length(starting_theta) != nrow(difference)) {
       stop("True theta must have the same length as the estimated theta")
     }
-    difference$starting_theta <- true_theta
+    difference$starting_theta <- starting_theta
     lab <- "true_theta"
   }
   difference$difference <- difference$stf_theta-  difference$starting_theta
