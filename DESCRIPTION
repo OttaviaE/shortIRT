@@ -1,7 +1,7 @@
 Package: shortIRT
 Type: Package
 Title: Procedures Based on Item Response Theory Models for the Development of Short Test Forms
-Version: 0.1.4
+Version: 1.0.0
 Authors@R: c(person(given = c("Ottavia", "M."),
            family = "Epifania",
            role = c("aut", "cre"),
@@ -20,9 +20,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    stats,
-    TAM,
-    dplyr,
     ggplot2
 RoxygenNote: 7.3.2
 Suggests: 
