@@ -14,20 +14,20 @@
 )
 }
 \arguments{
-\item{x}{Object of class theta_target}
+\item{x}{Object of class \code{theta_target} obtained with function \code{theta_target()}}
 
-\item{fun}{character, whether to consider the mean or the sum for the computation of the TIF}
+\item{fun}{\code{character}, whether to consider the mean or the sum for the computation of the TIF}
 
-\item{theta}{numeric, latent trait for the graphical representation}
+\item{theta}{\code{numeric}, latent trait for the graphical representation}
 
-\item{show_targets}{logical, default is TRUE. Whether to show or not the theta targets}
+\item{show_targets}{\code{logical}, default is TRUE. Whether to show or not the theta targets}
 
-\item{show_both}{logical, default is TRUE. Whether to show or not the TIF obtained from the full-length test}
+\item{show_both}{\code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test}
 
 \item{...}{other arguments}
 }
 \value{
-A ggplot showing the TIFs of both the STF and the full-length test
+A \code{ggplot} showing the TIFs of both the STF and the full-length test
 }
 \description{
 The STF is obtained with the theta target procedure

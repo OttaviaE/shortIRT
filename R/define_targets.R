@@ -1,12 +1,12 @@
-#' Define theta targets
+#' Define \eqn{\theta} targets
 #'
-#' Define theta targets according to two procedures.
+#' Define \eqn{\theta} targets according to two procedures, either by considering the midpoints of equal intervals defined on the latent trait (\code{equal}) or the centroids obtained by clustering the latent trait (\code{clusters})
 #'
-#' @param theta numeric vector defining the latent trait theta
-#' @param num_targets integer, define the number of theta targets to obtain
-#' @param method character, either equal (default) or clusters
+#' @param theta \code{numeric} vector defining the latent trait \eqn{\theta}
+#' @param num_targets \code{integer} value, define the number of \eqn{\theta} targets. The number of \eqn{\theta} targets defines the number of items included in the STF.
+#' @param method \code{character}, either \code{equal} (default) or \code{clusters}
 #'
-#' @returns A vector of length num_targets with the generated targets
+#' @returns A vector of length \code{num_targets} with the generated \eqn{\theta} targets. The class can be either \code{equal} or \code{clusters}, dependening on the method used for the definition of the \eqn{\theta} targets
 #' @export
 #' @importFrom stats kmeans
 #'

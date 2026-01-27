@@ -2,14 +2,14 @@
 #'
 #' The STF is obtained with the theta target procedure
 #'
-#' @param x Object of class theta_target
-#' @param fun character, whether to consider the mean or the sum for the computation of the TIF
-#' @param theta numeric, latent trait for the graphical representation
-#' @param show_targets logical, default is TRUE. Whether to show or not the theta targets
-#' @param show_both logical, default is TRUE. Whether to show or not the TIF obtained from the full-length test
+#' @param x Object of class \code{theta_target} obtained with function \code{theta_target()}
+#' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
+#' @param theta \code{numeric}, latent trait for the graphical representation
+#' @param show_targets \code{logical}, default is TRUE. Whether to show or not the theta targets
+#' @param show_both \code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test
 #' @param ... other arguments
 #'
-#' @returns A ggplot showing the TIFs of both the STF and the full-length test
+#' @returns A \code{ggplot} showing the TIFs of both the STF and the full-length test
 #' @export
 #'
 #' @examples

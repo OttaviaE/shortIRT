@@ -7,11 +7,11 @@
 \method{plot}{iifs}(x, single_panels = TRUE, items = NULL, ...)
 }
 \arguments{
-\item{x}{dataframe of class iifs obtained with the function item_info()}
+\item{x}{\code{data.frame} of class \code{iifs} obtained with the function \code{item_info()}}
 
-\item{single_panels}{logical, default is TRUE. Whether to show the IIFs on different panels}
+\item{single_panels}{\code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on different panels}
 
-\item{items}{default is null (shows all items). Allows for selecting specific items}
+\item{items}{default is \code{NULç} (shows all items). Allows for selecting specific items for the plot}
 
 \item{...}{other arguments}
 }
@@ -19,7 +19,7 @@
 A ggplot
 }
 \description{
-Plots the IIFs
+Plot the IIFs
 }
 \examples{
 set.seed(123)

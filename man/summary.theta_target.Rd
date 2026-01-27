@@ -2,20 +2,20 @@
 % Please edit documentation in R/summary.theta_target.R
 \name{summary.theta_target}
 \alias{summary.theta_target}
-\title{Method for the summary of the theta target procedure}
+\title{Method for the summary of the STF}
 \usage{
 \method{summary}{theta_target}(object, ...)
 }
 \arguments{
-\item{object}{Object obtained from the application of theta target procedure with class theta_target}
+\item{object}{Object of class \code{theta_target}}
 
 \item{...}{other arguments}
 }
 \value{
-A summary of the STF obatined from the application of the bench procedure
+A summary of the STF obtained from the application of the \eqn{\theta} target procedure
 }
 \description{
-Method for the summary of the theta target procedure
+The STF is obtained with the \eqn{\theta} target procedure implemented in the function \code{theta_target()}
 }
 \examples{
 set.seed(123)

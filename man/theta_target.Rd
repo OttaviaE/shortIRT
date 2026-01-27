@@ -12,15 +12,71 @@ theta_target(targets, item_par)
 \item{item_par}{dataframe, with nrows equals to the length of the latent trait and four columns, each denoting the IRT item parameters}
 }
 \value{
-A list of length 4 with:
+An object of class \code{theta_target} of length 4 containing:
 
-- stf: dataframe with the items selected for inclusion in the STF (column isel), their maximum information function (maxiif), for  a specific theta-target (column theta-target)
-- item_par: the original dataframe containing the item parameters
-- selected_items: dataframe with the parameters of the selected items
-- intervals: reports whether the theta-targets were obtained by clustering the latent trait (clusters) or by dividing it into equal intervals (equal). The label "unknown" identifies any other case.
+\itemize{
+  \item \strong{stf}: a data frame containing the items selected for inclusion
+  in the short test form (column \code{isel}), their maximum item information
+  function (column \code{maxiif}), and the corresponding theta target
+  (column \code{theta_target}).
+
+  \item \strong{item_par}: the original data frame containing the item
+  parameters.
+
+  \item \strong{selected_items}: a data frame containing the parameters of the
+  selected items.
+
+  \item \strong{intervals}: a character string indicating how the theta
+  targets were obtained. The value \code{"clusters"} denotes clustering of
+  the latent trait, \code{"equal"} denotes equally spaced intervals, and
+  \code{"unknown"} identifies any other case.
+}
 }
 \description{
 Procedure based on the theta targets procedure for the generation of a short test form
+}
+\details{
+Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
+\eqn{K = N - 1}. Let \eqn{J} be the total number of items in the item bank and
+\eqn{N} the desired length of the short test form.
+
+Define:
+\itemize{
+  \item \eqn{S^k \subseteq \{1, \dots, J\}} as the set of items selected for
+  inclusion in the short test form up to iteration \eqn{k};
+
+  \item \eqn{Q^k \subseteq \{1, \dots, N\}} as the set of ability targets
+  satisfied up to iteration \eqn{k}.
+}
+
+At initialization (\eqn{k = 0}), \eqn{S^0 = \varnothing} and
+\eqn{Q^0 = \varnothing}.
+
+The procedure iterates the following steps until \eqn{k = K}:
+
+\enumerate{
+  \item Select the item--target pair \eqn{(i, n)} maximizing the item
+  information function:
+
+  \deqn{
+  (i, n) =
+  \arg\max_{i \in B \setminus S^k,\; n \in N \setminus Q^k}
+  \mathrm{IIF}(i, n)
+  }
+
+  \item Update the set of selected items:
+  \deqn{
+  S^{k+1} = S^k \cup \{i\}
+  }
+
+  \item Update the set of satisfied ability targets:
+  \deqn{
+  Q^{k+1} = Q^k \cup \{n\}
+  }
+}
+
+At iteration \eqn{K}, the procedure yields
+\eqn{|S^{K+1}| = N} and \eqn{|Q^{K+1}| = N}.
 }
 \examples{
 set.seed(123)

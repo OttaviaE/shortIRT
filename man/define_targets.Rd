@@ -2,22 +2,22 @@
 % Please edit documentation in R/define_targets.R
 \name{define_targets}
 \alias{define_targets}
-\title{Define theta targets}
+\title{Define \eqn{\theta} targets}
 \usage{
 define_targets(theta, num_targets = NULL, method = c("equal", "clusters"))
 }
 \arguments{
-\item{theta}{numeric vector defining the latent trait theta}
+\item{theta}{\code{numeric} vector defining the latent trait \eqn{\theta}}
 
-\item{num_targets}{integer, define the number of theta targets to obtain}
+\item{num_targets}{\code{integer} value, define the number of \eqn{\theta} targets. The number of \eqn{\theta} targets defines the number of items included in the STF.}
 
-\item{method}{character, either equal (default) or clusters}
+\item{method}{\code{character}, either \code{equal} (default) or \code{clusters}}
 }
 \value{
-A vector of length num_targets with the generated targets
+A vector of length \code{num_targets} with the generated \eqn{\theta} targets. The class can be either \code{equal} or \code{clusters}, dependening on the method used for the definition of the \eqn{\theta} targets
 }
 \description{
-Define theta targets according to two procedures.
+Define \eqn{\theta} targets according to two procedures, either by considering the midpoints of equal intervals defined on the latent trait (\code{equal}) or the centroids obtained by clustering the latent trait (\code{clusters})
 }
 \examples{
 set.seed(123)

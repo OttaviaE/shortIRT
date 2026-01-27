@@ -2,20 +2,20 @@
 % Please edit documentation in R/summary.bench.R
 \name{summary.bench}
 \alias{summary.bench}
-\title{Method for the summary of the bench procedure}
+\title{Method for the summary of the STF}
 \usage{
 \method{summary}{bench}(object, ...)
 }
 \arguments{
-\item{object}{Object obtained from the application of theta target procedure with class theta_target}
+\item{object}{Object of class \code{bench()}}
 
 \item{...}{other arguments}
 }
 \value{
-A summary of the STF obatined from the application of the bench procedure
+A summary of the STF obtained from the application of the benchmark procedure
 }
 \description{
-Method for the summary of the bench procedure
+The STF is obtained with the benchmark procedure implemented in the function \code{bench()}
 }
 \examples{
 set.seed(123)

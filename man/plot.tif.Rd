@@ -7,12 +7,12 @@
 \method{plot}{tif}(x, ...)
 }
 \arguments{
-\item{x}{obejct of class tif obtained with the tif() function}
+\item{x}{object of class \code{tif} obtained with the \code{tif()} function}
 
 \item{...}{other arguments}
 }
 \value{
-A ggplot
+A \code{ggplot} displaying the TIF
 }
 \description{
 Plot TIF

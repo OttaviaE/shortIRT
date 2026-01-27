@@ -2,26 +2,45 @@
 % Please edit documentation in R/item_info.R
 \name{i_info}
 \alias{i_info}
-\title{Itenm information function (single item)}
+\title{Item Information Function (single item, IIF)}
 \usage{
 i_info(b, a = 1, c = 0, e = 1, theta = seq(-5, 5, length.out = 1000))
 }
 \arguments{
-\item{b}{location of item i, with no default.}
+\item{b}{\code{numeric}, difficulty/location parameter \eqn{b_i}}
 
-\item{a}{discrimination parameter for item i. Default is 1.}
+\item{a}{\code{numeric}, discrimination parameter \eqn{a_i}. Default is 1.}
 
-\item{c}{pesudoguessing parameter of item i. Default is 0.}
+\item{c}{\code{numeric}, pesudoguessing parameter \eqn{c_i}. Default is 0.}
 
-\item{e}{Upper asymptote of item i. Default is 1.}
+\item{e}{\code{numeric}, upper asymptote \eqn{e_i}. Default is 1.}
 
-\item{theta}{numeric vector (might also be a single value) representing the latent trait. Default is a vector of 1 thousand values rangin from -5 to +5}
+\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values. Default is a vector of 1 thousand values rangin from -5 to +5}
 }
 \value{
-A numeric vector of length equal to theta, which contains the IIF for a single item with respect to the values specified in theta
+A numeric vector of length equal to \code{theta}, which contains the item information function for a single item with respect to the values specified in theta
 }
 \description{
-Compute the item information function for a single item. The formula for the computation is taken from REFRENCE d magis
+Compute the item information function for a single item. See \code{Details}.
+}
+\details{
+Let \eqn{P(\theta)} denote the probability of a correct response under the
+four-parameter logistic (4PL) model:
+
+\deqn{
+P(\theta) =
+c + \frac{e - c}{1 + \exp\left[-a(\theta - b)\right]}
+}
+
+and let \eqn{Q(\theta) = 1 - P(\theta)}.
+
+The item information function is computed as:
+
+\deqn{
+I(\theta) =
+\frac{a^2 \left[P(\theta) - c\right]^2 \left[e - P(\theta)\right]^2}
+{(e - c)^2 \, P(\theta) \, Q(\theta)}
+}
 }
 \examples{
 # IIF of an item with b = 0

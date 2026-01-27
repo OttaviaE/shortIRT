@@ -1,9 +1,11 @@
-#' Method for the summary of the bench procedure
+#' Method for the summary of the STF
 #'
-#' @param object Object obtained from the application of theta target procedure with class theta_target
+#' The STF is obtained with the benchmark procedure implemented in the function \code{bench()}
+#'
+#' @param object Object of class \code{bench()}
 #' @param ... other arguments
 #'
-#' @returns A summary of the STF obatined from the application of the bench procedure
+#' @returns A summary of the STF obtained from the application of the benchmark procedure
 #' @export
 #'
 #' @examples

@@ -1,10 +1,10 @@
 #' Method for plotting the IIFs
 #'
-#' Plots the IIFs
+#' Plot the IIFs
 #'
-#' @param x dataframe of class iifs obtained with the function item_info()
-#' @param single_panels logical, default is TRUE. Whether to show the IIFs on different panels
-#' @param items default is null (shows all items). Allows for selecting specific items
+#' @param x \code{data.frame} of class \code{iifs} obtained with the function \code{item_info()}
+#' @param single_panels \code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on different panels
+#' @param items default is \code{NULç} (shows all items). Allows for selecting specific items for the plot
 #' @param ... other arguments
 #'
 #' @returns A ggplot

@@ -1,9 +1,11 @@
-#' Method for the summary of the theta target procedure
+#' Method for the summary of the STF
 #'
-#' @param object Object obtained from the application of theta target procedure with class theta_target
+#' The STF is obtained with the \eqn{\theta} target procedure implemented in the function \code{theta_target()}
+#'
+#' @param object Object of class \code{theta_target}
 #' @param ... other arguments
 #'
-#' @returns A summary of the STF obatined from the application of the bench procedure
+#' @returns A summary of the STF obtained from the application of the \eqn{\theta} target procedure
 #' @export
 #'
 #' @examples

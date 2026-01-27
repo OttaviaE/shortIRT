@@ -2,22 +2,22 @@
 % Please edit documentation in R/item_info.R
 \name{tif}
 \alias{tif}
-\title{Test Information Function}
+\title{Test Information Function (TIF)}
 \usage{
 tif(iifs, fun = "sum", theta = seq(-5, 5, length.out = 1000))
 }
 \arguments{
-\item{iifs}{matrix or dataframe with nrows equal to the levesl of theta and ncols equal to the number of items in a test}
+\item{iifs}{object of class \code{iifs} containg the item information functions}
 
-\item{fun}{character, defines the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)}
+\item{fun}{\code{character}, defines the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)}
 
-\item{theta}{numeric vector (might also be a single value) representing the latent trait. Default is a vector of 1 thousand values rangin from -5 to +5}
+\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values. Default is a vector of 1 thousand values ranging from -5 to +5}
 }
 \value{
-A dataframe with two columns: theta with the values of theta, either default values or defined by the user, and the value of the TIF
+A \code{data.frame} of class \code{tif} with two columns: (i) \code{theta} containing the latent trait values, and (ii) \code{tif} containing the TIF values computed as either the sum or the mean of the IIFs
 }
 \description{
-Computes the test information function of a test given a matrix of IIF
+Compute the test information function of a test given a matrix of item information functions
 }
 \examples{
 set.seed(123)

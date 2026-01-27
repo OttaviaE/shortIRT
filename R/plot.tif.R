@@ -1,10 +1,10 @@
 #' Plot TIF
 #'
-#' @param x obejct of class tif obtained with the tif() function
+#' @param x object of class \code{tif} obtained with the \code{tif()} function
 #' @param ... other arguments
 #'
 #' @import ggplot2
-#' @returns A ggplot
+#' @returns A \code{ggplot} displaying the TIF
 #' @export
 #'
 #' @examples
