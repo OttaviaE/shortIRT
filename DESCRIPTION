@@ -3,21 +3,21 @@ Type: Package
 Title: Procedures Based on Item Response Theory Models for the Development of Short Test Forms
 Version: 1.0.0
 Authors@R: 
-    c(person(given = c("Ottavia", "M."),
+  c(person(given = c("Ottavia", "M."),
            family = "Epifania",
            role = c("aut", "cre"),
            email = "ottavia.epifania@unitn.it", 
            comment = c(ORCID = "0000-0001-8552-568X")),
-    person(given = "Pasquale",
+  person(given = "Pasquale",
            family = "Anselmi",
            role = "ctb"),
-    person(given = "Egidio",
+  person(given = "Egidio",
            family = "Robusto",
            role = "ctb"), 
-    person(given = "Livio",
+  person(given = "Livio",
            family = "Finos",
            role = "ctb"))
-Maintainer: 'Ottavia M. Epifania <ottavia.epifania@unitn.it>
+Maintainer: Ottavia M. Epifania <ottavia.epifania@unitn.it>
 Description: Implement different Item Response Theory (IRT) based procedures for the development 
         of static short test forms (STFs) from a test. Two main procedures are considered (Epifania, Anselmi & Robusto, 2022 <doi:10.1007/978-3-031-27781-8_7>).
         The procedures differ in how the most informative items are selected for the inclusion in the STF, either by considering their item information functions without any reference to any specific latent trait level (benchmark procedure) or by considering their information 
