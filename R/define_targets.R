@@ -19,6 +19,9 @@ define_targets <- function(theta, num_targets = NULL,
   if (length(method) > 1) {
     method <- "equal"
   }
+  if (is.null(num_targets)) {
+    stop("Must define a number of theta targets")
+  }
   if (method == "equal") {
     x <- cut(theta, breaks = num_targets, include.lowest = TRUE)
     pattern <- "(\\(|\\[)(-*[0-9]+\\.*[0-9]*),(-*[0-9]+\\.*[0-9]*)(\\)|\\])"

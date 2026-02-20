@@ -4,17 +4,19 @@
 \alias{theta_target}
 \title{Theta target procedure}
 \usage{
-theta_target(
-  targets,
-  item_pars,
-  K = NULL,
-  theta = seq(-5, 5, length.out = 1000)
-)
+theta_target(targets, item_pars, K = NULL)
 }
 \arguments{
 \item{targets}{numeric vector with the discrete values of theta for which the information needs to be maximized}
 
-\item{item_pars}{dataframe, with nrows equals to the length of the latent trait and four columns, each denoting the IRT item parameters}
+\item{item_pars}{\code{data.frame}, dataframe with nrows equal to the number of items. #'
+ For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+ For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
+columns correspond to step difficulty (threshold) parameters (must be named "b")
+\eqn{b_1, \dots, b_K}.}
+
+\item{K}{Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
 }
 \value{
 An object of class \code{theta_target} of length 4 containing:
@@ -34,13 +36,13 @@ An object of class \code{theta_target} of length 4 containing:
   \item \strong{intervals}: a character string indicating how the theta
   targets were obtained. The value \code{"clusters"} denotes clustering of
   the latent trait, \code{"equal"} denotes equally spaced intervals, and
-  \code{"unknown"} identifies any other case.
+  \code{"unknown"} identifies any other case (e.g., user-defined theta targets).
 
-  \item{\code{K}}: Number of thresholds for the response categories of the items. If the items are dichotomous, K = 1.
+  \item{\code{K}: Number of thresholds for the response categories of the items. If the items are dichotomous \code{K} is \code{NULL}.}
 }
 }
 \description{
-Procedure based on the theta targets procedure for the generation of a short test form
+Develop a short test form given the item parameters (dichotomous or polytomous) according to the theta target procedure. See \code{Details}.
 }
 \details{
 Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
@@ -98,4 +100,14 @@ item_pars <- data.frame(
 targets <- define_targets(theta, num_targets = 4)
 resT <- theta_target(targets, item_pars)
 str(resT)
+# polytomous items with user defined theta targets
+item_pars <- data.frame(matrix(c(
+ 1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
+ 0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
+ 0.5, 1.5, 1, -1.5, -1.0, 0,
+ 1, 1, 1, -1.5, -0, 0.5
+ ), nrow = 4, byrow = TRUE))
+colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
+resT_poly <- theta_target(c(-1,0), item_pars, K = 3)
+str(resT_poly)
 }

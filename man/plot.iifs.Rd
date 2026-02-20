@@ -23,6 +23,7 @@ Plot the IIFs
 }
 \examples{
 set.seed(123)
+# simulate item parameters according to the 2-PL
 parameters <- data.frame(b = c(-3,-2,0, 2, 3),
 a = runif(5, 1.2, 1.9),
 c = rep(0,5),

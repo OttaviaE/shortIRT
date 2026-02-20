@@ -7,25 +7,30 @@
 i_info(item_pars, theta = seq(-5, 5, length.out = 1000), K = NULL)
 }
 \arguments{
-\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values. Default is a vector of 1 thousand values rangin from -5 to +5}
+\item{item_pars}{Numeric matrix with one row corresponding to one item.
+ For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+ For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
+columns correspond to step difficulty (threshold) parameters (must be named "b")
+\eqn{b_1, \dots, b_K}.}
 
-\item{b}{\code{numeric}, difficulty/location parameter \eqn{b_i}}
+\item{theta}{Numeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5}
 
-\item{a}{\code{numeric}, discrimination parameter \eqn{a_i}. Default is 1.}
-
-\item{c}{\code{numeric}, pesudoguessing parameter \eqn{c_i}. Default is 0.}
-
-\item{e}{\code{numeric}, upper asymptote \eqn{e_i}. Default is 1.}
+\item{K}{Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
 }
 \value{
-A numeric vector of length equal to \code{theta}, which contains the item information function for a single item with respect to the values specified in theta
+A numeric vector of length equal to \code{theta}, which contains the item information function for a single item with respect to the values specified in \code{theta}
 }
 \description{
-Compute the item information function for a single item. See \code{Details}.
+Compute the item information function (IIF) for a single dichotomous
+or polytoumous item under either the 4-PL model (dichotomous item) or  a Generalized Partial Credit (polytomous item).
+Specific models (e.g., 3-PL, 2-PL, 1-PL, or PCM, Rating Scale) are obtained by imposing
+constraints on the item parameters.
+See \code{Details}.
 }
 \details{
 Let \eqn{P(\theta)} denote the probability of a correct response under the
-four-parameter logistic (4PL) model:
+four-parameter logistic (4PL) model (dichotomous responses):
 
 \deqn{
 P(\theta) =
@@ -41,8 +46,32 @@ I(\theta) =
 \frac{a^2 \left[P(\theta) - c\right]^2 \left[e - P(\theta)\right]^2}
 {(e - c)^2 \, P(\theta) \, Q(\theta)}
 }
+
+For a polytomous item with \eqn{K} thresholds seprating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+\deqn{
+P(Y = k \mid \theta) =
+\frac{\exp\left( \sum_{s=1}^k a_s (\theta - b_s) \right)}
+{\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_s (\theta - b_s) \right)}
+}
+
+with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
+
+The item information is computed as:
+\deqn{
+I(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
+}
 }
 \examples{
+
+theta <- seq(-4, 4, length.out = 200)
+
 # IIF of an item with b = 0
-i_info(b = 0, theta = c(-3,-1,0,1,3))
+item_par <- data.frame(b = 0, a = 1.5, c = .10, e = .98)
+info_dichotomous <- i_info(item_par, theta = theta)
+
+# 4-category item (K = 3)
+item_pars <- data.frame(a1 = 1.2, a2 = 1.0, a3= 0.8,
+                        b1 = -1.0, b2 = 0.0, b3 = 1.2)
+
+info <- iif_poly(item_pars, theta = theta, K = 3)
 }

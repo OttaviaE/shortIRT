@@ -4,8 +4,7 @@
 #'
 #' @param x Object of class \code{theta_target} obtained with function \code{theta_target()}
 #' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
-#' @param theta \code{numeric}, latent trait for the graphical representation
-#' @param show_targets \code{logical}, default is TRUE. Whether to show or not the theta targets
+#' @param show_targets \code{logical}, default is TRUE. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown as the items that satisfy them.
 #' @param show_both \code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test
 #' @param ... other arguments
 #'

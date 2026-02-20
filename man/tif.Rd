@@ -7,11 +7,9 @@
 tif(iifs, fun = "sum")
 }
 \arguments{
-\item{iifs}{object of class \code{iifs} containg the item information functions}
+\item{iifs}{object of class \code{iifs} containing the item information functions}
 
 \item{fun}{\code{character}, defines the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)}
-
-\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values. Default is a vector of 1 thousand values ranging from -5 to +5}
 }
 \value{
 A \code{data.frame} of class \code{tif} with two columns: (i) \code{theta} containing the latent trait values, and (ii) \code{tif} containing the TIF values computed as either the sum or the mean of the IIFs
@@ -21,6 +19,7 @@ Compute the test information function of a test given a matrix of item informati
 }
 \examples{
 set.seed(123)
+theta <- rnorm(100)
 n <- 5
 item_par <- data.frame(
   b = runif(n, -3, 3),

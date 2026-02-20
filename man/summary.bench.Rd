@@ -15,7 +15,7 @@
 A summary of the STF obtained from the application of the benchmark procedure
 }
 \description{
-The STF is obtained with the benchmark procedure implemented in the function \code{bench()}
+The STF is obtained with the benchmark procedure implemented in the function \link{bench()}
 }
 \examples{
 set.seed(123)

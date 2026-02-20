@@ -14,11 +14,9 @@
 \item{show_both}{\code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test}
 
 \item{...}{other arguments}
-
-\item{theta}{\code{numeric}, latent trait for the graphical representation}
 }
 \value{
-A \code{ggplot} showing the TIFs of both the STF and the full-length test
+A \code{ggplot} showing the TIFs of both the STF and the full-length test, unless otherwise specified
 }
 \description{
 The STF is obtained with the benchmark procedure implemented with function \code{bench()}
@@ -37,4 +35,14 @@ resB <- bench(item_par, theta = theta, num_item = 5)
 plot(resB)
 # plot only the TIF of the STF
 plot(resB, show_both = FALSE)
+# same but with polytomous items
+item_pars <- data.frame(matrix(c(
+ 1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
+ 0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
+ 0.5, 1.5, 1, -1.5, -1.0, 0,
+ 1, 1, 1, -1.5, -0, 0.5
+ ), nrow = 4, byrow = TRUE))
+colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
+resB_poly <- bench(item_pars, theta = theta, num_item = 2, K = 3)
+plot(resB_poly)
 }

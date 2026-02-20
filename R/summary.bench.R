@@ -1,6 +1,6 @@
 #' Method for the summary of the STF
 #'
-#' The STF is obtained with the benchmark procedure implemented in the function \code{bench()}
+#' The STF is obtained with the benchmark procedure implemented in the function \link{bench()}
 #'
 #' @param object Object of class \code{bench()}
 #' @param ... other arguments

@@ -11,13 +11,11 @@
 
 \item{fun}{\code{character}, whether to consider the mean or the sum for the computation of the TIF}
 
-\item{show_targets}{\code{logical}, default is TRUE. Whether to show or not the theta targets}
+\item{show_targets}{\code{logical}, default is TRUE. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown as the items that satisfy them.}
 
 \item{show_both}{\code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test}
 
 \item{...}{other arguments}
-
-\item{theta}{\code{numeric}, latent trait for the graphical representation}
 }
 \value{
 A \code{ggplot} showing the TIFs of both the STF and the full-length test

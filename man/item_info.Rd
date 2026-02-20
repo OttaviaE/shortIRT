@@ -7,15 +7,22 @@
 item_info(item_pars, theta = seq(-5, 5, length.out = 1000), K = NULL)
 }
 \arguments{
-\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.}
+\item{item_pars}{\code{data.frame}, dataframe with nrows equal to the number of items. #'
+ For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+ For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
+columns correspond to step difficulty (threshold) parameters (must be named "b")
+\eqn{b_1, \dots, b_K}.}
 
-\item{item_par}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
+\item{theta}{Numeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5}
+
+\item{K}{Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
 }
 \value{
 A \code{matrix} of class \code{iifs} with nrows equal to the length of \code{theta} and ncols equal to the number of items in \code{item_par}
 }
 \description{
-Computes the item information functions for multiple items
+Computes the item information functions for multiple dichotous or polytomous items
 }
 \examples{
 set.seed(123)
@@ -23,6 +30,18 @@ parameters <- data.frame(b = c(-3,-2,0, 2, 3),
 a = runif(5, 1.2, 1.9),
 c = rep(0,5),
 e= rep(1, 5))
+# compute information for dichomtous items with default theta values
 infos <- item_info(parameters)
 head(infos)
+# 4 items with 4 response categories (K = 3)
+item_pars <- data.frame(matrix(c(
+        1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
+        0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
+       0.5, 1.5, 1, -1.5, -1.0, 0,
+       1, 1, 1, -1.5, -0, 0.5),
+       nrow = 4,
+       byrow = TRUE))
+colnames(item_pars) <- paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
+info_poly <- item_info(item_pars, K = 3)
+head(info_poly)
 }
