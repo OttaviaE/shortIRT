@@ -11,7 +11,7 @@
 
 \item{single_panels}{\code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on different panels}
 
-\item{items}{default is \code{NULç} (shows all items). Allows for selecting specific items for the plot}
+\item{items}{default is \code{NULL} (shows all items). Allows for selecting specific items for the plot}
 
 \item{...}{other arguments}
 }

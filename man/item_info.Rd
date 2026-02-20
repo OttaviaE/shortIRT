@@ -4,12 +4,12 @@
 \alias{item_info}
 \title{Item Information Functions (multiple items, IIFs)}
 \usage{
-item_info(item_par, theta = seq(-5, 5, length.out = 1000))
+item_info(item_pars, theta = seq(-5, 5, length.out = 1000), K = NULL)
 }
 \arguments{
-\item{item_par}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
-
 \item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.}
+
+\item{item_par}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
 }
 \value{
 A \code{matrix} of class \code{iifs} with nrows equal to the length of \code{theta} and ncols equal to the number of items in \code{item_par}

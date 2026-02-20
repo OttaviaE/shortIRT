@@ -4,24 +4,18 @@
 \alias{plot.bench}
 \title{Method for plotting the TIF of the STF}
 \usage{
-\method{plot}{bench}(
-  x,
-  fun = "sum",
-  theta = seq(-5, 5, length.out = 1000),
-  show_both = TRUE,
-  ...
-)
+\method{plot}{bench}(x, fun = "sum", show_both = TRUE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{bench}}
 
 \item{fun}{\code{character}, whether to consider the mean or the sum for the computation of the TIF}
 
-\item{theta}{\code{numeric}, latent trait for the graphical representation}
-
 \item{show_both}{\code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test}
 
 \item{...}{other arguments}
+
+\item{theta}{\code{numeric}, latent trait for the graphical representation}
 }
 \value{
 A \code{ggplot} showing the TIFs of both the STF and the full-length test

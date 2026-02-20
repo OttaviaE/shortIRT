@@ -4,16 +4,18 @@
 \alias{bench}
 \title{Benchmark Procedure}
 \usage{
-bench(item_par = NULL, iifs = NULL, theta = NULL, num_item = NULL)
+bench(item_pars = NULL, iifs = NULL, theta = NULL, num_item = NULL, K = NULL)
 }
 \arguments{
-\item{item_par}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
+\item{item_pars}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
 
 \item{iifs}{\code{data.frame}, dataframe with n-rows equal to the length of the latent trait \eqn{\theta} and n-cols equal to the number of items in the full-length test. It contains the item information functions (IIFs) of the items in the full-length test. Cannot use both \code{ipar} and \code{iifs}.}
 
 \item{theta}{\code{numeric}, vector with the latent trait values}
 
 \item{num_item}{\code{integer}, the number of items to include in the short test form}
+
+\item{K}{Integer. Number of steps (categories minus one). Must be specified only if polytomous items are used.}
 }
 \value{
 An object of class \code{bench} of length 3 with:
@@ -22,8 +24,9 @@ An object of class \code{bench} of length 3 with:
   \item{\code{stf}: dataframe with the items selected for inclusion in the STF (\code{isel}),
   their maximum information function (\code{maxiif}), for a specific latent trait
   level \eqn{\theta} (column \code{theta})}
-  \item{\code{item_par}: the original dataframe containing the item parameters}
+  \item{\code{item_pars}: the original dataframe containing the item parameters}
   \item{\code{selected_items}: dataframe with the parameters of the selected items}
+  \item{\code{K}}: Number of thresholds for the response categories of the items. If the items are dichotomous, K = 1.
 }
 }
 \description{
@@ -53,12 +56,12 @@ The first \eqn{N} items in the ordered vector \eqn{\mathrm{iif}}, with
 set.seed(123)
 n <- 50
 theta <- rnorm(500, sd = 2)
-item_par <- data.frame(
+item_pars <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
-resB <- bench(item_par, theta = theta, num_item = 5)
+resB <- bench(item_pars, theta = theta, num_item = 5)
 str(resB)
 }

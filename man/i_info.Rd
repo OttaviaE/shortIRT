@@ -4,9 +4,11 @@
 \alias{i_info}
 \title{Item Information Function (single item, IIF)}
 \usage{
-i_info(b, a = 1, c = 0, e = 1, theta = seq(-5, 5, length.out = 1000))
+i_info(item_pars, theta = seq(-5, 5, length.out = 1000), K = NULL)
 }
 \arguments{
+\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values. Default is a vector of 1 thousand values rangin from -5 to +5}
+
 \item{b}{\code{numeric}, difficulty/location parameter \eqn{b_i}}
 
 \item{a}{\code{numeric}, discrimination parameter \eqn{a_i}. Default is 1.}
@@ -14,8 +16,6 @@ i_info(b, a = 1, c = 0, e = 1, theta = seq(-5, 5, length.out = 1000))
 \item{c}{\code{numeric}, pesudoguessing parameter \eqn{c_i}. Default is 0.}
 
 \item{e}{\code{numeric}, upper asymptote \eqn{e_i}. Default is 1.}
-
-\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values. Default is a vector of 1 thousand values rangin from -5 to +5}
 }
 \value{
 A numeric vector of length equal to \code{theta}, which contains the item information function for a single item with respect to the values specified in theta

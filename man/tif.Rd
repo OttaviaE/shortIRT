@@ -4,7 +4,7 @@
 \alias{tif}
 \title{Test Information Function (TIF)}
 \usage{
-tif(iifs, fun = "sum", theta = seq(-5, 5, length.out = 1000))
+tif(iifs, fun = "sum")
 }
 \arguments{
 \item{iifs}{object of class \code{iifs} containg the item information functions}

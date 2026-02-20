@@ -4,12 +4,17 @@
 \alias{theta_target}
 \title{Theta target procedure}
 \usage{
-theta_target(targets, item_par)
+theta_target(
+  targets,
+  item_pars,
+  K = NULL,
+  theta = seq(-5, 5, length.out = 1000)
+)
 }
 \arguments{
 \item{targets}{numeric vector with the discrete values of theta for which the information needs to be maximized}
 
-\item{item_par}{dataframe, with nrows equals to the length of the latent trait and four columns, each denoting the IRT item parameters}
+\item{item_pars}{dataframe, with nrows equals to the length of the latent trait and four columns, each denoting the IRT item parameters}
 }
 \value{
 An object of class \code{theta_target} of length 4 containing:
@@ -20,7 +25,7 @@ An object of class \code{theta_target} of length 4 containing:
   function (column \code{maxiif}), and the corresponding theta target
   (column \code{theta_target}).
 
-  \item \strong{item_par}: the original data frame containing the item
+  \item \strong{item_pars}: the original data frame containing the item
   parameters.
 
   \item \strong{selected_items}: a data frame containing the parameters of the
@@ -30,6 +35,8 @@ An object of class \code{theta_target} of length 4 containing:
   targets were obtained. The value \code{"clusters"} denotes clustering of
   the latent trait, \code{"equal"} denotes equally spaced intervals, and
   \code{"unknown"} identifies any other case.
+
+  \item{\code{K}}: Number of thresholds for the response categories of the items. If the items are dichotomous, K = 1.
 }
 }
 \description{
@@ -82,13 +89,13 @@ At iteration \eqn{K}, the procedure yields
 set.seed(123)
 n <- 50
 theta <- rnorm(500)
-item_par <- data.frame(
+item_pars <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
 targets <- define_targets(theta, num_targets = 4)
-resT <- theta_target(targets, item_par)
+resT <- theta_target(targets, item_pars)
 str(resT)
 }
