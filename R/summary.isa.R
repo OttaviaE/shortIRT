@@ -21,13 +21,11 @@
 #' targets <- define_targets(theta, num_targets = 4)
 #' resT <- theta_target(targets, item_par)
 #' summary(resT)
-summary.theta_target <- function(object, ...) {
+summary.isa<- function(object, ...) {
   cat("The selected items are\n")
-  cat(object$stf$isel, "\n")
-  cat("These items maximize the information for thetas equal to: \n")
-  cat(object$stf$theta_target, "\n with the following parameters \n")
+  cat(object$stf$isel, "\n with the following parameters \n")
   print(object$selected_items)
-  cat("The item selection is based on the theta-target procedure with", object$intervals, "target \n")
+  cat("The item selection is based on the isa procedure with", unique(object$stf$nmin), "minimum items to be included in the STF \n")
   if (is.null(object$K)) {
     cat("The items are dichotomous")
   } else {
