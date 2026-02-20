@@ -23,11 +23,9 @@
 #' test_tif_mean <- tif(iifs, fun = "mean")
 #' plot(test_tif_mean)
 plot.tif <- function(x, ...) {
-  temp <- data.frame(theta = x$theta,
-                     tif = x$tif)
-  basic_plot <- ggplot2::ggplot(temp,
+  basic_plot <- ggplot2::ggplot(x,
                   ggplot2::aes(x = .data$theta, y = .data$tif)) +
     ggplot2::geom_line() + ggtitle(paste("TIF computed as",
-                                         attributes(x)$source))
+                                         attributes(x)$source)) + theme_light()
   print(basic_plot)
 }

@@ -32,14 +32,62 @@
 #' @examples
 #' # IIF of an item with b = 0
 #' i_info(b = 0, theta = c(-3,-1,0,1,3))
-i_info <- function(b, a=1,c=0, e= 1,
-                   theta = seq(-5,5,length.out=1000)){
-  P <- IRT(theta, b = b, a = a, e = e, c=c)
-  Q <- 1 - P
-  num <- (a^2)*((P-c)^2)*((e-P)^2)
-  den <- ((e-c)^2)*P*Q
-  Ii <- num/den
-  return(Ii)
+i_info <- function(item_pars,
+                   theta = seq(-5,5,length.out=1000), K = NULL){
+  if (is.null(K)) {
+    if (ncol(item_pars) > 4) {
+      stop("You forgot to specifiy the number of thresholds for your items!")
+    }
+    a <- item_pars$a
+    e <- item_pars$e
+    c <- item_pars$c
+    P <- IRT(theta, b = item_pars$b, a = a, e = e, c=c)
+    Q <- 1 - P
+    num <- (a^2)*((P-c)^2)*((e-P)^2)
+    den <- ((e-c)^2)*P*Q
+    info <- num/den
+  } else {
+    if (ncol(item_pars) != 2 * K)
+      stop("item_pars must have exactly 2*K columns.")
+
+    # extract parameters
+    a <- as.numeric(item_pars[1, 1:K])
+    b <- as.numeric(item_pars[1, (K + 1):(2 * K)])
+
+    n_theta <- length(theta)
+
+    # linear predictors for categories 0,...,K
+    eta <- sapply(0:K, function(k) {
+      if (k == 0) {
+        rep(0, n_theta)
+      } else {
+        rowSums(
+          sapply(1:k, function(s) a[s] * (theta - b[s]))
+        )
+      }
+    })
+
+    # category probabilities
+    exp_eta <- exp(eta)
+    P <- exp_eta / rowSums(exp_eta)
+
+    # derivatives of eta with respect to theta
+    deta <- sapply(0:K, function(k) {
+      if (k == 0) {
+        rep(0, n_theta)
+      } else {
+        rep(sum(a[1:k]), n_theta)
+      }
+    })
+
+    # derivatives of probabilities
+    dP <- P * (deta - rowSums(P * deta))
+
+    # item information
+    info <- rowSums((dP^2) / P, na.rm = TRUE)
+  }
+
+  return(info)
 }
 
 #' Item Information Functions (multiple items, IIFs)
@@ -60,14 +108,14 @@ i_info <- function(b, a=1,c=0, e= 1,
 #' e= rep(1, 5))
 #' infos <- item_info(parameters)
 #' head(infos)
-item_info <- function(item_par, theta = seq(-5,5,length.out=1000)){
-  item <- lapply(1:nrow(item_par), function(i) {
-    i_info(
-      b = item_par[i, "b"],
-      a = item_par[i, "a"],
-      c = item_par[i, "c"],
-      e = item_par[i, "e"],
-      theta = theta
+item_info <- function(item_pars, theta = seq(-5,5,length.out=1000), K = NULL){
+  if (is.null(K)) {
+    if (ncol(item_pars) > 4) {
+      stop("You forgot to specifiy the number of thresholds for your items!")
+    }
+  item <- lapply(1:nrow(item_pars), function(i) {
+    i_info(item_pars[i, ],
+           theta = theta
     )
   })
   item <- data.frame(do.call(cbind, item))
@@ -75,7 +123,30 @@ item_info <- function(item_par, theta = seq(-5,5,length.out=1000)){
     theta <- paste(theta, 1:length(theta), sep = "-")
   }
   rownames(item) <- theta
-  colnames(item) <- rownames(item_par)
+  colnames(item) <- rownames(item_pars)
+  } else {
+    if (ncol(item_pars) != 2 * K)
+      stop("item_pars must have exactly 2*K columns.")
+
+    n_items <- nrow(item_pars)
+    n_theta <- length(theta)
+
+    info_mat <- matrix(NA_real_, n_theta, n_items)
+
+    for (i in seq_len(n_items)) {
+      info_mat[, i] <- i_poly(
+        theta      = theta,
+        item_pars = item_pars[i, , drop = FALSE],
+        K         = K
+      )
+    }
+
+    info_mat <- data.frame(info_mat)
+    colnames(info_mat) <- rownames(item_pars)
+    rownames(info_mat) <- theta
+
+    item <- info_mat
+  }
   item <- structure(
     item,
     class = c("iifs", class(item))
@@ -105,14 +176,21 @@ item_info <- function(item_par, theta = seq(-5,5,length.out=1000)){
 #' )
 #' iifs <- item_info(item_par)
 #' test_tif <- tif(iifs)
-tif <- function(iifs, fun = "sum",
-                theta = seq(-5,5,length.out=1000)) {
+tif <- function(iifs, fun = "sum") {
+  if (inherits(iifs, "iifs") == FALSE) {
+    stop("I need an object of class iifs")
+  }
+  theta <- as.numeric(rownames(iifs))
   tif_fun <- switch(fun,
                     sum = rowSums,
                     mean = rowMeans)
   thetif <- data.frame(theta,
                        tif = tif_fun(iifs))
-  class(thetif) <- "tif"
-  attr(thetif, "source") <- fun
+  thetif <- structure(
+    thetif,
+    class = c("tif", class(thetif)),
+    source = fun
+  )
+
   return(thetif)
 }
