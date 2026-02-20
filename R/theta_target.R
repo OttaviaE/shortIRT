@@ -3,7 +3,7 @@
 #' Procedure based on the theta targets procedure for the generation of a short test form
 #'
 #' @param targets numeric vector with the discrete values of theta for which the information needs to be maximized
-#' @param item_par dataframe, with nrows equals to the length of the latent trait and four columns, each denoting the IRT item parameters
+#' @param item_pars dataframe, with nrows equals to the length of the latent trait and four columns, each denoting the IRT item parameters
 #' @details
 #' Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
 #' \eqn{K = N - 1}. Let \eqn{J} be the total number of items in the item bank and
@@ -56,7 +56,7 @@
 #'   function (column \code{maxiif}), and the corresponding theta target
 #'   (column \code{theta_target}).
 #'
-#'   \item \strong{item_par}: the original data frame containing the item
+#'   \item \strong{item_pars}: the original data frame containing the item
 #'   parameters.
 #'
 #'   \item \strong{selected_items}: a data frame containing the parameters of the
@@ -66,6 +66,8 @@
 #'   targets were obtained. The value \code{"clusters"} denotes clustering of
 #'   the latent trait, \code{"equal"} denotes equally spaced intervals, and
 #'   \code{"unknown"} identifies any other case.
+#'
+#'   \item{\code{K}}: Number of thresholds for the response categories of the items. If the items are dichotomous, K = 1.
 #' }
 #' @export
 #'
@@ -73,24 +75,37 @@
 #' set.seed(123)
 #' n <- 50
 #' theta <- rnorm(500)
-#' item_par <- data.frame(
+#' item_pars <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
 #' targets <- define_targets(theta, num_targets = 4)
-#' resT <- theta_target(targets, item_par)
+#' resT <- theta_target(targets, item_pars)
 #' str(resT)
-theta_target <- function(targets, item_par) {
-
-  itarget = t(item_info(item_par = item_par,
-                        theta = targets))
-  if (inherits(targets, "equal") == FALSE & inherits(targets, "clusters") == FALSE) {
+theta_target <- function(targets, item_pars, K = NULL,
+                         theta = seq(-5, 5, length.out = 1000)) {
+ if (inherits(targets, "equal") == FALSE & inherits(targets, "clusters") == FALSE) {
     class_targets  <- "unknown"
   } else {
     class_targets <- class(targets)
   }
+  if (is.null(K) == FALSE) {
+    itarget <- t(item_info(item_pars = item_pars,
+                          theta = targets,
+                          K = K))
+    iifs <- item_info(item_pars, theta, K)
+  } else {
+    if (ncol(item_pars) > 4) {
+      stop("You provided parameters for polytomous items but did not specified the number of thresholds")
+    } else {
+      itarget <- t(item_info(item_pars = item_pars,
+                             theta = targets))
+      iifs <- item_info(item_pars, theta)
+    }
+  }
+
   colnames(itarget) = paste("target", targets , sep ="")
   temp = itarget
 
@@ -105,15 +120,18 @@ theta_target <- function(targets, item_par) {
     temp[isel[i], ] = NA
     temp[, tsel[i]] = NA
   }
+  rownames(iifs) <- theta
   res <- t(rbind(isel, maxiif))
   res <- data.frame(res)
   res$isel <-  as.character(res$isel)
   res$theta_target <- targets[tsel]
-  sel_items <- item_par[res$isel, ]
+  sel_items <- item_pars[res$isel, ]
   results <- list(stf = res,
-                  item_par  = item_par,
+                  item_pars  = item_pars,
                   selected_items = sel_items,
-                  intervals = class_targets)
+                  intervals = class_targets,
+                  all_iifs = iifs,
+                  K = K)
   class(results) <- "theta_target"
   return(results)
 }
