@@ -4,7 +4,6 @@
 #'
 #' @param x Object of class \code{bench}
 #' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
-#' @param show_both \code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test
 #' @param ... other arguments
 #'
 #' @returns A \code{ggplot} showing the TIFs of both the STF and the full-length test, unless otherwise specified
@@ -35,14 +34,12 @@
 #' resB_poly <- bench(item_pars, theta = theta, num_item = 2, K = 3)
 #' plot(resB_poly)
 plot.bench <- function(x, fun = "sum",
-                             show_both = TRUE,
                               ...) {
+  if (inherits(x, "bench") == FALSE) {
+    stop("I need an object of either class bench or theta target")
+  }
   theta <- as.numeric(rownames(x$all_iifs))
   K <- x$K
-  temp <- tif(x$all_iifs, fun = fun)
-  alltif <- data.frame(theta = temp$theta,
-                       tif = temp$tif,
-                       test = paste("all", nrow(x$item_par), "items"))
   if (is.null(K)) {
     if (ncol(x$item_par) > 4) {
       stop("The items appear to be polytomous but you did not provide the K thresholds!")
@@ -50,24 +47,17 @@ plot.bench <- function(x, fun = "sum",
     stfiif <- item_info(x$selected_items, theta = theta)
     }
   } else {
-      stfiif <- iif_poly(x$selected_items, theta = theta, K = K)
+      stfiif <- item_info(x$selected_items, theta = theta, K = K)
     }
   temp <- tif(stfiif, fun = fun)
   stftif <- data.frame(theta = temp$theta,
                        tif = temp$tif,
                        test = paste("stf with",
                                     nrow(x$selected_items), "items"))
-  plottif <- rbind(alltif, stftif)
-  if (show_both == TRUE) {
-    basic_plot <-  ggplot(plottif,
-                          aes(x = .data$theta, y = .data$tif,
-                              group = .data$test, col = .data$test)) +
-      geom_line() + theme_light()
-  } else  {
+
     basic_plot <- ggplot(stftif,
                          aes(x = .data$theta, y = .data$tif,
                              group = .data$test, col = .data$test)) +
       geom_line() + theme_light()
-  }
   print(basic_plot)
 }

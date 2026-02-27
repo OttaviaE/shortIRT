@@ -2,7 +2,7 @@
 % Please edit documentation in R/IRT.R
 \name{obsirt}
 \alias{obsirt}
-\title{Simulate responses according to IRT probabilities}
+\title{Simulate dichotomous responses according to IRT probabilities}
 \usage{
 obsirt(myp)
 }
@@ -10,18 +10,18 @@ obsirt(myp)
 \item{myp}{Object of class \code{mpirt} containing the expected IRT probabilities obtained with function \code{mpirt()}}
 }
 \description{
-Simulate responses according to IRT probabilities
+Simulate dichotomous responses according to IRT probabilities
 }
 \examples{
 set.seed(123)
 n <- 50
 theta <- rnorm(500)
-item_par <- data.frame(
+item_pars <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
-expected_prob <- mpirt(item_par, theta)
+expected_prob <- mpirt(item_pars, theta)
 simulated_responses <- obsirt(expected_prob)
 }

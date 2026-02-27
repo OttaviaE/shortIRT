@@ -1,60 +1,103 @@
 #' Item Selection Algorithm
 #'
-#' Develop a short test form given the item parameters (dichotomous or polytomous) according to the Item Selection procedure. See \code{Details}.
+#' Develop a short test form given the item parameters (dichotomous or polytomous) according to the Item Selection procedure
 #'
-#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items. #'
+#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items.
 #'    For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+#'    For polytomous items, the matrix has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters (must be named "b")
 #'   \eqn{b_1, \dots, b_K}.
 #' @param tif_target \code{data.frame} with two columns: \code{theta} the latent trait \eqn{\theta} and \code{tif} defining the values of the tif target. The TIF target should be computed as the mean TIF to allow for the comparability with the TIF obtained from the STF.
-#' @param nmin \code{numeric}, minimum number of items to be included in the STF (i.e., the termination criterion is not tested until the minimum number of items is reached). Default is the 10% of the total number of items.
-#' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#' @param nmin \code{numeric}, minimum number of items to be included in the STF (i.e., the termination criterion is not tested until the minimum number of items is reached). Default is the 10\% of the total number of items.
+#' @param K \code{integer}, number of thresholds for polytomous items (number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).
+#' @details
+#' Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure. At \eqn{k = 0}: \eqn{\text{TIF}^0(\theta) = 0}, \eqn{\forall \theta$}, \eqn{$Q^0 = \emptyset}.
+#' For \eqn{k \geq 0},
+#'
+#' \enumerate{
+#'   \item Consider the available items at iteration \eqn{k}
+#'
+#'   \deqn{A^k = B \setminus Q^k}
+#'
+#'   \item Compute the provisional TIF for each of the available items
+#'
+#'   \deqn{\forall i \in A^k$, $\text{pTIF}_{i} := \frac{\text{TIF}^k + \text{IIF}_{i}}{||Q^k||+1}}
+#'
+#'   \item Select a provisional item allowing for minimizing the distance from the TIF target
+#'
+#'   \deqn{i^+ := \arg \min_{i \in A^k} (|\text{TIF}^* - \text{pTIF}_i|)}
+#'
+#'   \item Test the termination criterion: If
+#'
+#'   \eqn{|\text{TIF}^* - \text{pTIF}_{i^+}| \ngeq |\text{TIF}^* - \text{TIF}^{k}|$, $Q^{k+1} = Q^{k} \cup \{i^+\}}, \eqn{\text{TIF}^{k+1} = \text{pTIF}_{i^+}}, Go back to 1
+#'
+#'   \item Stop, \eqn{Q_{\text{IIF-ISA}} = Q^k}
+#'
+#' }
+#'
 #'
 #' @returns
-#' An object of class \code{isa} of length 4 containing:
+#' An object of class \code{isa} of length 6 containing:
 #'
 #' \itemize{
-#'   \item \strong{stf}: a data frame containing the items selected for inclusion
+#'   \item \strong{stf}: a dataframe containing the items selected for inclusion
 #'   in the short test form (column \code{isel}) and the minimum number of items set in \code{nmin}.
 #'
-#'   \item \strong{item_pars}: the original data frame containing the item
-#'   parameters.
+#'   \item \strong{item_pars}: the original dataframe containing the item parameters.
 #'
-#'   \item \strong{all_iifs}: a data frame containing the IIFs of all the original items
+#'   \item \strong{selected_items}: a dataframe containing the parameters of the selected items.
 #'
-#'   \item \strong{tif_target}:the data frame with the TIF traget used for teh item selection
+#'   \item \strong{all_iifs}: a dataframe containing the IIFs of all the original items.
 #'
-#'   \item{\code{K}: Number of thresholds for the response categories of the items. If the items are dichotomous \code{K} is \code{NULL}.}
+#'   \item \strong{tif_target}: the dataframe with the TIF target used for the item selection.
+#'
+#'   \item \strong{K}: Number of thresholds for the response categories of the items. If the items are dichotomous \code{K} is \code{NULL}.
 #' }
 #' @export
 #'
 #' @examples
 #' set.seed(123)
+#'
 #' n <- 50
 #' theta <- rnorm(500)
+#'
 #' item_pars <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
-#' tif_target <- tif(item_info(item_pars[-c(3,5,10,14), ]), fun = "mean")
+#'
+#' tif_target <- tif(
+#'   item_info(item_pars[-c(3, 5, 10, 14), ]),
+#'   fun = "mean"
+#' )
+#'
 #' resIsa <- isa(item_pars, tif_target, nmin = 4)
 #' str(resIsa)
-#' # polytomous items with user defined theta targets
-#' item_pars <- data.frame(matrix(c(
-#'  1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
-#'  0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
-#'  0.5, 1.5, 1, -1.5, -1.0, 0,
-#'  1, 1, 1, -1.5, -0, 0.5
-#'  ), nrow = 4, byrow = TRUE))
-#' colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
-#' resT_poly <- theta_target(c(-1,0), item_pars, K = 3)
+#'
+#' # Polytomous items with user-defined theta targets
+#'
+#' item_pars <- data.frame(
+#'   matrix(c(
+#'     1.2, 1.0, 0.8,  -1.0,  0.0,  1.2,
+#'     0.9, 1.1, 1.3,  -0.5,  0.7,  1.8,
+#'     0.5, 1.5, 1.0,  -1.5, -1.0,  0.0,
+#'     1.0, 1.0, 1.0,  -1.5,  0.0,  0.5
+#'   ), nrow = 4, byrow = TRUE)
+#' )
+#'
+#' colnames(item_pars) <- paste(
+#'   rep(c("a", "b"), each = 3),
+#'   1:3,
+#'   sep = ""
+#' )
+#'
+#' resT_poly <- theta_target(c(-1, 0), item_pars, K = 3)
 #' str(resT_poly)
 isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = NULL) {
-  if ( attributes(target)$source  != "mean") {
+  if ( attributes(tif_target)$source  != "mean") {
     warning("we strongly advise for the use of the mean TIF for the definition of the TIF target")
   }
   theta <- tif_target$theta

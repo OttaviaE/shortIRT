@@ -2,30 +2,45 @@
 % Please edit documentation in R/IRT.R
 \name{mpirt}
 \alias{mpirt}
-\title{Compute expected probability for multiple items}
+\title{Compute expected probability for multiple dichotmous items}
 \usage{
-mpirt(item_par, theta)
+mpirt(item_pars, theta)
 }
 \arguments{
-\item{item_par}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
+\item{item_pars}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
 
 \item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.}
 }
 \value{
-A \eqn{p \times i} matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}
+A \eqn{P \times I} matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}
 }
 \description{
-Compute expected probability for multiple items
+Compute expected probability for multiple dichotmous items
+}
+\details{
+The probability of a correct response under the four-parameter logistic
+(4-PL) model is defined as:
+
+\deqn{
+P(X = 1 \mid \theta_p) =
+c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta_p - b_i)\right]}
+}
+
+where \eqn{a_i} is the discrimination parameter,
+\eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
+\eqn{c_i} is the lower asymptote (psedo-guessing probability),
+and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
+is computed according to the 3-PL, 2-PL and 1-PL, respectively.
 }
 \examples{
 set.seed(123)
 n <- 50
 theta <- rnorm(500)
-item_par <- data.frame(
+item_pars <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
-expected_prob <- mpirt(item_par, theta)
+expected_prob <- mpirt(item_pars, theta)
 }

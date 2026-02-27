@@ -12,10 +12,10 @@
 \item{...}{other arguments}
 }
 \value{
-A summary of the STF obtained from the application of the \eqn{\theta} target procedure
+A summary of the STF obtained from the application of the theta target procedure
 }
 \description{
-The STF is obtained with the \eqn{\theta} target procedure implemented in the function \code{theta_target()}
+The STF is obtained with the theta target procedure implemented in the function \code{theta_target()}
 }
 \examples{
 set.seed(123)

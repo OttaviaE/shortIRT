@@ -1,11 +1,11 @@
 #' Method for the summary of the STF
 #'
-#' The STF is obtained with the \eqn{\theta} target procedure implemented in the function \code{theta_target()}
+#' The STF is obtained with the ISA procedure implemented in the function \code{isa()}
 #'
-#' @param object Object of class \code{theta_target}
+#' @param object Object of class \code{isa}
 #' @param ... other arguments
 #'
-#' @returns A summary of the STF obtained from the application of the \eqn{\theta} target procedure
+#' @returns A summary of the STF obtained from the application of the ISA procedure
 #' @export
 #'
 #' @examples

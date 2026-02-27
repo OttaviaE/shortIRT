@@ -24,6 +24,39 @@ A \code{matrix} of class \code{iifs} with nrows equal to the length of \code{the
 \description{
 Computes the item information functions for multiple dichotous or polytomous items
 }
+\details{
+Let \eqn{P(\theta)} denote the probability of a correct response under the
+four-parameter logistic (4PL) model (dichotomous responses):
+
+\deqn{
+P(\theta) =
+c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta - b_i)\right]}
+}
+
+and let \eqn{Q(\theta) = 1 - P(\theta)}.
+
+The information function of item \eqn{i} is computed as:
+
+\deqn{
+I_i(\theta) =
+\frac{a_i^2 \left[P(\theta) - c_i\right]^2 \left[e_i - P(\theta)\right]^2}
+{(e_i - c_i)^2 \, P(\theta) \, Q(\theta)}
+}
+
+For a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+\deqn{
+P(Y = k \mid \theta) =
+\frac{\exp\left( \sum_{s=1}^k a_i (\theta - b_i) \right)}
+{\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_i (\theta - b_i) \right)}
+}
+
+with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
+
+The item information is computed as:
+\deqn{
+I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
+}
+}
 \examples{
 set.seed(123)
 parameters <- data.frame(b = c(-3,-2,0, 2, 3),

@@ -23,14 +23,15 @@ define_targets <- function(theta, num_targets = NULL,
     stop("Must define a number of theta targets")
   }
   if (method == "equal") {
-    x <- cut(theta, breaks = num_targets, include.lowest = TRUE)
-    pattern <- "(\\(|\\[)(-*[0-9]+\\.*[0-9]*),(-*[0-9]+\\.*[0-9]*)(\\)|\\])"
-    start <- as.numeric(gsub(pattern,"\\2", x))
-    end <- as.numeric(gsub(pattern,"\\3", x))
-    borders <- data.frame(start, end)
-    borders$central <- rowMeans(borders)
-    borders <- unique(borders)
-    targets <- borders$central
+    theta_ord <- sort(theta)
+    width  <- (max(theta_ord) - min(theta_ord)) / num_targets
+    breaks <- min(theta_ord) + 0:num_targets * width
+
+    intervals <- data.frame(
+      start   = breaks[-length(breaks)],
+      end     = breaks[-1]
+    )
+    targets <- rowMeans(intervals)
     class(targets) <- "equal"
   } else if (method == "clusters") {
     targets <- kmeans(theta, centers = num_targets)$centers[,1]

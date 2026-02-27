@@ -7,15 +7,15 @@
 \method{summary}{isa}(object, ...)
 }
 \arguments{
-\item{object}{Object of class \code{theta_target}}
+\item{object}{Object of class \code{isa}}
 
 \item{...}{other arguments}
 }
 \value{
-A summary of the STF obtained from the application of the \eqn{\theta} target procedure
+A summary of the STF obtained from the application of the ISA procedure
 }
 \description{
-The STF is obtained with the \eqn{\theta} target procedure implemented in the function \code{theta_target()}
+The STF is obtained with the ISA procedure implemented in the function \code{isa()}
 }
 \examples{
 set.seed(123)

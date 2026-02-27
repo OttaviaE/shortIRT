@@ -2,14 +2,18 @@
 #'
 #' Develop a short test form given the item parameters (dichotomous or polytomous) according to the theta target procedure. See \code{Details}.
 #'
-#' @param targets numeric vector with the discrete values of theta for which the information needs to be maximized
-#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items. #'
+#' @param targets \code{numeric}, either a vector with the discrete values of theta for which the information needs to be
+#'    maximized obtained with the \code{define_targets()} function or a vector with user-defined values.
+#'    If the same theta value is defined and repeated several time, it can be passed as a named list, where \code{value} indicate the value
+#'    that needs to be repeated and \code{num_targets} the number of times it is repeated for.
+#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items.
 #'    For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+#'    For polytomous items, the matrix has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters (must be named "b")
 #'   \eqn{b_1, \dots, b_K}.
-#' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#' @param theta \code{numeric} vector with the values of the latent trait \eqn{\theta} (needed for the computation of the IIFs of all items)
+#' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
 #' Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
 #' \eqn{K = N - 1}. Let \eqn{J} be the total number of items in the item bank and
@@ -100,9 +104,16 @@
 #' colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
 #' resT_poly <- theta_target(c(-1,0), item_pars, K = 3)
 #' str(resT_poly)
-theta_target <- function(targets, item_pars, K = NULL) {
+theta_target <- function(targets, item_pars, theta = seq(-5,5, length.out=1000),
+                         K = NULL) {
+  if (is.list(targets)) {
+    if (length(targets) > 2) {
+      stop("Only lists of length 2 are accepted with the specific theta value and the number of targets to generated")
+    }
+    targets <- rep(targets$value, targets$num_targets)
+  }
  if (inherits(targets, "equal") == FALSE & inherits(targets, "clusters") == FALSE) {
-    class_targets  <- "unknown"
+    class_targets  <- "user-defined"
   } else {
     class_targets <- class(targets)
   }
@@ -121,18 +132,18 @@ theta_target <- function(targets, item_pars, K = NULL) {
     }
   }
 
-  colnames(itarget) = paste("target", targets , sep ="")
-  temp = itarget
+  colnames(itarget) <- paste("target", targets , sep ="")
+  temp <- itarget
 
-  isel = numeric(length(targets))
-  tsel = numeric(length(targets))
-  maxiif = numeric(length(targets))
+  isel <- numeric(length(targets))
+  tsel <- numeric(length(targets))
+  maxiif <- numeric(length(targets))
   for (i in 1:length(targets)) {
-    isel[i] = which(temp == max(temp, na.rm = TRUE), arr.ind = TRUE)[1,][1]
-    tsel[i] = which(temp == max(temp, na.rm = TRUE), arr.ind = TRUE)[1,][2]
-    maxiif[i] =  max(temp, na.rm = TRUE)
-    temp[isel[i], ] = NA
-    temp[, tsel[i]] = NA
+    isel[i] <- which(temp == max(temp, na.rm = TRUE), arr.ind = TRUE)[1,][1]
+    tsel[i] <- which(temp == max(temp, na.rm = TRUE), arr.ind = TRUE)[1,][2]
+    maxiif[i] <-  max(temp, na.rm = TRUE)
+    temp[isel[i], ] <- NA
+    temp[, tsel[i]] <- NA
   }
   rownames(iifs) <- theta
   res <- t(rbind(isel, maxiif))

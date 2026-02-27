@@ -2,7 +2,7 @@
 % Please edit documentation in R/irt_estimate.R
 \name{logLik_theta}
 \alias{logLik_theta}
-\title{Log-likelihood estiamtion of theta}
+\title{Log-likelihood estimation of \eqn{\theta}}
 \usage{
 logLik_theta(theta, x, item_par)
 }
@@ -14,10 +14,11 @@ logLik_theta(theta, x, item_par)
 \item{item_par}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
 }
 \value{
-The log-likelihood
+The function for estimating the log-likelihood of \eqn{\theta}
 }
 \description{
-Log-likelihood estiamtion of theta
+Provide the log-likelihood function for estimating \eqn{\theta} given
+the item parameters (dichotomous only) and the true values of \eqn{\theta}
 }
 \examples{
 set.seed(123)

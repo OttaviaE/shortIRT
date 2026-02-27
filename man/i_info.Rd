@@ -14,7 +14,7 @@ discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the las
 columns correspond to step difficulty (threshold) parameters (must be named "b")
 \eqn{b_1, \dots, b_K}.}
 
-\item{theta}{Numeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5}
+\item{theta}{Numeric vector of latent trait values. Default is a vector of a thousand values ranging from -5 to +5}
 
 \item{K}{Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
 }
@@ -34,31 +34,31 @@ four-parameter logistic (4PL) model (dichotomous responses):
 
 \deqn{
 P(\theta) =
-c + \frac{e - c}{1 + \exp\left[-a(\theta - b)\right]}
+c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta - b_i)\right]}
 }
 
 and let \eqn{Q(\theta) = 1 - P(\theta)}.
 
-The item information function is computed as:
+The information function of item \eqn{i} is computed as:
 
 \deqn{
-I(\theta) =
-\frac{a^2 \left[P(\theta) - c\right]^2 \left[e - P(\theta)\right]^2}
-{(e - c)^2 \, P(\theta) \, Q(\theta)}
+I_i(\theta) =
+\frac{a_i^2 \left[P(\theta) - c_i\right]^2 \left[e_i - P(\theta)\right]^2}
+{(e_i - c_i)^2 \, P(\theta) \, Q(\theta)}
 }
 
-For a polytomous item with \eqn{K} thresholds seprating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+For a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
 \deqn{
 P(Y = k \mid \theta) =
-\frac{\exp\left( \sum_{s=1}^k a_s (\theta - b_s) \right)}
-{\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_s (\theta - b_s) \right)}
+\frac{\exp\left( \sum_{s=1}^k a_i (\theta - b_i) \right)}
+{\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_i (\theta - b_i) \right)}
 }
 
 with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
 
 The item information is computed as:
 \deqn{
-I(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
+I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
 }
 }
 \examples{
@@ -73,5 +73,5 @@ info_dichotomous <- i_info(item_par, theta = theta)
 item_pars <- data.frame(a1 = 1.2, a2 = 1.0, a3= 0.8,
                         b1 = -1.0, b2 = 0.0, b3 = 1.2)
 
-info <- iif_poly(item_pars, theta = theta, K = 3)
+info <- i_info(item_pars, theta = theta, K = 3)
 }

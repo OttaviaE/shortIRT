@@ -4,14 +4,12 @@
 \alias{plot.bench}
 \title{Method for plotting the TIF of the STF}
 \usage{
-\method{plot}{bench}(x, fun = "sum", show_both = TRUE, ...)
+\method{plot}{bench}(x, fun = "sum", ...)
 }
 \arguments{
 \item{x}{Object of class \code{bench}}
 
 \item{fun}{\code{character}, whether to consider the mean or the sum for the computation of the TIF}
-
-\item{show_both}{\code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test}
 
 \item{...}{other arguments}
 }

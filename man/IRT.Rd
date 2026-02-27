@@ -2,12 +2,12 @@
 % Please edit documentation in R/IRT.R
 \name{IRT}
 \alias{IRT}
-\title{Compute expected probability for a single item}
+\title{Compute expected probability for a single dichotomous item}
 \usage{
 IRT(theta, b = 0, a = 1, c = 0, e = 1)
 }
 \arguments{
-\item{theta}{\code{numeric} latent trait level of person p. It can be a single value or a vector of values.}
+\item{theta}{\code{numeric} latent trait level of person \eqn{p}. It can be a single value or a vector of values.}
 
 \item{b}{\code{numeric} location of item \eqn{i}. Default is 0.}
 
@@ -22,25 +22,28 @@ a single value, that is the probability of the correct response for item \eqn{i}
 }
 \description{
 Compute the expected probability for an item \eqn{i} according to its IRT parameters.
-According to the parameters that are specified, the probability according to the 1-PL, 2-PL, 3-PL, or 4-PL models is computed
+Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 }
 \details{
 The probability of a correct response under the four-parameter logistic
-(4PL) model is defined as:
+(4-PL) model is defined as:
 
 \deqn{
 P(X = 1 \mid \theta_p) =
 c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta_p - b_i)\right]}
 }
 
-where \eqn{a} is the discrimination parameter,
-\eqn{b} is the difficulty parameter,
-\eqn{c} is the lower asymptote (guessing),
-and \eqn{e} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-is computed according to the 3-PL, 2-PL and 1-PL, respectively
+where \eqn{a_i} is the discrimination parameter,
+\eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
+\eqn{c_i} is the lower asymptote (psedo-guessing probability),
+and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
+is computed according to the 3-PL, 2-PL and 1-PL, respectively.
 }
 \examples{
+# compute the probability for an item according to 1-PL model
 IRT(theta = 0, b = 0,  a = 1, c = 0, e = 1)
 # compute probability for a vector of thetas for the same item
 IRT(theta = c(-1, 0, 1), b = 0,  a = 1, c = 0, e = 1)
+# compute probability for a vector of thetas for an item according to the 4-PL model
+IRT(theta = c(-1, 0, 1), b = 0,  a = 1.25, c = 0.10, e = 0.98)
 }

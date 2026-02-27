@@ -2,20 +2,21 @@
 #'
 #' Develop a short test form given the item parameters (dichotomous or polytomous) according to the benchmark procedure. See \code{Details}.
 #'
-#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items. #'
+#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items.
 #'    For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+#'    For polytomous items, the matrix has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters (must be named "b")
 #'   \eqn{b_1, \dots, b_K}.
-#' @param iifs \code{data.frame}, dataframe with n-rows equal to the length of the latent trait \eqn{\theta} and n-cols equal to the number of items in the full-length test. It contains the item information functions (IIFs) of the items in the full-length test. Cannot use both \code{ipar} and \code{iifs}.
-#' @param num_item \code{integer}, the number of items to include in the short test form
+#' @param iifs \code{data.frame}, dataframe with n-rows equal to the length of the latent trait \eqn{\theta} and n-cols equal to the number of items in the full-length test. It contains the item information functions (IIFs) of the items in the full-length test. Cannot use both \code{item_pars} and \code{iifs}.
+#' @param num_item \code{integer}, the number \eqn{N} of items to include in the short test form
 #' @param theta \code{numeric}, vector with the latent trait values
-#' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#' @param K \code{Integer}, Number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).
 #'
 #' @details
 #' A short test form composed of \eqn{N} items is constructed from an item bank
-#' \eqn{B} by selecting the items with the highest item information values.
+#' \eqn{B} by selecting the items with the highest item information values, with no
+#' explicit reference to any specific level of the latent trait.
 #'
 #' Let \eqn{I_i(\theta)} denote the item information function (IIF) for item
 #' \eqn{i}, with \eqn{i = 1, \dots, |B|}. The IIFs of the item bank are sorted in

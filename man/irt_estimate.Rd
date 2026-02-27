@@ -2,16 +2,16 @@
 % Please edit documentation in R/irt_estimate.R
 \name{irt_estimate}
 \alias{irt_estimate}
-\title{Estimate of theta}
+\title{Estimate of \eqn{\theta} via Maximum Likelihood}
 \usage{
 irt_estimate(item_par, responses = NULL, theta, lower = -3, upper = abs(lower))
 }
 \arguments{
 \item{item_par}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
 
-\item{responses}{\code{matrix}, \eqn{p \times i} matrix with the dichotomous responses of each respondent \eqn{p} on each item \eqn{i}. Default is \code{NULL}.}
+\item{responses}{\code{matrix}, \eqn{P \times I} matrix with the dichotomous responses of each respondent \eqn{p} on each item \eqn{i}. Default is \code{NULL}.}
 
-\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.}
+\item{theta}{\code{numeric} vector with true values of \eqn{\theta}}
 
 \item{lower}{\code{integer} lower value of \eqn{\theta} to be considered for the estimation}
 
@@ -21,7 +21,7 @@ irt_estimate(item_par, responses = NULL, theta, lower = -3, upper = abs(lower))
 A numeric vector of length equal to the length of \code{theta} with the ML estimation of the latent trait
 }
 \description{
-Maximum Likelihood estimation of theta
+Maximum Likelihood estimation of \eqn{\theta}
 }
 \examples{
 set.seed(123)

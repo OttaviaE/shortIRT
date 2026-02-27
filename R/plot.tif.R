@@ -1,5 +1,7 @@
 #' Plot TIF
 #'
+#' Plot the test information function
+#'
 #' @param x object of class \code{tif} obtained with the \code{tif()} function
 #' @param ... other arguments
 #'

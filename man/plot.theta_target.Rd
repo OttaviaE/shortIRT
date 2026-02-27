@@ -4,7 +4,7 @@
 \alias{plot.theta_target}
 \title{Method for plotting the TIF of the STF}
 \usage{
-\method{plot}{theta_target}(x, fun = "sum", show_targets = TRUE, show_both = TRUE, K = NULL, ...)
+\method{plot}{theta_target}(x, fun = "sum", show_targets = TRUE, K = NULL, ...)
 }
 \arguments{
 \item{x}{Object of class \code{theta_target} obtained with function \code{theta_target()}}
@@ -13,7 +13,7 @@
 
 \item{show_targets}{\code{logical}, default is TRUE. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown as the items that satisfy them.}
 
-\item{show_both}{\code{logical}, default is \code{TRUE}. Whether to show or not the TIF obtained from the full-length test}
+\item{K}{Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
 
 \item{...}{other arguments}
 }
@@ -21,7 +21,7 @@
 A \code{ggplot} showing the TIFs of both the STF and the full-length test
 }
 \description{
-The STF is obtained with the theta target procedure
+The STF is obtained with the theta target procedure implemented with function \code{theta_target()}
 }
 \examples{
 set.seed(123)

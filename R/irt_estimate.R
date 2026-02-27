@@ -1,4 +1,7 @@
-#' Log-likelihood estiamtion of theta
+#' Log-likelihood estimation of \eqn{\theta}
+#'
+#' Provide the log-likelihood function for estimating \eqn{\theta} given
+#' the item parameters (dichotomous only) and the true values of \eqn{\theta}
 #'
 #' @param theta \code{numeric} vector with true values of \eqn{\theta}
 #' @param x \code{integer} vector of 0s and 1s, response pattern of each respondent
@@ -6,7 +9,7 @@
 #'
 #' @importFrom stats optim rbinom
 #'
-#' @returns The log-likelihood
+#' @returns The function for estimating the log-likelihood of \eqn{\theta}
 #' @export
 #'
 #' @examples
@@ -30,13 +33,13 @@ logLik_theta <- function(theta, x, item_par) {
   sum(x * log(P) + (1 - x) * log(1 - P))
 }
 
-#' Estimate of theta
+#' Estimate of \eqn{\theta} via Maximum Likelihood
 #'
-#' Maximum Likelihood estimation of theta
+#' Maximum Likelihood estimation of \eqn{\theta}
 #'
 #' @param item_par \code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#' @param responses \code{matrix}, \eqn{p \times i} matrix with the dichotomous responses of each respondent \eqn{p} on each item \eqn{i}. Default is \code{NULL}.
-#' @param theta \code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.
+#' @param responses \code{matrix}, \eqn{P \times I} matrix with the dichotomous responses of each respondent \eqn{p} on each item \eqn{i}. Default is \code{NULL}.
+#' @param theta \code{numeric} vector with true values of \eqn{\theta}
 #' @param lower \code{integer} lower value of \eqn{\theta} to be considered for the estimation
 #' @param upper \code{integer} upper value of \eqn{\theta} to be considered for the estimation
 #'

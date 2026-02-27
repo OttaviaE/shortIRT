@@ -15,7 +15,7 @@
 A \code{ggplot} displaying the TIF
 }
 \description{
-Plot TIF
+Plot the test information function
 }
 \examples{
 set.seed(123)

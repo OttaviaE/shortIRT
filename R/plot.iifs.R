@@ -1,9 +1,9 @@
 #' Method for plotting the IIFs
 #'
-#' Plot the IIFs
+#' Plot the information functions of polytomous or dichotomous items
 #'
 #' @param x \code{data.frame} of class \code{iifs} obtained with the function \code{item_info()}
-#' @param single_panels \code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on different panels
+#' @param single_panels \code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on a different panel
 #' @param items default is \code{NULL} (shows all items). Allows for selecting specific items for the plot
 #' @param ... other arguments
 #'

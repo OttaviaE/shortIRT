@@ -12,7 +12,7 @@
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters (must be named "b")
 #'   \eqn{b_1, \dots, b_K}.
-#' @param theta Numeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5
+#' @param theta Numeric vector of latent trait values. Default is a vector of a thousand values ranging from -5 to +5
 #' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
 #' Let \eqn{P(\theta)} denote the probability of a correct response under the
@@ -20,31 +20,31 @@
 #'
 #' \deqn{
 #' P(\theta) =
-#' c + \frac{e - c}{1 + \exp\left[-a(\theta - b)\right]}
+#' c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta - b_i)\right]}
 #' }
 #'
 #' and let \eqn{Q(\theta) = 1 - P(\theta)}.
 #'
-#' The item information function is computed as:
+#' The information function of item \eqn{i} is computed as:
 #'
 #' \deqn{
-#' I(\theta) =
-#' \frac{a^2 \left[P(\theta) - c\right]^2 \left[e - P(\theta)\right]^2}
-#' {(e - c)^2 \, P(\theta) \, Q(\theta)}
+#' I_i(\theta) =
+#' \frac{a_i^2 \left[P(\theta) - c_i\right]^2 \left[e_i - P(\theta)\right]^2}
+#' {(e_i - c_i)^2 \, P(\theta) \, Q(\theta)}
 #' }
 #'
-#' For a polytomous item with \eqn{K} thresholds seprating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+#' For a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
 #' \deqn{
 #' P(Y = k \mid \theta) =
-#' \frac{\exp\left( \sum_{s=1}^k a_s (\theta - b_s) \right)}
-#' {\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_s (\theta - b_s) \right)}
+#' \frac{\exp\left( \sum_{s=1}^k a_i (\theta - b_i) \right)}
+#' {\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_i (\theta - b_i) \right)}
 #' }
 #'
 #' with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
 #'
 #' The item information is computed as:
 #' \deqn{
-#' I(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
+#' I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
 #' }
 #'
 #' @returns A numeric vector of length equal to \code{theta}, which contains the item information function for a single item with respect to the values specified in \code{theta}
@@ -62,7 +62,7 @@
 #' item_pars <- data.frame(a1 = 1.2, a2 = 1.0, a3= 0.8,
 #'                         b1 = -1.0, b2 = 0.0, b3 = 1.2)
 #'
-#' info <- iif_poly(item_pars, theta = theta, K = 3)
+#' info <- i_info(item_pars, theta = theta, K = 3)
 i_info <- function(item_pars,
                    theta = seq(-5,5,length.out=1000), K = NULL){
   if (is.null(K)) {
@@ -133,7 +133,38 @@ i_info <- function(item_pars,
 #'   \eqn{b_1, \dots, b_K}.
 #' @param theta Numeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5
 #' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#' @details
+#' Let \eqn{P(\theta)} denote the probability of a correct response under the
+#' four-parameter logistic (4PL) model (dichotomous responses):
 #'
+#' \deqn{
+#' P(\theta) =
+#' c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta - b_i)\right]}
+#' }
+#'
+#' and let \eqn{Q(\theta) = 1 - P(\theta)}.
+#'
+#' The information function of item \eqn{i} is computed as:
+#'
+#' \deqn{
+#' I_i(\theta) =
+#' \frac{a_i^2 \left[P(\theta) - c_i\right]^2 \left[e_i - P(\theta)\right]^2}
+#' {(e_i - c_i)^2 \, P(\theta) \, Q(\theta)}
+#' }
+#'
+#' For a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+#' \deqn{
+#' P(Y = k \mid \theta) =
+#' \frac{\exp\left( \sum_{s=1}^k a_i (\theta - b_i) \right)}
+#' {\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_i (\theta - b_i) \right)}
+#' }
+#'
+#' with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
+#'
+#' The item information is computed as:
+#' \deqn{
+#' I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
+#' }
 #' @returns A \code{matrix} of class \code{iifs} with nrows equal to the length of \code{theta} and ncols equal to the number of items in \code{item_par}
 #' @export
 #'
@@ -183,7 +214,7 @@ item_info <- function(item_pars, theta = seq(-5,5,length.out=1000), K = NULL){
     info_mat <- matrix(NA_real_, n_theta, n_items)
 
     for (i in seq_len(n_items)) {
-      info_mat[, i] <- i_poly(
+      info_mat[, i] <- i_info(
         theta      = theta,
         item_pars = item_pars[i, , drop = FALSE],
         K         = K
