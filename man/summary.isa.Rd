@@ -27,7 +27,7 @@ item_par <- data.frame(
   c = rep(0, n),
   e = rep(1, n)
 )
-targets <- define_targets(theta, num_targets = 4)
-resT <- theta_target(targets, item_par)
-summary(resT)
+target <- tif(item_info(item_par), fun = "mean")
+resI <- isa(item_par, target, nmin = 5)
+summary(resI)
 }
