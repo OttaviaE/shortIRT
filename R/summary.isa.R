@@ -18,17 +18,19 @@
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
-#' targets <- define_targets(theta, num_targets = 4)
-#' resT <- theta_target(targets, item_par)
-#' summary(resT)
+#' target <- tif(item_info(item_par), fun = "mean")
+#' resI <- isa(item_par, target, nmin = 5)
+#' summary(resI)
 summary.isa<- function(object, ...) {
   cat("The selected items are\n")
   cat(object$stf$isel, "\n with the following parameters \n")
   print(object$selected_items)
-  cat("The item selection is based on the isa procedure with", unique(object$stf$nmin), "minimum items to be included in the STF \n")
+  cat("The item selection is based on the isa procedure with", unique(object$stf$nmin),
+      "minimum items to be included in the STF. \n")
+  cat("The STF is composed of", nrow(object$stf))
   if (is.null(object$K)) {
-    cat("The items are dichotomous")
+    cat(" dichotomous items")
   } else {
-    cat("The items are polytomous with", object$K+1, "categories (", object$K, "thresholds)")
+    cat(" of polytomous with", object$K+1, "categories (", object$K, "thresholds)")
   }
 }

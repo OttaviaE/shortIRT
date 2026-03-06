@@ -26,10 +26,10 @@ summary.bench <- function(object, ...) {
   cat("These items maximize the information for thetas equal to: \n")
   cat(object$stf$theta, "\n The parameters of the selected items are: \n")
   print(object$selected_items)
-  cat("The item selection is based on the bench procedure \n")
+  cat("The item selection is based on the bench procedure. The STF is composed of ", nrow(object$stf))
   if (is.null(object$K)) {
-    cat("The items are dichotomous")
+    cat(" dichotomous items.")
   } else {
-    cat("The items are polytomous with", object$K+1, "categories (", object$K, "thresholds)")
+    cat(" polytomous items with", object$K+1, "categories (", object$K, "thresholds)")
   }
 }

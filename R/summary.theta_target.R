@@ -27,10 +27,10 @@ summary.theta_target <- function(object, ...) {
   cat("These items maximize the information for thetas equal to: \n")
   cat(object$stf$theta_target, "\n with the following parameters \n")
   print(object$selected_items)
-  cat("The item selection is based on the theta-target procedure with", object$intervals, "target \n")
+  cat("The item selection is based on the theta-target procedure with", object$intervals, "targets. The STF is composed of", nrow(object$stf))
   if (is.null(object$K)) {
-    cat("The items are dichotomous")
+    cat(" dichotomous items.")
   } else {
-    cat("The items are polytomous with", object$K+1, "categories (", object$K, "thresholds)")
+    cat(" polytomous items with", object$K+1, "categories (", object$K, "thresholds).")
   }
 }
