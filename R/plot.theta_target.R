@@ -1,14 +1,17 @@
 #' Method for plotting the TIF of the STF
 #'
-#' The STF is obtained with the theta target procedure implemented with function \code{theta_target()}
+#' The STF is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 #'
 #' @param x Object of class \code{theta_target} obtained with function \code{theta_target()}
 #' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
 #' @param show_targets \code{logical}, default is TRUE. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown as the items that satisfy them.
-#' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @param ... other arguments
 #'
-#' @returns A \code{ggplot} showing the TIFs of both the STF and the full-length test
+#' @details
+#' If more than 10 theta targets are selected, the legend associated to each theta target is not displayed.
+#'
+#'
+#' @returns A \code{ggplot} showing the TIFs of the STF, the locations of the theta targets, and the items that satisfy each theta target.
 #' @export
 #'
 #' @examples
@@ -28,17 +31,12 @@
 #' plot(resT, show_targets = FALSE)
 plot.theta_target <- function(x, fun = "sum",
                               show_targets = TRUE,
-                              K = NULL,
                               ...) {
   theta <- as.numeric(rownames(x$all_iifs))
   K <- x$K
   temp <- tif(x$all_iifs, fun = fun)
   if (is.null(K)) {
-    if (ncol(x$item_par) > 4) {
-      stop("The items appear to be polytomous but you did not provide the K thresholds!")
-    } else {
       stfiif <- item_info(x$selected_items, theta = theta)
-    }
   } else {
     stfiif <- item_info(x$selected_items, theta = theta, K = K)
   }
@@ -61,6 +59,9 @@ plot.theta_target <- function(x, fun = "sum",
                                                   y = .010,
                                                   col = .data$isel),
                                           inherit.aes = FALSE)
+    if (nrow(x$selected_items) > 10) {
+      basic_plot <- basic_plot + theme(legend.position = "none")
+    }
   }
 
  print(basic_plot)

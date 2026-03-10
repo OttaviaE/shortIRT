@@ -11,28 +11,48 @@
 #' @param iifs \code{data.frame}, dataframe with n-rows equal to the length of the latent trait \eqn{\theta} and n-cols equal to the number of items in the full-length test. It contains the item information functions (IIFs) of the items in the full-length test. Cannot use both \code{item_pars} and \code{iifs}.
 #' @param num_item \code{integer}, the number \eqn{N} of items to include in the short test form
 #' @param theta \code{numeric}, vector with the latent trait values
-#' @param K \code{Integer}, Number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).
+#' @param K \code{integer}, Number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).
 #'
 #' @details
 #' A short test form composed of \eqn{N} items is constructed from an item bank
 #' \eqn{B} by selecting the items with the highest item information values, with no
 #' explicit reference to any specific level of the latent trait.
 #'
-#' Let \eqn{I_i(\theta)} denote the item information function (IIF) for item
-#' \eqn{i}, with \eqn{i = 1, \dots, |B|}. The IIFs of the item bank are sorted in
-#' decreasing order:
+#' Let \eqn{I_i(\theta)} denote the item information function (IIF) of item
+#' \eqn{i}, with \eqn{i = 1, \dots, |B|}, where \eqn{|B|} denotes the
+#' cardinality of the item bank \eqn{B}.
+#'
+#' For each item \eqn{i}, compute the maximum value of its information
+#' function over \eqn{\theta}. Define the vector
 #'
 #' \deqn{
-#' \mathrm{iif} =
-#' \left(
-#' \max_{1 \le i \le |B|} I_i(\theta),
-#' \dots,
-#' \min_{1 \le i \le |B|} I_i(\theta)
-#' \right)
+#' \mathbf{m} = (m_1, \dots, m_{|B|}),
 #' }
 #'
-#' The first \eqn{N} items in the ordered vector \eqn{\mathrm{iif}}, with
-#' \eqn{N < |B|}, are selected to be included in the short test form.
+#' where
+#'
+#' \deqn{
+#' m_i = \max_{\theta} I_i(\theta), \qquad i = 1, \dots, |B|.
+#' }
+#'
+#' The vector \eqn{\mathbf{m}} is then sorted in decreasing order,
+#' producing
+#'
+#' \deqn{
+#' \mathrm{iif}_{(1)} \ge \mathrm{iif}_{(2)} \ge \dots \ge \mathrm{iif}_{(|B|)},
+#' }
+#' Finally, the first \eqn{N} items in the ordered vector, with
+#' \eqn{N < |B|}, are selected to form the short test form.
+#'
+#' Further details on the benchmark procedure can be found in Epifania et al. (2022).
+#'
+#' @references Epifania, O. M., Anselmi, P., & Robusto, E. (2022). Item response
+#' theory approaches for test shortening. In M. Wiberg, D. Molenaar,
+#' J. Gonzalez, J. S. Kim, & H. Hwang (Eds.), Quantitative Psychology
+#' (Vol. 422, pp. 75–83). Springer Proceedings in Mathematics and
+#' Statistics. Cham: Springer.
+#' https://doi.org/10.1007/978-3-031-27781-8_7
+#'
 #' @returns
 #' An object of class \code{bench} of length 3 with:
 #'
@@ -77,13 +97,16 @@ bench <- function(item_pars = NULL,
   if (is.null(num_item)) {
     stop("You must specify the number of items for the STFs!")
   }
+  if (num_item >= nrow(item_pars)) {
+    stop("The number of items for the STF is greater or equal to the number of items in the STF")
+  }
   if (is.null(item_pars) & is.null(iifs)) stop("You must specificy either the IIFs or the item parameters!")
   if (is.null(item_pars) == FALSE & is.null(iifs) == TRUE) {
     if (!is.null(K)) {
       iifs <- item_info(item_pars = item_pars,theta = theta,  K = K)
     } else {
-      if (ncol(item_pars) > 4) {
-        stop("You provided parameters for polytomous items but did not specified the number of thresholds")
+      if (length(unique(gsub("[0-9]", "", colnames(item_pars)))) == 2) {
+        stop("You forgot to specifiy the number of thresholds for your items!")
       } else {
         iifs <- item_info(item_pars = item_pars,theta = theta,)
       }

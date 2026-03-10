@@ -1,11 +1,15 @@
-#' Method for plotting the IIFs
+#' Method for plotting the item information functions
 #'
 #' Plot the information functions of polytomous or dichotomous items
 #'
 #' @param x \code{data.frame} of class \code{iifs} obtained with the function \code{item_info()}
 #' @param single_panels \code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on a different panel
-#' @param items default is \code{NULL} (shows all items). Allows for selecting specific items for the plot
+#' @param items default is \code{NULL} (shows all items). Allows for selecting specific items for the plot.
 #' @param ... other arguments
+#'
+#' @details
+#' If more there are more than 10 items, the legend associated to the color of the lines is not displayed.
+#'
 #'
 #' @returns A ggplot
 #' @export
@@ -32,10 +36,15 @@ plot.iifs <- function(x, single_panels = TRUE,
     if (is.null(items) == FALSE) {
       iifs <- iifs[iifs$ind %in% items, ]
     }
+    if (ncol(x) > 10) {
+      pos <- "none"
+    } else {
+      pos <- "bottom"
+    }
     basic_plot <- ggplot(iifs,
                          aes(x = .data$theta, y = .data$values,
                              group = .data$ind, color = .data$ind)) +
-      geom_line() + theme_light()
+      geom_line() + theme_light() + theme(legend.position = pos)
     if (single_panels == TRUE) {
       basic_plot <- basic_plot + facet_wrap(~.data$ind)
     } else {

@@ -15,17 +15,21 @@
 #' @param theta Numeric vector of latent trait values. Default is a vector of a thousand values ranging from -5 to +5
 #' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' Let \eqn{P(\theta)} denote the probability of a correct response under the
-#' four-parameter logistic (4PL) model (dichotomous responses):
+#' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+#' (4-PL; Barton & Lord, 1981) model is defined as:
 #'
 #' \deqn{
 #' P(\theta) =
-#' c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta - b_i)\right]}
+#' c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta_p - b_i)\right]}
 #' }
 #'
-#' and let \eqn{Q(\theta) = 1 - P(\theta)}.
+#' where \eqn{a_i} is the discrimination parameter,
+#' \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
+#' \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
+#' and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
+#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
 #'
-#' The information function of item \eqn{i} is computed as:
+#' Let \eqn{Q(\theta) = 1 - P(\theta)}, the information function of item \eqn{i} is computed as:
 #'
 #' \deqn{
 #' I_i(\theta) =
@@ -33,19 +37,37 @@
 #' {(e_i - c_i)^2 \, P(\theta) \, Q(\theta)}
 #' }
 #'
-#' For a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+#' According to the Generalized Partial Credit Model (GPCM; Muraki, 1997), for a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
 #' \deqn{
 #' P(Y = k \mid \theta) =
-#' \frac{\exp\left( \sum_{s=1}^k a_i (\theta - b_i) \right)}
-#' {\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_i (\theta - b_i) \right)}
+#' \frac{\exp\left( \sum_{k=1}^K a_k (\theta - b_k) \right)}
+#' {\sum_{j=0}^K \exp\left( \sum_{k=1}^K a_k (\theta - b_k) \right)}
 #' }
 #'
-#' with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
+#' where \eqn{a_k} and \eqn{b_k} are the discrimination and location parameters associate with each threshold \eqn{k}. If \eqn{a_k = 1, \, \forall k}, the Partial Credit Model (PCM, Muraki, 1992) is obtained.
 #'
 #' The item information is computed as:
 #' \deqn{
 #' I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
 #' }
+#'
+#' @references Barton, M. A., & Lord, F. M. (1981). An upper asymptote for the
+#' three-parameter logistic item-response model. ETS Research Report
+#' Series, 1981(1), i–8. Princeton, NJ: Educational Testing Service.
+#'
+#' Birnbaum, A. (1968). Some latent trait models and their use in inferring
+#' an examinee's ability. In F. M. Lord & M. R. Novick (Eds.),
+#' Statistical theories of mental test scores (pp. 397–479).
+#' Reading, MA: Addison-Wesley.
+#'
+#' Lord, F. M. (1980). Applications of item response theory to practical
+#' testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
+#'
+#' Muraki, G. (1992). A generalized partial credit model: Application of an EM algorithm.
+#' Psychometrika, 57(2), 159–176.
+#'
+#' Muraki, G. (1997). A generalized partial credit model with step discrimination.
+#' Journal of Educational Measurement, 34(2), 115–127.
 #'
 #' @returns A numeric vector of length equal to \code{theta}, which contains the item information function for a single item with respect to the values specified in \code{theta}
 #' @export
@@ -66,7 +88,7 @@
 i_info <- function(item_pars,
                    theta = seq(-5,5,length.out=1000), K = NULL){
   if (is.null(K)) {
-    if (ncol(item_pars) > 4) {
+    if (length(unique(gsub("[0-9]", "", colnames(item_pars)))) == 2) {
       stop("You forgot to specifiy the number of thresholds for your items!")
     }
     a <- item_pars$a
@@ -134,17 +156,21 @@ i_info <- function(item_pars,
 #' @param theta Numeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5
 #' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' Let \eqn{P(\theta)} denote the probability of a correct response under the
-#' four-parameter logistic (4PL) model (dichotomous responses):
+#' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+#' (4-PL; Barton & Lord, 1981) model is defined as:
 #'
 #' \deqn{
 #' P(\theta) =
-#' c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta - b_i)\right]}
+#' c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta_p - b_i)\right]}
 #' }
 #'
-#' and let \eqn{Q(\theta) = 1 - P(\theta)}.
+#' where \eqn{a_i} is the discrimination parameter,
+#' \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
+#' \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
+#' and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
+#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
 #'
-#' The information function of item \eqn{i} is computed as:
+#' Let \eqn{Q(\theta) = 1 - P(\theta)}, the information function of item \eqn{i} is computed as:
 #'
 #' \deqn{
 #' I_i(\theta) =
@@ -152,19 +178,38 @@ i_info <- function(item_pars,
 #' {(e_i - c_i)^2 \, P(\theta) \, Q(\theta)}
 #' }
 #'
-#' For a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+#' According to the Generalized Partial Credit Model (GPCM; Muraki, 1997), for a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
 #' \deqn{
 #' P(Y = k \mid \theta) =
-#' \frac{\exp\left( \sum_{s=1}^k a_i (\theta - b_i) \right)}
-#' {\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_i (\theta - b_i) \right)}
+#' \frac{\exp\left( \sum_{k=1}^K a_k (\theta - b_k) \right)}
+#' {\sum_{j=0}^K \exp\left( \sum_{k=1}^K a_k (\theta - b_k) \right)}
 #' }
 #'
-#' with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
+#' where \eqn{a_k} and \eqn{b_k} are the discrimination and location parameters associate with each threshold \eqn{k}. If \eqn{a_k = 1, \, \forall k}, the Partial Credit Model (PCM, Muraki, 1992) is obtained.
 #'
 #' The item information is computed as:
 #' \deqn{
 #' I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
 #' }
+#'
+#' @references Barton, M. A., & Lord, F. M. (1981). An upper asymptote for the
+#' three-parameter logistic item-response model. ETS Research Report
+#' Series, 1981(1), i–8. Princeton, NJ: Educational Testing Service.
+#'
+#' Birnbaum, A. (1968). Some latent trait models and their use in inferring
+#' an examinee's ability. In F. M. Lord & M. R. Novick (Eds.),
+#' Statistical theories of mental test scores (pp. 397–479).
+#' Reading, MA: Addison-Wesley.
+#'
+#' Lord, F. M. (1980). Applications of item response theory to practical
+#' testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
+#'
+#' Muraki, G. (1992). A generalized partial credit model: Application of an EM algorithm.
+#' Psychometrika, 57(2), 159–176.
+#'
+#' Muraki, G. (1997). A generalized partial credit model with step discrimination.
+#' Journal of Educational Measurement, 34(2), 115–127.
+#'
 #' @returns A \code{matrix} of class \code{iifs} with nrows equal to the length of \code{theta} and ncols equal to the number of items in \code{item_par}
 #' @export
 #'
@@ -190,7 +235,7 @@ i_info <- function(item_pars,
 #' head(info_poly)
 item_info <- function(item_pars, theta = seq(-5,5,length.out=1000), K = NULL){
   if (is.null(K)) {
-    if (ncol(item_pars) > 4) {
+    if (length(unique(gsub("[0-9]", "", colnames(item_pars)))) == 2) {
       stop("You forgot to specifiy the number of thresholds for your items!")
     }
   item <- lapply(1:nrow(item_pars), function(i) {
@@ -236,13 +281,22 @@ item_info <- function(item_pars, theta = seq(-5,5,length.out=1000), K = NULL){
 
 #' Test Information Function (TIF)
 #'
-#'  Compute the test information function of a test given a matrix of item information functions
+#' Compute the test information function of a test given a matrix of item information functions computed with the \code{item_info()} function. See \code{Details}.
 #'
 #' @param iifs object of class \code{iifs} containing the item information functions
 #' @param fun \code{character}, defines the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)
 #'
 #' @returns A \code{data.frame} of class \code{tif} with two columns: (i) \code{theta} containing the latent trait values, and (ii) \code{tif} containing the TIF values computed as either the sum or the mean of the IIFs
 #' @export
+#'
+#' @details
+#' The test infromation function (TIF) for both polytomous and dichotomous items is computed as:
+#'
+#' \deqn{
+#' \text{TIF}(\theta) = \sum_{i = 1}^{B} I_i(\theta)
+#' }
+#'
+#' Where \eqn{B} is the item bank.
 #'
 #' @examples
 #' set.seed(123)

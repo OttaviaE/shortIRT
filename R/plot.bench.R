@@ -1,12 +1,12 @@
 #' Method for plotting the TIF of the STF
 #'
-#' The STF is obtained with the benchmark procedure implemented with function \code{bench()}
+#' The STF is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
 #'
 #' @param x Object of class \code{bench}
 #' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
 #' @param ... other arguments
 #'
-#' @returns A \code{ggplot} showing the TIFs of both the STF and the full-length test, unless otherwise specified
+#' @returns A \code{ggplot} showing the TIFs of the STF.
 #' @export
 #'
 #' @examples

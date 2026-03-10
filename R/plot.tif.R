@@ -1,6 +1,6 @@
 #' Plot TIF
 #'
-#' Plot the test information function
+#' Plot the test information function computed with the \code{tif()} function.
 #'
 #' @param x object of class \code{tif} obtained with the \code{tif()} function
 #' @param ... other arguments
@@ -25,9 +25,13 @@
 #' test_tif_mean <- tif(iifs, fun = "mean")
 #' plot(test_tif_mean)
 plot.tif <- function(x, ...) {
+  if (attributes(x)$source == "sum") {
+    title <- "TIF"
+  } else {
+    title <- "Average TIF"
+  }
   basic_plot <- ggplot2::ggplot(x,
                   ggplot2::aes(x = .data$theta, y = .data$tif)) +
-    ggplot2::geom_line() + ggtitle(paste("TIF computed as",
-                                         attributes(x)$source)) + theme_light()
+    ggplot2::geom_line() + ggtitle(title) + theme_light()
   print(basic_plot)
 }
