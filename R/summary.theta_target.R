@@ -1,6 +1,6 @@
 #' Method for the summary of the STF
 #'
-#' The STF is obtained with the theta target procedure implemented in the function \code{theta_target()}
+#' The STF is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 #'
 #' @param object Object of class \code{theta_target}
 #' @param ... other arguments
@@ -22,15 +22,15 @@
 #' resT <- theta_target(targets, item_par)
 #' summary(resT)
 summary.theta_target <- function(object, ...) {
+  cat("The item selection is based on the theta-target procedure with", object$intervals, "targets. \n The STF is composed of", nrow(object$stf))
+  if (is.null(object$K)) {
+    cat(" dichotomous items. \n")
+  } else {
+    cat(" polytomous items with", object$K+1, "categories. \n")
+  }
   cat("The selected items are\n")
   cat(object$stf$isel, "\n")
   cat("These items maximize the information for thetas equal to: \n")
   cat(object$stf$theta_target, "\n with the following parameters \n")
   print(object$selected_items)
-  cat("The item selection is based on the theta-target procedure with", object$intervals, "targets. The STF is composed of", nrow(object$stf))
-  if (is.null(object$K)) {
-    cat(" dichotomous items.")
-  } else {
-    cat(" polytomous items with", object$K+1, "categories (", object$K, "thresholds).")
-  }
 }

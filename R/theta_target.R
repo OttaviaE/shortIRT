@@ -15,21 +15,23 @@
 #' @param theta \code{numeric} vector with the values of the latent trait \eqn{\theta} (needed for the computation of the IIFs of all items)
 #' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
-#' \eqn{K = N - 1}. Let \eqn{J} be the total number of items in the item bank and
+#' A short test form (STF) composed of \eqn{J} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence \eqn{|N| = |J|}.
+#' Let \eqn{J} be the total number of items in the item bank and
 #' \eqn{N} the desired length of the short test form.
+#' Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
+#' \eqn{K = N - 1}.
 #'
 #' Define:
 #' \itemize{
 #'   \item \eqn{S^k \subseteq \{1, \dots, J\}} as the set of items selected for
 #'   inclusion in the short test form up to iteration \eqn{k};
 #'
-#'   \item \eqn{Q^k \subseteq \{1, \dots, N\}} as the set of ability targets
+#'   \item \eqn{Q^k \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
 #'   satisfied up to iteration \eqn{k}.
 #' }
 #'
-#' At initialization (\eqn{k = 0}), \eqn{S^0 = \varnothing} and
-#' \eqn{Q^0 = \varnothing}.
+#' At \eqn{k = 0}, \eqn{S^0 = \emptyset} and
+#' \eqn{Q^0 = \emptyset}.
 #'
 #' The procedure iterates the following steps until \eqn{k = K}:
 #'
@@ -55,7 +57,14 @@
 #' }
 #'
 #' At iteration \eqn{K}, the procedure yields
-#' \eqn{|S^{K+1}| = N} and \eqn{|Q^{K+1}| = N}.
+#' \eqn{|S^{K+1}| = N} and \eqn{|Q^{K+1}| = N}. Further details can be found in Epifania et al. (2022).
+#'
+#' @references Epifania, O. M., Anselmi, P., & Robusto, E. (2022). Item response
+#' theory approaches for test shortening. In M. Wiberg, D. Molenaar,
+#' J. Gonzalez, J. S. Kim, & H. Hwang (Eds.), Quantitative Psychology
+#' (Vol. 422, pp. 75–83). Springer Proceedings in Mathematics and
+#' Statistics. Cham: Springer.
+#' https://doi.org/10.1007/978-3-031-27781-8_7
 #'
 #' @returns
 #' An object of class \code{theta_target} of length 4 containing:
@@ -79,6 +88,7 @@
 #'
 #'   \item{\code{K}: Number of thresholds for the response categories of the items. If the items are dichotomous \code{K} is \code{NULL}.}
 #' }
+#'
 #' @export
 #'
 #' @examples
@@ -110,7 +120,13 @@ theta_target <- function(targets, item_pars, theta = seq(-5,5, length.out=1000),
     if (length(targets) > 2) {
       stop("Only lists of length 2 are accepted with the specific theta value and the number of targets to generated")
     }
+    if (targets$num_targets >= nrow(item_pars)) {
+      stop("The number of items for the STF is greater or equal to the number of items in the STF")
+    }
     targets <- rep(targets$value, targets$num_targets)
+  }
+  if (length(targets) >= nrow(item_pars)) {
+    stop("The number of items for the STF is greater or equal to the number of items in the STF")
   }
  if (inherits(targets, "equal") == FALSE & inherits(targets, "clusters") == FALSE) {
     class_targets  <- "user-defined"
@@ -123,8 +139,8 @@ theta_target <- function(targets, item_pars, theta = seq(-5,5, length.out=1000),
                           K = K))
     iifs <- item_info(item_pars, theta, K)
   } else {
-    if (ncol(item_pars) > 4) {
-      stop("You provided parameters for polytomous items but did not specified the number of thresholds")
+    if (length(unique(gsub("[0-9]", "", colnames(item_pars)))) == 2) {
+      stop("You forgot to specifiy the number of thresholds for your items!")
     } else {
       itarget <- t(item_info(item_pars = item_pars,
                              theta = targets))

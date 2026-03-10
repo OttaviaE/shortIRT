@@ -1,6 +1,6 @@
 #' Method for the summary of the STF
 #'
-#' The STF is obtained with the ISA procedure implemented in the function \code{isa()}
+#' The STF is obtained with the ISA procedure implemented with function \code{isa()}.Details on the procedure can be found in the documentation of the \code{isa()} function.
 #'
 #' @param object Object of class \code{isa}
 #' @param ... other arguments
@@ -22,15 +22,15 @@
 #' resI <- isa(item_par, target, nmin = 5)
 #' summary(resI)
 summary.isa<- function(object, ...) {
-  cat("The selected items are\n")
-  cat(object$stf$isel, "\n with the following parameters \n")
-  print(object$selected_items)
   cat("The item selection is based on the isa procedure with", unique(object$stf$nmin),
       "minimum items to be included in the STF. \n")
   cat("The STF is composed of", nrow(object$stf))
   if (is.null(object$K)) {
-    cat(" dichotomous items")
+    cat(" dichotomous items. \n")
   } else {
-    cat(" of polytomous with", object$K+1, "categories (", object$K, "thresholds)")
+    cat(" of polytomous with", object$K+1, "categories \n")
   }
+    cat("The selected items are\n")
+  cat(object$stf$isel, "\n with the following parameters \n")
+  print(object$selected_items)
 }
