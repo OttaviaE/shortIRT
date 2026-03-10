@@ -15,7 +15,16 @@ tif(iifs, fun = "sum")
 A \code{data.frame} of class \code{tif} with two columns: (i) \code{theta} containing the latent trait values, and (ii) \code{tif} containing the TIF values computed as either the sum or the mean of the IIFs
 }
 \description{
-Compute the test information function of a test given a matrix of item information functions
+Compute the test information function of a test given a matrix of item information functions computed with the \code{item_info()} function. See \code{Details}.
+}
+\details{
+The test infromation function (TIF) for both polytomous and dichotomous items is computed as:
+
+\deqn{
+\text{TIF}(\theta) = \sum_{i = 1}^{B} I_i(\theta)
+}
+
+Where \eqn{B} is the item bank.
 }
 \examples{
 set.seed(123)

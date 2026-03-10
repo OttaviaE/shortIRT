@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.iifs.R
 \name{plot.iifs}
 \alias{plot.iifs}
-\title{Method for plotting the IIFs}
+\title{Method for plotting the item information functions}
 \usage{
 \method{plot}{iifs}(x, single_panels = TRUE, items = NULL, ...)
 }
@@ -11,7 +11,7 @@
 
 \item{single_panels}{\code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on a different panel}
 
-\item{items}{default is \code{NULL} (shows all items). Allows for selecting specific items for the plot}
+\item{items}{default is \code{NULL} (shows all items). Allows for selecting specific items for the plot.}
 
 \item{...}{other arguments}
 }
@@ -20,6 +20,9 @@ A ggplot
 }
 \description{
 Plot the information functions of polytomous or dichotomous items
+}
+\details{
+If more there are more than 10 items, the legend associated to the color of the lines is not displayed.
 }
 \examples{
 set.seed(123)

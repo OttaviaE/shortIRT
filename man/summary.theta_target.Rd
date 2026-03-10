@@ -15,7 +15,7 @@
 A summary of the STF obtained from the application of the theta target procedure
 }
 \description{
-The STF is obtained with the theta target procedure implemented in the function \code{theta_target()}
+The STF is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 }
 \examples{
 set.seed(123)

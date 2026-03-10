@@ -29,17 +29,21 @@ constraints on the item parameters.
 See \code{Details}.
 }
 \details{
-Let \eqn{P(\theta)} denote the probability of a correct response under the
-four-parameter logistic (4PL) model (dichotomous responses):
+Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+(4-PL; Barton & Lord, 1981) model is defined as:
 
 \deqn{
 P(\theta) =
-c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta - b_i)\right]}
+c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta_p - b_i)\right]}
 }
 
-and let \eqn{Q(\theta) = 1 - P(\theta)}.
+where \eqn{a_i} is the discrimination parameter,
+\eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
+\eqn{c_i} is the lower asymptote (pseudo-guessing probability),
+and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
+is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
 
-The information function of item \eqn{i} is computed as:
+Let \eqn{Q(\theta) = 1 - P(\theta)}, the information function of item \eqn{i} is computed as:
 
 \deqn{
 I_i(\theta) =
@@ -47,14 +51,14 @@ I_i(\theta) =
 {(e_i - c_i)^2 \, P(\theta) \, Q(\theta)}
 }
 
-For a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
+According to the Generalized Partial Credit Model (GPCM; Muraki, 1997), for a polytomous item with \eqn{K} thresholds separating the \eqn{K + 1} categories, the probability of category \eqn{k} is defined as:
 \deqn{
 P(Y = k \mid \theta) =
-\frac{\exp\left( \sum_{s=1}^k a_i (\theta - b_i) \right)}
-{\sum_{j=0}^K \exp\left( \sum_{s=1}^j a_i (\theta - b_i) \right)}
+\frac{\exp\left( \sum_{k=1}^K a_k (\theta - b_k) \right)}
+{\sum_{j=0}^K \exp\left( \sum_{k=1}^K a_k (\theta - b_k) \right)}
 }
 
-with the convention that the empty sum (for \eqn{k = 0}) is equal to zero.
+where \eqn{a_k} and \eqn{b_k} are the discrimination and location parameters associate with each threshold \eqn{k}. If \eqn{a_k = 1, \, \forall k}, the Partial Credit Model (PCM, Muraki, 1992) is obtained.
 
 The item information is computed as:
 \deqn{
@@ -74,4 +78,23 @@ item_pars <- data.frame(a1 = 1.2, a2 = 1.0, a3= 0.8,
                         b1 = -1.0, b2 = 0.0, b3 = 1.2)
 
 info <- i_info(item_pars, theta = theta, K = 3)
+}
+\references{
+Barton, M. A., & Lord, F. M. (1981). An upper asymptote for the
+three-parameter logistic item-response model. ETS Research Report
+Series, 1981(1), i–8. Princeton, NJ: Educational Testing Service.
+
+Birnbaum, A. (1968). Some latent trait models and their use in inferring
+an examinee's ability. In F. M. Lord & M. R. Novick (Eds.),
+Statistical theories of mental test scores (pp. 397–479).
+Reading, MA: Addison-Wesley.
+
+Lord, F. M. (1980). Applications of item response theory to practical
+testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
+
+Muraki, G. (1992). A generalized partial credit model: Application of an EM algorithm.
+Psychometrika, 57(2), 159–176.
+
+Muraki, G. (1997). A generalized partial credit model with step discrimination.
+Journal of Educational Measurement, 34(2), 115–127.
 }

@@ -20,7 +20,7 @@ columns correspond to step difficulty (threshold) parameters (must be named "b")
 
 \item{num_item}{\code{integer}, the number \eqn{N} of items to include in the short test form}
 
-\item{K}{\code{Integer}, Number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).}
+\item{K}{\code{integer}, Number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).}
 }
 \value{
 An object of class \code{bench} of length 3 with:
@@ -42,21 +42,33 @@ A short test form composed of \eqn{N} items is constructed from an item bank
 \eqn{B} by selecting the items with the highest item information values, with no
 explicit reference to any specific level of the latent trait.
 
-Let \eqn{I_i(\theta)} denote the item information function (IIF) for item
-\eqn{i}, with \eqn{i = 1, \dots, |B|}. The IIFs of the item bank are sorted in
-decreasing order:
+Let \eqn{I_i(\theta)} denote the item information function (IIF) of item
+\eqn{i}, with \eqn{i = 1, \dots, |B|}, where \eqn{|B|} denotes the
+cardinality of the item bank \eqn{B}.
+
+For each item \eqn{i}, compute the maximum value of its information
+function over \eqn{\theta}. Define the vector
 
 \deqn{
-\mathrm{iif} =
-\left(
-\max_{1 \le i \le |B|} I_i(\theta),
-\dots,
-\min_{1 \le i \le |B|} I_i(\theta)
-\right)
+\mathbf{m} = (m_1, \dots, m_{|B|}),
 }
 
-The first \eqn{N} items in the ordered vector \eqn{\mathrm{iif}}, with
-\eqn{N < |B|}, are selected to be included in the short test form.
+where
+
+\deqn{
+m_i = \max_{\theta} I_i(\theta), \qquad i = 1, \dots, |B|.
+}
+
+The vector \eqn{\mathbf{m}} is then sorted in decreasing order,
+producing
+
+\deqn{
+\mathrm{iif}_{(1)} \ge \mathrm{iif}_{(2)} \ge \dots \ge \mathrm{iif}_{(|B|)},
+}
+Finally, the first \eqn{N} items in the ordered vector, with
+\eqn{N < |B|}, are selected to form the short test form.
+
+Further details on the benchmark procedure can be found in Epifania et al. (2022).
 }
 \examples{
 set.seed(123)
@@ -80,4 +92,12 @@ item_pars <- data.frame(matrix(c(
 colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
 resB_poly <- bench(item_pars, theta = theta, num_item = 2, K = 3)
 str(resB_poly)
+}
+\references{
+Epifania, O. M., Anselmi, P., & Robusto, E. (2022). Item response
+theory approaches for test shortening. In M. Wiberg, D. Molenaar,
+J. Gonzalez, J. S. Kim, & H. Hwang (Eds.), Quantitative Psychology
+(Vol. 422, pp. 75–83). Springer Proceedings in Mathematics and
+Statistics. Cham: Springer.
+https://doi.org/10.1007/978-3-031-27781-8_7
 }

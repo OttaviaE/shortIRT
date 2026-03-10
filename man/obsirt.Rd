@@ -10,7 +10,7 @@ obsirt(myp)
 \item{myp}{Object of class \code{mpirt} containing the expected IRT probabilities obtained with function \code{mpirt()}}
 }
 \description{
-Simulate dichotomous responses according to IRT probabilities
+Simulate dichotomous responses according to IRT probabilities simulated with the \code{mpirt()} function .
 }
 \examples{
 set.seed(123)

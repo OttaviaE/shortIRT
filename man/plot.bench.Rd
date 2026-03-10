@@ -14,10 +14,10 @@
 \item{...}{other arguments}
 }
 \value{
-A \code{ggplot} showing the TIFs of both the STF and the full-length test, unless otherwise specified
+A \code{ggplot} showing the TIFs of the STF.
 }
 \description{
-The STF is obtained with the benchmark procedure implemented with function \code{bench()}
+The STF is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
 }
 \examples{
 set.seed(123)

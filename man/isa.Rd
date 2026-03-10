@@ -39,10 +39,11 @@ An object of class \code{isa} of length 6 containing:
 }
 }
 \description{
-Develop a short test form given the item parameters (dichotomous or polytomous) according to the Item Selection procedure
+Develop a short test form given the item parameters (dichotomous or polytomous) according to the Item Selection procedure (ISA, Epifania & Finos, 2025). See \code{Details}.
 }
 \details{
-Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure. At \eqn{k = 0}: \eqn{\text{TIF}^0(\theta) = 0}, \eqn{\forall \theta$}, \eqn{$Q^0 = \emptyset}.
+Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, \eqn{\text{TIF}^*} denote the test information target, and \eqn{\text{TIF}^k} denote the test information function obtained from \eqn{Q^k \subset B} (where \eqn{B} is the item bank and \eqn{Q^k} is the subset of items selected up to iteration \eqn{k}).
+At \eqn{k = 0}: \eqn{\text{TIF}^0(\theta) = 0}, \eqn{\forall \theta}, \eqn{Q^0 = \emptyset}.
 For \eqn{k \geq 0},
 
 \enumerate{
@@ -50,21 +51,23 @@ For \eqn{k \geq 0},
 
   \deqn{A^k = B \setminus Q^k}
 
-  \item Compute the provisional TIF for each of the available items
+  \item Compute the provisional TIF (\eqn{\text{pTIF}_i}) for each of the available items
 
-  \deqn{\forall i \in A^k$, $\text{pTIF}_{i} := \frac{\text{TIF}^k + \text{IIF}_{i}}{||Q^k||+1}}
+  \deqn{\forall i \in A^k, \text{pTIF}_{i} := \frac{\text{TIF}^k + I_{i}(\theta)}{|Q^k|+1}}
 
-  \item Select a provisional item allowing for minimizing the distance from the TIF target
+  \item Select a provisional item \eqn{i^*} allowing for minimizing the distance from the TIF target
 
-  \deqn{i^+ := \arg \min_{i \in A^k} (|\text{TIF}^* - \text{pTIF}_i|)}
+  \deqn{i^* := \arg \min_{i \in A^k} \text{abs}(\text{TIF}^* - \text{pTIF}_i)}
 
   \item Test the termination criterion: If
 
-  \eqn{|\text{TIF}^* - \text{pTIF}_{i^+}| \ngeq |\text{TIF}^* - \text{TIF}^{k}|$, $Q^{k+1} = Q^{k} \cup \{i^+\}}, \eqn{\text{TIF}^{k+1} = \text{pTIF}_{i^+}}, Go back to 1
+  \eqn{\text{abs}(\text{TIF}^* - \text{pTIF}_{i^*}) \ngeq \text{abs}(\text{TIF}^* - \text{TIF}^{k}), Q^{k+1} = Q^{k} \cup \{i^+\}}, \eqn{\text{TIF}^{k+1} = \text{pTIF}_{i^+}}, Go back to 1
 
-  \item Stop, \eqn{Q_{\text{IIF-ISA}} = Q^k}
+  \item Stop, \eqn{Q_{\text{ISA}} = Q^k}
 
 }
+
+Further details on the algorithm can be found in Epifania & Finos (2025).
 }
 \examples{
 set.seed(123)
@@ -106,4 +109,12 @@ colnames(item_pars) <- paste(
 
 resT_poly <- theta_target(c(-1, 0), item_pars, K = 3)
 str(resT_poly)
+}
+\references{
+Epifania, O. M., & Finos, L. (2025). Nothing lasts forever – only item
+administration: An item response theory algorithm to shorten tests.
+In E. Di Bella, V. Gioia, C. Lagazio, & S. Zaccarin (Eds.),
+Statistics for Innovation III (pp. 188–193).
+Italian Statistical Society Series on Advances in Statistics.
+Cham: Springer. https://doi.org/10.1007/978-3-031-95995-0_32
 }

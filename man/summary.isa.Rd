@@ -15,7 +15,7 @@
 A summary of the STF obtained from the application of the ISA procedure
 }
 \description{
-The STF is obtained with the ISA procedure implemented in the function \code{isa()}
+The STF is obtained with the ISA procedure implemented with function \code{isa()}.Details on the procedure can be found in the documentation of the \code{isa()} function.
 }
 \examples{
 set.seed(123)

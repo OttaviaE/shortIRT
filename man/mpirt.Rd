@@ -2,7 +2,7 @@
 % Please edit documentation in R/IRT.R
 \name{mpirt}
 \alias{mpirt}
-\title{Compute expected probability for multiple dichotmous items}
+\title{Compute expected probability for multiple dichotomous items}
 \usage{
 mpirt(item_pars, theta)
 }
@@ -15,22 +15,23 @@ mpirt(item_pars, theta)
 A \eqn{P \times I} matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}
 }
 \description{
-Compute expected probability for multiple dichotmous items
+Compute the expected probability for multiple dichotomous items.
+Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 }
 \details{
-The probability of a correct response under the four-parameter logistic
-(4-PL) model is defined as:
+The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+(4-PL; Barton & Lord, 1981) model is defined as:
 
 \deqn{
-P(X = 1 \mid \theta_p) =
+P(x_{pi} = 1 \mid \theta_p, b_i, a_i, c_i, e_i) =
 c_i + \frac{e_i - c_i}{1 + \exp\left[-a_i(\theta_p - b_i)\right]}
 }
 
 where \eqn{a_i} is the discrimination parameter,
 \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
-\eqn{c_i} is the lower asymptote (psedo-guessing probability),
+\eqn{c_i} is the lower asymptote (pseudo-guessing probability),
 and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-is computed according to the 3-PL, 2-PL and 1-PL, respectively.
+is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
 }
 \examples{
 set.seed(123)
@@ -43,4 +44,17 @@ item_pars <- data.frame(
   e = rep(1, n)
 )
 expected_prob <- mpirt(item_pars, theta)
+}
+\references{
+Barton, M. A., & Lord, F. M. (1981). An upper asymptote for the
+three-parameter logistic item-response model. ETS Research Report
+Series, 1981(1), i–8. Princeton, NJ: Educational Testing Service.
+
+Birnbaum, A. (1968). Some latent trait models and their use in inferring
+an examinee's ability. In F. M. Lord & M. R. Novick (Eds.),
+Statistical theories of mental test scores (pp. 397–479).
+Reading, MA: Addison-Wesley.
+
+Lord, F. M. (1980). Applications of item response theory to practical
+testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
 }

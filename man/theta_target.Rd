@@ -55,21 +55,23 @@ An object of class \code{theta_target} of length 4 containing:
 Develop a short test form given the item parameters (dichotomous or polytomous) according to the theta target procedure. See \code{Details}.
 }
 \details{
-Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
-\eqn{K = N - 1}. Let \eqn{J} be the total number of items in the item bank and
+A short test form (STF) composed of \eqn{J} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence \eqn{|N| = |J|}.
+Let \eqn{J} be the total number of items in the item bank and
 \eqn{N} the desired length of the short test form.
+Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
+\eqn{K = N - 1}.
 
 Define:
 \itemize{
   \item \eqn{S^k \subseteq \{1, \dots, J\}} as the set of items selected for
   inclusion in the short test form up to iteration \eqn{k};
 
-  \item \eqn{Q^k \subseteq \{1, \dots, N\}} as the set of ability targets
+  \item \eqn{Q^k \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
   satisfied up to iteration \eqn{k}.
 }
 
-At initialization (\eqn{k = 0}), \eqn{S^0 = \varnothing} and
-\eqn{Q^0 = \varnothing}.
+At \eqn{k = 0}, \eqn{S^0 = \emptyset} and
+\eqn{Q^0 = \emptyset}.
 
 The procedure iterates the following steps until \eqn{k = K}:
 
@@ -95,7 +97,7 @@ The procedure iterates the following steps until \eqn{k = K}:
 }
 
 At iteration \eqn{K}, the procedure yields
-\eqn{|S^{K+1}| = N} and \eqn{|Q^{K+1}| = N}.
+\eqn{|S^{K+1}| = N} and \eqn{|Q^{K+1}| = N}. Further details can be found in Epifania et al. (2022).
 }
 \examples{
 set.seed(123)
@@ -120,4 +122,12 @@ item_pars <- data.frame(matrix(c(
 colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
 resT_poly <- theta_target(c(-1,0), item_pars, K = 3)
 str(resT_poly)
+}
+\references{
+Epifania, O. M., Anselmi, P., & Robusto, E. (2022). Item response
+theory approaches for test shortening. In M. Wiberg, D. Molenaar,
+J. Gonzalez, J. S. Kim, & H. Hwang (Eds.), Quantitative Psychology
+(Vol. 422, pp. 75–83). Springer Proceedings in Mathematics and
+Statistics. Cham: Springer.
+https://doi.org/10.1007/978-3-031-27781-8_7
 }

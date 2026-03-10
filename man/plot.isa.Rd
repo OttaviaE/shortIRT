@@ -4,26 +4,24 @@
 \alias{plot.isa}
 \title{Method for plotting the TIF of the STF}
 \usage{
-\method{plot}{isa}(x, fun = "mean", show_all = TRUE, show_dist = FALSE, K = NULL, ...)
+\method{plot}{isa}(x, fun = "mean", show_all = FALSE, show_dist = FALSE, ...)
 }
 \arguments{
 \item{x}{Object of class \code{isa} obtained with function \code{isa()}}
 
 \item{fun}{\code{character}, whether to consider the mean or the sum for the computation of the TIF}
 
-\item{show_all}{\code{logical}, default is \code{TRUE}. Whether to show TIF of the STF and the TIF target together with the TIF obtained from all the items in \code{item_par}}
+\item{show_all}{\code{logical}, default is \code{FALSE}. Whether to show the TIF of the STF and the TIF target together with the TIF obtained from all the items in \code{item_par}}
 
-\item{show_dist}{\code{logical}, default is default. Whether to show or not the difference and distance (absolute difference) from the TIF target.}
-
-\item{K}{Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
+\item{show_dist}{\code{logical}, default is \code{FALSE}. Whether to show or not the difference and distance (absolute difference) from the TIF target.}
 
 \item{...}{other arguments}
 }
 \value{
-A \code{ggplot} showing the TIFs either of the STF, that of the full-length test, and the TIF target or the distance/difference.
+A \code{ggplot} showing either the TIFs of the STF, that of the full-length test, and the TIF target or the distance/difference.
 }
 \description{
-The STF is obtained with the ISA procedure implemented with function \code{isa()}
+The STF is obtained with the ISA procedure implemented with function \code{isa()}.Details on the procedure can be found in the documentation of the \code{isa()} function.
 }
 \examples{
 set.seed(123)
@@ -35,9 +33,11 @@ item_par <- data.frame(
   c = rep(0, n),
   e = rep(1, n)
 )
-targets <- define_targets(theta, num_targets = 4)
-resT <- theta_target(targets, item_par)
-plot(resT)
-# plot without showing the theta targets
-plot(resT, show_targets = FALSE)
+target <- tif(item_info(item_par), fun = "mean")
+resI <- isa(item_par, target, nmin = 5)
+plot(resI)
+# show the TIF of the full length test
+plot(resI, show_all = TRUE)
+# show the distance form the TIF target
+plot(resI, show_dist = TRUE)
 }
