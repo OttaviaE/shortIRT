@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.isa.R
 \name{plot.isa}
 \alias{plot.isa}
-\title{Method for plotting the TIF of the STF}
+\title{Method for plotting the TIF of the test/short test form}
 \usage{
 \method{plot}{isa}(x, fun = "mean", show_all = FALSE, show_dist = FALSE, ...)
 }
@@ -11,17 +11,17 @@
 
 \item{fun}{\code{character}, whether to consider the mean or the sum for the computation of the TIF}
 
-\item{show_all}{\code{logical}, default is \code{FALSE}. Whether to show the TIF of the STF and the TIF target together with the TIF obtained from all the items in \code{item_par}}
+\item{show_all}{\code{logical}, default is \code{FALSE}. Whether to show the TIF of the test and the TIF target together with the TIF obtained from all the items in \code{item_par}}
 
 \item{show_dist}{\code{logical}, default is \code{FALSE}. Whether to show or not the difference and distance (absolute difference) from the TIF target.}
 
 \item{...}{other arguments}
 }
 \value{
-A \code{ggplot} showing either the TIFs of the STF, that of the full-length test, and the TIF target or the distance/difference.
+A \code{ggplot} showing either the TIFs of the test, that of the item bank, and the TIF target or the distance/difference.
 }
 \description{
-The STF is obtained with the ISA procedure implemented with function \code{isa()}.Details on the procedure can be found in the documentation of the \code{isa()} function.
+The test/short test form is obtained with the ISA procedure implemented with function \code{isa()}. Details on the procedure can be found in the documentation of the \code{isa()} function.
 }
 \examples{
 set.seed(123)
@@ -36,7 +36,7 @@ item_par <- data.frame(
 target <- tif(item_info(item_par), fun = "mean")
 resI <- isa(item_par, target, nmin = 5)
 plot(resI)
-# show the TIF of the full length test
+# show the TIF of the item bank
 plot(resI, show_all = TRUE)
 # show the distance form the TIF target
 plot(resI, show_dist = TRUE)

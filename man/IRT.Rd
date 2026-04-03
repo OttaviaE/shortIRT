@@ -13,7 +13,7 @@ IRT(theta, b = 0, a = 1, c = 0, e = 1)
 
 \item{a}{\code{numeric} discrimination parameter for item \eqn{i}. Default is 1.}
 
-\item{c}{\code{numeric} pesudoguessing parameter of item \eqn{i}. Default is 0.}
+\item{c}{\code{numeric} pseudo-guessing parameter of item \eqn{i}. Default is 0.}
 
 \item{e}{\code{numeric} upper asymptote of item \eqn{i}. Default is 1.}
 }
@@ -21,11 +21,11 @@ IRT(theta, b = 0, a = 1, c = 0, e = 1)
 a single value, that is the probability of the correct response for item \eqn{i} given the specified parameters
 }
 \description{
-Compute the expected probability for an item \eqn{i} according to its IRT parameters.
+Compute the expected probability for an item \eqn{i} given the latent trait \eqn{\theta} and the item parameters.
 Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 }
 \details{
-The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 (4-PL; Barton & Lord, 1981) model is defined as:
 
 \deqn{
@@ -37,14 +37,14 @@ where \eqn{a_i} is the discrimination parameter,
 \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
 \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
 and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
+is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL or the Rasch model (Rasch, 1960), respectively.
 }
 \examples{
-# compute the probability for an item according to 1-PL model
+# compute the probability for an item according to the 1-PL model
 IRT(theta = 0, b = 0,  a = 1, c = 0, e = 1)
-# compute probability for a vector of thetas for the same item
+# compute the probability for a vector of thetas for the same item
 IRT(theta = c(-1, 0, 1), b = 0,  a = 1, c = 0, e = 1)
-# compute probability for a vector of thetas for an item according to the 4-PL model
+# compute the probability for a vector of thetas for an item according to the 4-PL model
 IRT(theta = c(-1, 0, 1), b = 0,  a = 1.25, c = 0.10, e = 0.98)
 }
 \references{
@@ -59,4 +59,7 @@ Reading, MA: Addison-Wesley.
 
 Lord, F. M. (1980). Applications of item response theory to practical
 testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
+
+Rasch, G. (1960). Probabilistic models for some intelligence and attainment
+tests. Copenhagen, Denmark: Danish Institute for Educational Research.
 }

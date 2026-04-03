@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.bench.R
 \name{summary.bench}
 \alias{summary.bench}
-\title{Method for the summary of the STF}
+\title{Method for the summary of the test/short test form}
 \usage{
 \method{summary}{bench}(object, ...)
 }
@@ -12,10 +12,10 @@
 \item{...}{other arguments}
 }
 \value{
-A summary of the STF obtained from the application of the benchmark procedure
+A summary of the test obtained from the application of the benchmark procedure
 }
 \description{
-The STF is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
+The test/short test form is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
 }
 \examples{
 set.seed(123)

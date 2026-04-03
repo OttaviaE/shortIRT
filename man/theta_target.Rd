@@ -32,8 +32,8 @@ columns correspond to step difficulty (threshold) parameters (must be named "b")
 An object of class \code{theta_target} of length 4 containing:
 
 \itemize{
-  \item \strong{stf}: a data frame containing the items selected for inclusion
-  in the short test form (column \code{isel}), their maximum item information
+  \item \strong{test}: a data frame containing the items selected for inclusion
+  in the test (column \code{isel}), their maximum item information
   function (column \code{maxiif}), and the corresponding theta target
   (column \code{theta_target}).
 
@@ -52,28 +52,28 @@ An object of class \code{theta_target} of length 4 containing:
 }
 }
 \description{
-Develop a short test form given the item parameters (dichotomous or polytomous) according to the theta target procedure. See \code{Details}.
+Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the theta target procedure. See \code{Details}.
 }
 \details{
-A short test form (STF) composed of \eqn{J} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence \eqn{|N| = |J|}.
-Let \eqn{J} be the total number of items in the item bank and
-\eqn{N} the desired length of the short test form.
-Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
-\eqn{K = N - 1}.
+A test or a short test form composed of \eqn{N} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence the number of items included in the test is determined by the number of defined \eqn{\theta}-targets.
+Let \eqn{B} be the set of items in the item bank and
+\eqn{N} the desired number of \eqn{\theta}-targets and hence the desired number of items.
+Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, with
+\eqn{T = N - 1}.
 
 Define:
 \itemize{
-  \item \eqn{S^k \subseteq \{1, \dots, J\}} as the set of items selected for
-  inclusion in the short test form up to iteration \eqn{k};
+  \item \eqn{Q^t \subseteq \{1, \dots, B\}} as the set of items selected for
+  inclusion in the short test form up to iteration \eqn{t};
 
-  \item \eqn{Q^k \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
-  satisfied up to iteration \eqn{k}.
+  \item \eqn{S^t \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
+  satisfied up to iteration \eqn{t}.
 }
 
-At \eqn{k = 0}, \eqn{S^0 = \emptyset} and
-\eqn{Q^0 = \emptyset}.
+At \eqn{t = 0}, \eqn{Q^0 = \emptyset} and
+\eqn{S^0 = \emptyset}.
 
-The procedure iterates the following steps until \eqn{k = K}:
+The procedure iterates the following steps until \eqn{t = T}:
 
 \enumerate{
   \item Select the item--target pair \eqn{(i, n)} maximizing the item
@@ -81,23 +81,23 @@ The procedure iterates the following steps until \eqn{k = K}:
 
   \deqn{
   (i, n) =
-  \arg\max_{i \in B \setminus S^k,\; n \in N \setminus Q^k}
+  \arg\max_{i \in B \setminus S^t,\; n \in N \setminus Q^t}
   \mathrm{IIF}(i, n)
   }
 
   \item Update the set of selected items:
   \deqn{
-  S^{k+1} = S^k \cup \{i\}
+  Q^{t+1} = Q^t \cup \{i\}
   }
 
   \item Update the set of satisfied ability targets:
   \deqn{
-  Q^{k+1} = Q^k \cup \{n\}
+  S^{t+1} = S^t \cup \{n\}
   }
 }
 
-At iteration \eqn{K}, the procedure yields
-\eqn{|S^{K+1}| = N} and \eqn{|Q^{K+1}| = N}. Further details can be found in Epifania et al. (2022).
+At iteration \eqn{T}, the procedure yields
+\eqn{|Q^{T+1}| = N} and \eqn{|S^{T+1}| = N}. Further details can be found in Epifania et al. (2022).
 }
 \examples{
 set.seed(123)
@@ -128,6 +128,6 @@ Epifania, O. M., Anselmi, P., & Robusto, E. (2022). Item response
 theory approaches for test shortening. In M. Wiberg, D. Molenaar,
 J. Gonzalez, J. S. Kim, & H. Hwang (Eds.), Quantitative Psychology
 (Vol. 422, pp. 75–83). Springer Proceedings in Mathematics and
-Statistics. Cham: Springer.
+Statistics. Springer, Cham.
 https://doi.org/10.1007/978-3-031-27781-8_7
 }

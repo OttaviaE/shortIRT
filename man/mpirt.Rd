@@ -7,19 +7,19 @@
 mpirt(item_pars, theta)
 }
 \arguments{
-\item{item_pars}{\code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
+\item{item_pars}{\code{data.frame}, dataframe with number of rows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
 
 \item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.}
 }
 \value{
-A \eqn{P \times I} matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}
+A \eqn{P \times I} (where \eqn{P} is the number of respondents corresponding to the length of \code{theta} and \eqn{I} is the number of items corresponding to the number of rows in \code{item_pars}) matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}
 }
 \description{
-Compute the expected probability for multiple dichotomous items.
+Compute the expected probability for multiple dichotomous items given the latent trait levels \eqn{\theta} and the item parameters.
 Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 }
 \details{
-The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 (4-PL; Barton & Lord, 1981) model is defined as:
 
 \deqn{
@@ -31,7 +31,7 @@ where \eqn{a_i} is the discrimination parameter,
 \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
 \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
 and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
+is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL or the Rasch model (Rasch, 1960), respectively.
 }
 \examples{
 set.seed(123)
@@ -57,4 +57,7 @@ Reading, MA: Addison-Wesley.
 
 Lord, F. M. (1980). Applications of item response theory to practical
 testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
+
+Rasch, G. (1960). Probabilistic models for some intelligence and attainment
+tests. Copenhagen, Denmark: Danish Institute for Educational Research.
 }

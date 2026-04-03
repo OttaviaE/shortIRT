@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.bench.R
 \name{plot.bench}
 \alias{plot.bench}
-\title{Method for plotting the TIF of the STF}
+\title{Method for plotting the TIF of the test/short test form}
 \usage{
 \method{plot}{bench}(x, fun = "sum", ...)
 }
@@ -14,10 +14,10 @@
 \item{...}{other arguments}
 }
 \value{
-A \code{ggplot} showing the TIFs of the STF.
+A \code{ggplot} showing the TIFs of the test.
 }
 \description{
-The STF is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
+The test/short test form is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
 }
 \examples{
 set.seed(123)
@@ -31,7 +31,7 @@ item_par <- data.frame(
 )
 resB <- bench(item_par, theta = theta, num_item = 5)
 plot(resB)
-# plot only the TIF of the STF
+# plot only the TIF of the test
 plot(resB, show_both = FALSE)
 # same but with polytomous items
 item_pars <- data.frame(matrix(c(

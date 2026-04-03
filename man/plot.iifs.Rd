@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{\code{data.frame} of class \code{iifs} obtained with the function \code{item_info()}}
 
-\item{single_panels}{\code{logical}, default is \code{TRUE}. Whether to show the IIFs of each item on a different panel}
+\item{single_panels}{\code{logical}, default is \code{TRUE}. Whether to show the \eqn{I_i(\theta)} of each item on a different panel}
 
 \item{items}{default is \code{NULL} (shows all items). Allows for selecting specific items for the plot.}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.theta_target.R
 \name{summary.theta_target}
 \alias{summary.theta_target}
-\title{Method for the summary of the STF}
+\title{Method for the summary of the test/short test form}
 \usage{
 \method{summary}{theta_target}(object, ...)
 }
@@ -12,10 +12,10 @@
 \item{...}{other arguments}
 }
 \value{
-A summary of the STF obtained from the application of the theta target procedure
+A summary of the test obtained from the application of the theta target procedure
 }
 \description{
-The STF is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
+The test/short test form is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 }
 \examples{
 set.seed(123)

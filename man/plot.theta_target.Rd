@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.theta_target.R
 \name{plot.theta_target}
 \alias{plot.theta_target}
-\title{Method for plotting the TIF of the STF}
+\title{Method for plotting the TIF of the test/short test form}
 \usage{
 \method{plot}{theta_target}(x, fun = "sum", show_targets = TRUE, ...)
 }
@@ -11,15 +11,15 @@
 
 \item{fun}{\code{character}, whether to consider the mean or the sum for the computation of the TIF}
 
-\item{show_targets}{\code{logical}, default is TRUE. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown as the items that satisfy them.}
+\item{show_targets}{\code{logical}, default is \code{TRUE}. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown. The color associated to each theta target represents the specific item that has been selected for maximizing the information for that specific point.}
 
 \item{...}{other arguments}
 }
 \value{
-A \code{ggplot} showing the TIFs of the STF, the locations of the theta targets, and the items that satisfy each theta target.
+A \code{ggplot} showing the TIFs of the test, the locations of the theta targets, and the items that satisfy each theta target.
 }
 \description{
-The STF is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
+The test/short test form is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 }
 \details{
 If more than 10 theta targets are selected, the legend associated to each theta target is not displayed.
