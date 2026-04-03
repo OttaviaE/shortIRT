@@ -1,21 +1,21 @@
-#' Item Information Function (single item, IIF)
+#' Item Information Function (single item, \eqn{I_i(\theta)})
 #'
-#' Compute the item information function (IIF) for a single dichotomous
-#' or polytoumous item under either the 4-PL model (dichotomous item) or  a Generalized Partial Credit (polytomous item).
+#' Compute the item information function \eqn{I_i(\theta)} for a single dichotomous
+#' or polytoumous item under either the 4-PL model (dichotomous item) or  the Generalized Partial Credit (polytomous item).
 #' Specific models (e.g., 3-PL, 2-PL, 1-PL, or PCM, Rating Scale) are obtained by imposing
 #' constraints on the item parameters.
 #' See \code{Details}.
 #'
-#' @param item_pars Numeric matrix with one row corresponding to one item.
-#'    For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+#' @param item_pars dataframe with one row corresponding to one item.
+#'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+#'    For polytomous items, the dataframe has \eqn{2K} columns. The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
-#'   columns correspond to step difficulty (threshold) parameters (must be named "b")
-#'   \eqn{b_1, \dots, b_K}.
-#' @param theta Numeric vector of latent trait values. Default is a vector of a thousand values ranging from -5 to +5
-#' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#'   columns correspond to step difficulty (threshold) parameters
+#'   \eqn{b_1, \dots, b_K} (must be named "b").
+#' @param theta numeric vector of latent trait values. Default is a vector of a thousand values ranging from -5 to +5
+#' @param K integer, number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+#' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 #' (4-PL; Barton & Lord, 1981) model is defined as:
 #'
 #' \deqn{
@@ -27,7 +27,7 @@
 #' \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
 #' \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
 #' and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
+#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL or the Rasch model (Rasch, 1960), respectively.
 #'
 #' Let \eqn{Q(\theta) = 1 - P(\theta)}, the information function of item \eqn{i} is computed as:
 #'
@@ -68,6 +68,9 @@
 #'
 #' Muraki, G. (1997). A generalized partial credit model with step discrimination.
 #' Journal of Educational Measurement, 34(2), 115–127.
+#'
+#' Rasch, G. (1960). Probabilistic models for some intelligence and attainment
+#' tests. Copenhagen, Denmark: Danish Institute for Educational Research.
 #'
 #' @returns A numeric vector of length equal to \code{theta}, which contains the item information function for a single item with respect to the values specified in \code{theta}
 #' @export
@@ -143,20 +146,20 @@ i_info <- function(item_pars,
   return(info)
 }
 
-#' Item Information Functions (multiple items, IIFs)
+#' Item Information Functions (multiple items, \eqn{I_i(\theta)})
 #'
-#' Computes the item information functions for multiple dichotous or polytomous items
+#' Computes the item information functions for multiple dichotomous or polytomous items
 #'
-#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items. #'
-#'    For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the matrix has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+#' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items.
+#'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+#'    For polytomous items, the dataframe has \eqn{2K} columns. The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
-#'   columns correspond to step difficulty (threshold) parameters (must be named "b")
-#'   \eqn{b_1, \dots, b_K}.
-#' @param theta Numeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5
-#' @param K Integer. Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#'   columns correspond to step difficulty (threshold) parameters
+#'   \eqn{b_1, \dots, b_K} (must be named "b").
+#' @param theta mumeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5
+#' @param K integer, Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+#' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 #' (4-PL; Barton & Lord, 1981) model is defined as:
 #'
 #' \deqn{
@@ -168,7 +171,7 @@ i_info <- function(item_pars,
 #' \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
 #' \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
 #' and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
+#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL or the Rasch model (Rasch, 1960), respectively.
 #'
 #' Let \eqn{Q(\theta) = 1 - P(\theta)}, the information function of item \eqn{i} is computed as:
 #'
@@ -210,7 +213,11 @@ i_info <- function(item_pars,
 #' Muraki, G. (1997). A generalized partial credit model with step discrimination.
 #' Journal of Educational Measurement, 34(2), 115–127.
 #'
-#' @returns A \code{matrix} of class \code{iifs} with nrows equal to the length of \code{theta} and ncols equal to the number of items in \code{item_par}
+#' Rasch, G. (1960). Probabilistic models for some intelligence and attainment
+#' tests. Copenhagen, Denmark: Danish Institute for Educational Research.
+#'
+#'
+#' @returns A \code{matrix} of class \code{iifs} with number of rows equal to the length of \code{theta} and number of columns equal to the number of items in \code{item_par}
 #' @export
 #'
 #' @examples

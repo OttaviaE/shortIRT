@@ -1,16 +1,16 @@
-#' Method for plotting the TIF of the STF
+#' Method for plotting the TIF of the test/short test form
 #'
-#' The STF is obtained with the ISA procedure implemented with function \code{isa()}.Details on the procedure can be found in the documentation of the \code{isa()} function.
+#' The test/short test form is obtained with the ISA procedure implemented with function \code{isa()}. Details on the procedure can be found in the documentation of the \code{isa()} function.
 #'
 #' @param x Object of class \code{isa} obtained with function \code{isa()}
 #' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
-#' @param show_all \code{logical}, default is \code{FALSE}. Whether to show the TIF of the STF and the TIF target together with the TIF obtained from all the items in \code{item_par}
+#' @param show_all \code{logical}, default is \code{FALSE}. Whether to show the TIF of the test and the TIF target together with the TIF obtained from all the items in \code{item_par}
 #' @param show_dist \code{logical}, default is \code{FALSE}. Whether to show or not the difference and distance (absolute difference) from the TIF target.
 #' @param ... other arguments
 #'
 #' @importFrom  stats reshape
 #'
-#' @returns A \code{ggplot} showing either the TIFs of the STF, that of the full-length test, and the TIF target or the distance/difference.
+#' @returns A \code{ggplot} showing either the TIFs of the test, that of the item bank, and the TIF target or the distance/difference.
 #' @export
 #'
 #' @examples
@@ -26,7 +26,7 @@
 #' target <- tif(item_info(item_par), fun = "mean")
 #' resI <- isa(item_par, target, nmin = 5)
 #' plot(resI)
-#' # show the TIF of the full length test
+#' # show the TIF of the item bank
 #' plot(resI, show_all = TRUE)
 #' # show the distance form the TIF target
 #' plot(resI, show_dist = TRUE)
@@ -54,7 +54,7 @@ plot.isa <- function(x, fun = "mean",
   temp <- tif(stfiif, fun = fun)
   stftif <- data.frame(theta = temp$theta,
                        tif = temp$tif,
-                       test = paste("stf with",
+                       test = paste("test with",
                                     nrow(x$selected_items), "items"))
   diff_data <- data.frame(theta = stftif$theta,
                          target_all = tif_target$tif - alltif$tif,
@@ -73,6 +73,7 @@ plot.isa <- function(x, fun = "mean",
                        direction = "long", varying = list(names(dist_data)[2:3]),
                        v.names = "value")
   plot_diff_data <- rbind(diff_data, dist_data)
+  plot_diff_data$computation <- gsub("_stf", "_test", plot_diff_data$computation)
   plottif <- rbind(alltif, stftif, tif_target)
   basic_plot <-   ggplot(plottif,
                          aes(x = .data$theta, y = .data$tif,
@@ -100,6 +101,6 @@ plot.isa <- function(x, fun = "mean",
                                                        col = "black")
     }
   }
-
+  basic_plot <- basic_plot + theme(legend.title = element_blank())
   print(basic_plot)
 }

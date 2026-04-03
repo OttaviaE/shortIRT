@@ -1,51 +1,51 @@
 #' Item Selection Algorithm
 #'
-#' Develop a short test form given the item parameters (dichotomous or polytomous) according to the Item Selection procedure (ISA, Epifania & Finos, 2025). See \code{Details}.
+#' Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the Item Selection procedure (ISA, Epifania & Finos, 2025). See \code{Details}.
 #'
-#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items.
-#'    For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the matrix has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
+#' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items.
+#'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+#'    For polytomous items, the dataframe has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
-#'   columns correspond to step difficulty (threshold) parameters (must be named "b")
-#'   \eqn{b_1, \dots, b_K}.
-#' @param tif_target \code{data.frame} with two columns: \code{theta} the latent trait \eqn{\theta} and \code{tif} defining the values of the tif target. The TIF target should be computed as the mean TIF to allow for the comparability with the TIF obtained from the STF.
-#' @param nmin \code{numeric}, minimum number of items to be included in the STF (i.e., the termination criterion is not tested until the minimum number of items is reached). Default is the 10\% of the total number of items.
+#'   columns correspond to step difficulty (threshold) parameters
+#'   \eqn{b_1, \dots, b_K} (must be named "b").
+#' @param tif_target \code{data.frame} with two columns: \code{theta} the latent trait \eqn{\theta} and \code{tif} defining the values of the tif target. The TIF target should be computed as the mean TIF to allow for the comparability with the TIF obtained from the test.
+#' @param nmin \code{numeric}, minimum number of items to be included in the test (i.e., the termination criterion is not tested until the minimum number of items is reached). Default is the 10\% of the total number of items.
 #' @param K \code{integer}, number of thresholds for polytomous items (number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, \eqn{\text{TIF}^*} denote the test information target, and \eqn{\text{TIF}^k} denote the test information function obtained from \eqn{Q^k \subset B} (where \eqn{B} is the item bank and \eqn{Q^k} is the subset of items selected up to iteration \eqn{k}).
-#' At \eqn{k = 0}: \eqn{\text{TIF}^0(\theta) = 0}, \eqn{\forall \theta}, \eqn{Q^0 = \emptyset}.
-#' For \eqn{k \geq 0},
+#' Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, \eqn{\text{TIF}^*} denote the test information target, and \eqn{\text{TIF}^t} denote the test information function obtained from \eqn{Q^t \subset B} (where \eqn{B} is the item bank and \eqn{Q^t} is the subset of items selected up to iteration \eqn{t}).
+#' At \eqn{t = 0}: \eqn{\text{TIF}^0(\theta) = 0}, \eqn{\forall \theta}, \eqn{Q^0 = \emptyset}.
+#' For \eqn{t \geq 0},
 #'
 #' \enumerate{
-#'   \item Consider the available items at iteration \eqn{k}
+#'   \item Consider the available items at iteration \eqn{t}
 #'
-#'   \deqn{A^k = B \setminus Q^k}
+#'   \deqn{A^t = B \setminus Q^t}
 #'
 #'   \item Compute the provisional TIF (\eqn{\text{pTIF}_i}) for each of the available items
 #'
-#'   \deqn{\forall i \in A^k, \text{pTIF}_{i} := \frac{\text{TIF}^k + I_{i}(\theta)}{|Q^k|+1}}
+#'   \deqn{\forall i \in A^t, \text{pTIF}_{i} := \frac{\text{TIF}^t + I_{i}(\theta)}{|Q^t|+1}}
 #'
 #'   \item Select a provisional item \eqn{i^*} allowing for minimizing the distance from the TIF target
 #'
-#'   \deqn{i^* := \arg \min_{i \in A^k} \text{abs}(\text{TIF}^* - \text{pTIF}_i)}
+#'   \deqn{i^* := \arg \min_{i \in A^t} \text{abs}(\text{TIF}^* - \text{pTIF}_i)}
 #'
 #'   \item Test the termination criterion: If
 #'
-#'   \eqn{\text{abs}(\text{TIF}^* - \text{pTIF}_{i^*}) \ngeq \text{abs}(\text{TIF}^* - \text{TIF}^{k}), Q^{k+1} = Q^{k} \cup \{i^+\}}, \eqn{\text{TIF}^{k+1} = \text{pTIF}_{i^+}}, Go back to 1
+#'   \eqn{\text{abs}(\text{TIF}^* - \text{pTIF}_{i^*}) \ngeq \text{abs}(\text{TIF}^* - \text{TIF}^{t}), Q^{t+1} = Q^{t} \cup \{i^+\}}, \eqn{\text{TIF}^{t+1} = \text{pTIF}_{i^+}}, Go back to 1
 #'
-#'   \item Stop, \eqn{Q_{\text{ISA}} = Q^k}
+#'   \item Stop, \eqn{Q_{\text{ISA}} = Q^t}
 #'
 #' }
 #'
-#' Further details on the algorithm can be found in Epifania & Finos (2025).
+#' Further details on the algorithm can be found in Epifania & Finos (2025), where the algorithm is denoted as Frank.
 #'
 #'
 #' @returns
 #' An object of class \code{isa} of length 6 containing:
 #'
 #' \itemize{
-#'   \item \strong{stf}: a dataframe containing the items selected for inclusion
-#'   in the short test form (column \code{isel}) and the minimum number of items set in \code{nmin}.
+#'   \item \strong{test}: a dataframe containing the items selected for inclusion
+#'   in the test (column \code{isel}) and the minimum number of items set in \code{nmin}.
 #'
 #'   \item \strong{item_pars}: the original dataframe containing the item parameters.
 #'
@@ -64,7 +64,7 @@
 #' In E. Di Bella, V. Gioia, C. Lagazio, & S. Zaccarin (Eds.),
 #' Statistics for Innovation III (pp. 188–193).
 #' Italian Statistical Society Series on Advances in Statistics.
-#' Cham: Springer. https://doi.org/10.1007/978-3-031-95995-0_32
+#' Springer, Cham. https://doi.org/10.1007/978-3-031-95995-0_32
 #'
 #' @examples
 #' set.seed(123)
@@ -165,7 +165,7 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
   isel <- as.numeric(gsub("item_", "", colnames(iif_stf)))
   stf_info = data.frame(isel = rownames(item_pars)[isel], nmin = nmin)
   rownames(iifs) <- theta
-  results <- list(stf = stf_info,
+  results <- list(test = stf_info,
                   item_pars  = original_parameters,
                   selected_items = original_parameters[isel, ],
                   all_iifs = iifs,

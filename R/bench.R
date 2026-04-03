@@ -1,22 +1,23 @@
 #' Benchmark Procedure
 #'
-#' Develop a short test form given the item parameters (dichotomous or polytomous) according to the benchmark procedure. See \code{Details}.
+#' Develop a test or a short form given the parameters of dichotomous or polytomous items in an item bank/full-length test according to the benchmark procedure. See \code{Details}.
 #'
-#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items.
-#'    For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the matrix has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
+#' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items.
+#'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+#'    For polytomous items, the dataframe has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
-#'   columns correspond to step difficulty (threshold) parameters (must be named "b")
-#'   \eqn{b_1, \dots, b_K}.
-#' @param iifs \code{data.frame}, dataframe with n-rows equal to the length of the latent trait \eqn{\theta} and n-cols equal to the number of items in the full-length test. It contains the item information functions (IIFs) of the items in the full-length test. Cannot use both \code{item_pars} and \code{iifs}.
+#'   columns correspond to step difficulty (threshold) parameters
+#'   \eqn{b_1, \dots, b_K} (must be named "b").
+#' @param iifs \code{data.frame}, dataframe with number of rows equal to the length of the latent trait \eqn{\theta} and number of columns equal to the number of items in the item bank. It contains the item information functions (IIFs) of the items in the full-length test. The arguments \code{item_pars} and \code{iifs} cannot be used together.
 #' @param num_item \code{integer}, the number \eqn{N} of items to include in the short test form
 #' @param theta \code{numeric}, vector with the latent trait values
-#' @param K \code{integer}, Number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).
+#' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).
 #'
 #' @details
-#' A short test form composed of \eqn{N} items is constructed from an item bank
+#' A test composed of \eqn{N} items is constructed from an item bank
 #' \eqn{B} by selecting the items with the highest item information values, with no
-#' explicit reference to any specific level of the latent trait.
+#' explicit reference to any specific level of the latent trait. The same procedure can be applied
+#' to obtain a short test form from a full-length test \eqn{B}.
 #'
 #' Let \eqn{I_i(\theta)} denote the item information function (IIF) of item
 #' \eqn{i}, with \eqn{i = 1, \dots, |B|}, where \eqn{|B|} denotes the
@@ -35,14 +36,8 @@
 #' m_i = \max_{\theta} I_i(\theta), \qquad i = 1, \dots, |B|.
 #' }
 #'
-#' The vector \eqn{\mathbf{m}} is then sorted in decreasing order,
-#' producing
-#'
-#' \deqn{
-#' \mathrm{iif}_{(1)} \ge \mathrm{iif}_{(2)} \ge \dots \ge \mathrm{iif}_{(|B|)},
-#' }
-#' Finally, the first \eqn{N} items in the ordered vector, with
-#' \eqn{N < |B|}, are selected to form the short test form.
+#' The vector \eqn{\mathbf{m}} is then sorted in decreasing order, and the first \eqn{N} items in the ordered vector (i.e., the items with the highest information functions), with
+#' \eqn{N < |B|}, are selected to form the test.
 #'
 #' Further details on the benchmark procedure can be found in Epifania et al. (2022).
 #'
@@ -50,19 +45,19 @@
 #' theory approaches for test shortening. In M. Wiberg, D. Molenaar,
 #' J. Gonzalez, J. S. Kim, & H. Hwang (Eds.), Quantitative Psychology
 #' (Vol. 422, pp. 75–83). Springer Proceedings in Mathematics and
-#' Statistics. Cham: Springer.
+#' Statistics. Springer, Cham.
 #' https://doi.org/10.1007/978-3-031-27781-8_7
 #'
 #' @returns
 #' An object of class \code{bench} of length 3 with:
 #'
 #' \itemize{
-#'   \item{\code{stf}: dataframe with the items selected for inclusion in the STF (\code{isel}),
+#'   \item{\code{test}: dataframe with the items selected for inclusion in the test (\code{isel}),
 #'   their maximum information function (\code{maxiif}), for a specific latent trait
 #'   level \eqn{\theta} (column \code{theta})}
 #'   \item{\code{item_pars}: the original dataframe containing the item parameters}
 #'   \item{\code{selected_items}: dataframe with the parameters of the selected items}
-#'   \item{\code{K}: Number of thresholds for the response categories of the items. If the items are dichotomous \code{K} is \code{NULL}.}
+#'   \item{\code{K}: number of thresholds for the response categories of the items. If the items are dichotomous \code{K} is \code{NULL}.}
 #' }
 #'
 #' @export
@@ -95,13 +90,16 @@ bench <- function(item_pars = NULL,
                   num_item = NULL,
                   K = NULL) {
   if (is.null(num_item)) {
-    stop("You must specify the number of items for the STFs!")
-  }
-  if (num_item >= nrow(item_pars)) {
-    stop("The number of items for the STF is greater or equal to the number of items in the STF")
+    stop("You must specify the number of items for the test!")
   }
   if (is.null(item_pars) & is.null(iifs)) stop("You must specificy either the IIFs or the item parameters!")
   if (is.null(item_pars) == FALSE & is.null(iifs) == TRUE) {
+    if (num_item == nrow(item_pars)) {
+      warning("The number of items is equal to the number of items in the item bank.")
+    }
+    if (num_item > nrow(item_pars)) {
+      stop("The number of items of the test is greater than the number of items in the item bank")
+    }
     if (!is.null(K)) {
       iifs <- item_info(item_pars = item_pars,theta = theta,  K = K)
     } else {
@@ -112,6 +110,12 @@ bench <- function(item_pars = NULL,
       }
     }
   } else if (is.null(item_pars) == TRUE & is.null(iifs) == FALSE) {
+    if (num_item == ncol(iifs)) {
+      warning("The number of items is equal to the number of items in the item bank.")
+    }
+    if (num_item > ncol(iifs)) {
+      stop("The number of items of the test is greater than the number of items in the item bank")
+    }
     iifs <- iifs
   } else {
     stop("Too much")
@@ -126,7 +130,7 @@ bench <- function(item_pars = NULL,
   stf <- data.frame(isel = names(maxinfos),
                     maxiif = maxinfos,
                     theta = maxthetas[rownames(sel_items)])
-  results <- list(stf = stf,
+  results <- list(test = stf,
                   item_pars = item_pars,
                   selected_items = sel_items,
                   all_iifs = iifs,

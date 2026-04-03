@@ -1,11 +1,11 @@
-#' Method for the summary of the STF
+#' Method for the summary of the test/short test form
 #'
-#' The STF is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
+#' The test/short test form is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 #'
 #' @param object Object of class \code{theta_target}
 #' @param ... other arguments
 #'
-#' @returns A summary of the STF obtained from the application of the theta target procedure
+#' @returns A summary of the test obtained from the application of the theta target procedure
 #' @export
 #'
 #' @examples
@@ -22,15 +22,22 @@
 #' resT <- theta_target(targets, item_par)
 #' summary(resT)
 summary.theta_target <- function(object, ...) {
-  cat("The item selection is based on the theta-target procedure with", object$intervals, "targets. \n The STF is composed of", nrow(object$stf))
-  if (is.null(object$K)) {
-    cat(" dichotomous items. \n")
+  if (object$intervals == "clusters") {
+    lab <- "cluster-defined"
+  } else if (object$intervals == "equal") {
+    lab <- "equally-spaced"
   } else {
-    cat(" polytomous items with", object$K+1, "categories. \n")
+    lab <- object$intervals
   }
-  cat("The selected items are\n")
+  cat("The item selection is based on the theta-target procedure with", lab, "targets. \nThe procedure selected the following", nrow(object$test))
+  if (is.null(object$K)) {
+    cat(" dichotomous items: \n")
+  } else {
+    cat(" polytomous items with", object$K+1, "categories: \n")
+  }
   cat(object$stf$isel, "\n")
-  cat("These items maximize the information for thetas equal to: \n")
-  cat(object$stf$theta_target, "\n with the following parameters \n")
+  cat("with parameters: \n")
   print(object$selected_items)
+  cat("These items maximize the information for thetas equal to: \n")
+  cat(object$stf$theta_target)
 }

@@ -1,11 +1,11 @@
-#' Method for the summary of the STF
+#' Method for the summary of the test/short test form
 #'
-#' The STF is obtained with the ISA procedure implemented with function \code{isa()}.Details on the procedure can be found in the documentation of the \code{isa()} function.
+#' The test/short test form is obtained with the ISA procedure implemented with function \code{isa()}. Details on the procedure can be found in the documentation of the \code{isa()} function.
 #'
 #' @param object Object of class \code{isa}
 #' @param ... other arguments
 #'
-#' @returns A summary of the STF obtained from the application of the ISA procedure
+#' @returns A summary of the test obtained from the application of ISA
 #' @export
 #'
 #' @examples
@@ -22,15 +22,14 @@
 #' resI <- isa(item_par, target, nmin = 5)
 #' summary(resI)
 summary.isa<- function(object, ...) {
-  cat("The item selection is based on the isa procedure with", unique(object$stf$nmin),
-      "minimum items to be included in the STF. \n")
-  cat("The STF is composed of", nrow(object$stf))
+  cat("The item selection is based on the isa procedure requiring the selection of at least", unique(object$test$nmin),
+      "items. \n")
+  cat("The procedure resulted in the selection of the following", nrow(object$test))
   if (is.null(object$K)) {
-    cat(" dichotomous items. \n")
+    cat(" dichotomous items: \n")
   } else {
     cat(" of polytomous with", object$K+1, "categories \n")
   }
-    cat("The selected items are\n")
-  cat(object$stf$isel, "\n with the following parameters \n")
+  cat(object$test$isel, "\nwith parameters: \n")
   print(object$selected_items)
 }

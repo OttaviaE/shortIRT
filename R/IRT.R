@@ -1,16 +1,16 @@
 #' Compute expected probability for a single dichotomous item
 #'
-#' Compute the expected probability for an item \eqn{i} according to its IRT parameters.
+#' Compute the expected probability for an item \eqn{i} given the latent trait \eqn{\theta} and the item parameters.
 #' Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 #'
 #' @param theta \code{numeric} latent trait level of person \eqn{p}. It can be a single value or a vector of values.
 #' @param b \code{numeric} location of item \eqn{i}. Default is 0.
 #' @param a \code{numeric} discrimination parameter for item \eqn{i}. Default is 1.
-#' @param c \code{numeric} pesudoguessing parameter of item \eqn{i}. Default is 0.
+#' @param c \code{numeric} pseudo-guessing parameter of item \eqn{i}. Default is 0.
 #' @param e \code{numeric} upper asymptote of item \eqn{i}. Default is 1.
 #'
 #' @details
-#' The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+#' The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 #' (4-PL; Barton & Lord, 1981) model is defined as:
 #'
 #' \deqn{
@@ -22,7 +22,7 @@
 #' \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
 #' \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
 #' and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
+#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL or the Rasch model (Rasch, 1960), respectively.
 #'
 #' @references Barton, M. A., & Lord, F. M. (1981). An upper asymptote for the
 #' three-parameter logistic item-response model. ETS Research Report
@@ -36,15 +36,18 @@
 #' Lord, F. M. (1980). Applications of item response theory to practical
 #' testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
 #'
+#' Rasch, G. (1960). Probabilistic models for some intelligence and attainment
+#' tests. Copenhagen, Denmark: Danish Institute for Educational Research.
+#'
 #' @returns a single value, that is the probability of the correct response for item \eqn{i} given the specified parameters
 #' @export
 #'
 #' @examples
-#' # compute the probability for an item according to 1-PL model
+#' # compute the probability for an item according to the 1-PL model
 #' IRT(theta = 0, b = 0,  a = 1, c = 0, e = 1)
-#' # compute probability for a vector of thetas for the same item
+#' # compute the probability for a vector of thetas for the same item
 #' IRT(theta = c(-1, 0, 1), b = 0,  a = 1, c = 0, e = 1)
-#' # compute probability for a vector of thetas for an item according to the 4-PL model
+#' # compute the probability for a vector of thetas for an item according to the 4-PL model
 #' IRT(theta = c(-1, 0, 1), b = 0,  a = 1.25, c = 0.10, e = 0.98)
 IRT <- function(theta,  b = 0, a = 1, c = 0,e = 1) {
   if (length(a) > 1 | length(b) > 1 | length(c)> 1 | length(e) > 1) stop("Compute the probability for a single item at the time")
@@ -54,13 +57,13 @@ IRT <- function(theta,  b = 0, a = 1, c = 0,e = 1) {
 
 #' Compute expected probability for multiple dichotomous items
 #'
-#' Compute the expected probability for multiple dichotomous items.
+#' Compute the expected probability for multiple dichotomous items given the latent trait levels \eqn{\theta} and the item parameters.
 #' Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 #'
-#' @param item_pars \code{data.frame}, dataframe with nrows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+#' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
 #' @param theta \code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.
 #' @details
-#' The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} on item \eqn{i} under the four-parameter logistic
+#' The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 #' (4-PL; Barton & Lord, 1981) model is defined as:
 #'
 #' \deqn{
@@ -72,7 +75,7 @@ IRT <- function(theta,  b = 0, a = 1, c = 0,e = 1) {
 #' \eqn{b_i} is the difficulty parameter (or location of item \eqn{i} on the latent trait),
 #' \eqn{c_i} is the lower asymptote (pseudo-guessing probability),
 #' and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_i = 1}, \eqn{c_i = 0}, and \eqn{a_i=1} \eqn{\forall i}, the probability
-#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL, respectively.
+#' is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL or the Rasch model (Rasch, 1960), respectively.
 #'
 #' @references Barton, M. A., & Lord, F. M. (1981). An upper asymptote for the
 #' three-parameter logistic item-response model. ETS Research Report
@@ -86,7 +89,10 @@ IRT <- function(theta,  b = 0, a = 1, c = 0,e = 1) {
 #' Lord, F. M. (1980). Applications of item response theory to practical
 #' testing problems. Hillsdale, NJ: Lawrence Erlbaum Associates.
 #'
-#' @returns A \eqn{P \times I} matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}
+#' Rasch, G. (1960). Probabilistic models for some intelligence and attainment
+#' tests. Copenhagen, Denmark: Danish Institute for Educational Research.
+#'
+#' @returns A \eqn{P \times I} (where \eqn{P} is the number of respondents corresponding to the length of \code{theta} and \eqn{I} is the number of items corresponding to the number of rows in \code{item_pars}) matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}
 #' @export
 #'
 #' @examples

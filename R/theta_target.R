@@ -1,6 +1,6 @@
 #' Theta target procedure
 #'
-#' Develop a short test form given the item parameters (dichotomous or polytomous) according to the theta target procedure. See \code{Details}.
+#' Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the theta target procedure. See \code{Details}.
 #'
 #' @param targets \code{numeric}, either a vector with the discrete values of theta for which the information needs to be
 #'    maximized obtained with the \code{define_targets()} function or a vector with user-defined values.
@@ -15,25 +15,25 @@
 #' @param theta \code{numeric} vector with the values of the latent trait \eqn{\theta} (needed for the computation of the IIFs of all items)
 #' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' A short test form (STF) composed of \eqn{J} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence \eqn{|N| = |J|}.
-#' Let \eqn{J} be the total number of items in the item bank and
-#' \eqn{N} the desired length of the short test form.
-#' Let \eqn{k = 0, \dots, K} denote the iteration index of the procedure, with
-#' \eqn{K = N - 1}.
+#' A test or a short test form composed of \eqn{N} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence the number of items included in the test is determined by the number of defined \eqn{\theta}-targets.
+#' Let \eqn{B} be the set of items in the item bank and
+#' \eqn{N} the desired number of \eqn{\theta}-targets and hence the desired number of items.
+#' Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, with
+#' \eqn{T = N - 1}.
 #'
 #' Define:
 #' \itemize{
-#'   \item \eqn{S^k \subseteq \{1, \dots, J\}} as the set of items selected for
-#'   inclusion in the short test form up to iteration \eqn{k};
+#'   \item \eqn{Q^t \subseteq \{1, \dots, B\}} as the set of items selected for
+#'   inclusion in the short test form up to iteration \eqn{t};
 #'
-#'   \item \eqn{Q^k \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
-#'   satisfied up to iteration \eqn{k}.
+#'   \item \eqn{S^t \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
+#'   satisfied up to iteration \eqn{t}.
 #' }
 #'
-#' At \eqn{k = 0}, \eqn{S^0 = \emptyset} and
-#' \eqn{Q^0 = \emptyset}.
+#' At \eqn{t = 0}, \eqn{Q^0 = \emptyset} and
+#' \eqn{S^0 = \emptyset}.
 #'
-#' The procedure iterates the following steps until \eqn{k = K}:
+#' The procedure iterates the following steps until \eqn{t = T}:
 #'
 #' \enumerate{
 #'   \item Select the item--target pair \eqn{(i, n)} maximizing the item
@@ -41,37 +41,37 @@
 #'
 #'   \deqn{
 #'   (i, n) =
-#'   \arg\max_{i \in B \setminus S^k,\; n \in N \setminus Q^k}
+#'   \arg\max_{i \in B \setminus S^t,\; n \in N \setminus Q^t}
 #'   \mathrm{IIF}(i, n)
 #'   }
 #'
 #'   \item Update the set of selected items:
 #'   \deqn{
-#'   S^{k+1} = S^k \cup \{i\}
+#'   Q^{t+1} = Q^t \cup \{i\}
 #'   }
 #'
 #'   \item Update the set of satisfied ability targets:
 #'   \deqn{
-#'   Q^{k+1} = Q^k \cup \{n\}
+#'   S^{t+1} = S^t \cup \{n\}
 #'   }
 #' }
 #'
-#' At iteration \eqn{K}, the procedure yields
-#' \eqn{|S^{K+1}| = N} and \eqn{|Q^{K+1}| = N}. Further details can be found in Epifania et al. (2022).
+#' At iteration \eqn{T}, the procedure yields
+#' \eqn{|Q^{T+1}| = N} and \eqn{|S^{T+1}| = N}. Further details can be found in Epifania et al. (2022).
 #'
 #' @references Epifania, O. M., Anselmi, P., & Robusto, E. (2022). Item response
 #' theory approaches for test shortening. In M. Wiberg, D. Molenaar,
 #' J. Gonzalez, J. S. Kim, & H. Hwang (Eds.), Quantitative Psychology
 #' (Vol. 422, pp. 75–83). Springer Proceedings in Mathematics and
-#' Statistics. Cham: Springer.
+#' Statistics. Springer, Cham.
 #' https://doi.org/10.1007/978-3-031-27781-8_7
 #'
 #' @returns
 #' An object of class \code{theta_target} of length 4 containing:
 #'
 #' \itemize{
-#'   \item \strong{stf}: a data frame containing the items selected for inclusion
-#'   in the short test form (column \code{isel}), their maximum item information
+#'   \item \strong{test}: a data frame containing the items selected for inclusion
+#'   in the test (column \code{isel}), their maximum item information
 #'   function (column \code{maxiif}), and the corresponding theta target
 #'   (column \code{theta_target}).
 #'
@@ -120,13 +120,19 @@ theta_target <- function(targets, item_pars, theta = seq(-5,5, length.out=1000),
     if (length(targets) > 2) {
       stop("Only lists of length 2 are accepted with the specific theta value and the number of targets to generated")
     }
-    if (targets$num_targets >= nrow(item_pars)) {
-      stop("The number of items for the STF is greater or equal to the number of items in the STF")
+    if (targets$num_targets == nrow(item_pars)) {
+      warning("The number of items is equal to the number of items in the item bank.")
+    }
+    if (targets$num_targets > nrow(item_pars)) {
+      stop("The number of items of the test is greater than the number of items in the item bank")
     }
     targets <- rep(targets$value, targets$num_targets)
   }
-  if (length(targets) >= nrow(item_pars)) {
-    stop("The number of items for the STF is greater or equal to the number of items in the STF")
+  if (length(targets) == nrow(item_pars)) {
+    warning("The number of items is equal to the number of items in the item bank.")
+  }
+  if (length(targets) > nrow(item_pars)) {
+    stop("The number of items of the test is greater than the number of items in the item bank")
   }
  if (inherits(targets, "equal") == FALSE & inherits(targets, "clusters") == FALSE) {
     class_targets  <- "user-defined"
@@ -167,7 +173,7 @@ theta_target <- function(targets, item_pars, theta = seq(-5,5, length.out=1000),
   res$isel <-  as.character(rownames(item_pars)[isel])
   res$theta_target <- targets[tsel]
   sel_items <- item_pars[res$isel, ]
-  results <- list(stf = res,
+  results <- list(test = res,
                   item_pars  = item_pars,
                   selected_items = sel_items,
                   intervals = class_targets,

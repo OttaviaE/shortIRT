@@ -1,17 +1,17 @@
-#' Method for plotting the TIF of the STF
+#' Method for plotting the TIF of the test/short test form
 #'
-#' The STF is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
+#' The test/short test form is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 #'
 #' @param x Object of class \code{theta_target} obtained with function \code{theta_target()}
 #' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
-#' @param show_targets \code{logical}, default is TRUE. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown as the items that satisfy them.
+#' @param show_targets \code{logical}, default is \code{TRUE}. Whether to show or not the theta targets. If \code{TRUE} the theta targets are shown. The color associated to each theta target represents the specific item that has been selected for maximizing the information for that specific point.
 #' @param ... other arguments
 #'
 #' @details
 #' If more than 10 theta targets are selected, the legend associated to each theta target is not displayed.
 #'
 #'
-#' @returns A \code{ggplot} showing the TIFs of the STF, the locations of the theta targets, and the items that satisfy each theta target.
+#' @returns A \code{ggplot} showing the TIFs of the test, the locations of the theta targets, and the items that satisfy each theta target.
 #' @export
 #'
 #' @examples
@@ -43,10 +43,10 @@ plot.theta_target <- function(x, fun = "sum",
   temp <- tif(stfiif, fun = fun)
   stftif <- data.frame(theta = temp$theta,
                        tif = temp$tif,
-                       test = paste("stf with",
+                       test = paste("test with",
                                     nrow(x$selected_items), "items"))
   plottif <- stftif
-  tt <- x$stf
+  tt <- x$test
   colnames(tt)[3] <- "theta"
 
   basic_plot <-   ggplot(plottif,

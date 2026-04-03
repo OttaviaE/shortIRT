@@ -1,12 +1,12 @@
-#' Method for plotting the TIF of the STF
+#' Method for plotting the TIF of the test/short test form
 #'
-#' The STF is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
+#' The test/short test form is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
 #'
 #' @param x Object of class \code{bench}
 #' @param fun \code{character}, whether to consider the mean or the sum for the computation of the TIF
 #' @param ... other arguments
 #'
-#' @returns A \code{ggplot} showing the TIFs of the STF.
+#' @returns A \code{ggplot} showing the TIFs of the test.
 #' @export
 #'
 #' @examples
@@ -21,7 +21,7 @@
 #' )
 #' resB <- bench(item_par, theta = theta, num_item = 5)
 #' plot(resB)
-#' # plot only the TIF of the STF
+#' # plot only the TIF of the test
 #' plot(resB, show_both = FALSE)
 #' # same but with polytomous items
 #' item_pars <- data.frame(matrix(c(
@@ -52,12 +52,12 @@ plot.bench <- function(x, fun = "sum",
   temp <- tif(stfiif, fun = fun)
   stftif <- data.frame(theta = temp$theta,
                        tif = temp$tif,
-                       test = paste("stf with",
+                       test = paste("test with",
                                     nrow(x$selected_items), "items"))
 
     basic_plot <- ggplot(stftif,
                          aes(x = .data$theta, y = .data$tif,
                              group = .data$test, col = .data$test)) +
-      geom_line() + theme_light()
+      geom_line() + theme_light() + theme(legend.title = element_blank())
   print(basic_plot)
 }
