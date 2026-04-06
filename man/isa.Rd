@@ -39,7 +39,7 @@ An object of class \code{isa} of length 6 containing:
 }
 }
 \description{
-Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the Item Selection procedure (ISA, Epifania & Finos, 2025). See \code{Details}.
+Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the Item Selection Algorithm (ISA, Epifania & Finos, 2025). See \code{Details}.
 }
 \details{
 Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, \eqn{\text{TIF}^*} denote the test information target, and \eqn{\text{TIF}^t} denote the test information function obtained from \eqn{Q^t \subset B} (where \eqn{B} is the item bank and \eqn{Q^t} is the subset of items selected up to iteration \eqn{t}).
