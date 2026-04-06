@@ -21,13 +21,17 @@
 #' resB <- bench(item_par, theta = theta, num_item = 5)
 #' summary(resB)
 summary.bench <- function(object, ...) {
-  cat("The item selection is based on the benchmark procedure. \nThe procedure selected the following", nrow(object$test))
   if (is.null(object$K)) {
-    cat(" dichotomous items: \n")
+    type_items <- "dichotomous items: \n"
   } else {
-    cat(" polytomous items with", object$K+1, "categories: \n")
+    type_items <- paste("polytomous items with", object$K+1, "categories: \n")
   }
-  cat(object$stf$isel, "\n")
+  if (nrow(object$test) == nrow(object$item_pars)) {
+    cat("The item selection is based on the benchmark procedure. \nAll the", gsub(": \n", "", type_items), "from the item bank have been included in the test in the following order: \n")
+  } else {
+    cat("The item selection is based on the benchmark procedure. \nThe procedure selected the following", nrow(object$test), type_items)
+  }
+  cat(object$test$isel, "\n")
   cat("with parameters: \n")
   print(object$selected_items)
   cat("These items maximize the information for thetas equal to: \n")

@@ -22,13 +22,16 @@
 #' resI <- isa(item_par, target, nmin = 5)
 #' summary(resI)
 summary.isa<- function(object, ...) {
-  cat("The item selection is based on the isa procedure requiring the selection of at least", unique(object$test$nmin),
-      "items. \n")
-  cat("The procedure resulted in the selection of the following", nrow(object$test))
   if (is.null(object$K)) {
-    cat(" dichotomous items: \n")
+    type_items <- "dichotomous items: \n"
   } else {
-    cat(" of polytomous with", object$K+1, "categories \n")
+    type_items <- paste("polytomous items with", object$K+1, "categories: \n")
+  }
+  if (nrow(object$test) == nrow(object$item_pars)) {
+    cat("The item selection is based on the ISA. \nAll the", gsub(": \n", "", type_items), "from the item bank have been included in the test in the following order: \n")
+  } else {
+    cat("The item selection is based on the isa requiring the selection of at least", unique(object$test$nmin), "items",
+        "\nThe procedure selected the following", nrow(object$test), type_items)
   }
   cat(object$test$isel, "\nwith parameters: \n")
   print(object$selected_items)

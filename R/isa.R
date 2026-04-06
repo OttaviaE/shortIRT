@@ -1,6 +1,6 @@
 #' Item Selection Algorithm
 #'
-#' Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the Item Selection procedure (ISA, Epifania & Finos, 2025). See \code{Details}.
+#' Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the Item Selection Algorithm (ISA, Epifania & Finos, 2025). See \code{Details}.
 #'
 #' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items.
 #'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
@@ -110,9 +110,16 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
   if ( attributes(tif_target)$source  != "mean") {
     warning("we strongly advise for the use of the mean TIF for the definition of the TIF target")
   }
+  if (nmin <= 0) {
+    stop("You need to include at least 1 item in the test")
+  } else if (nmin == nrow(item_pars)) {
+    warning("The number of items is equal to the number of items in the item bank.")
+  } else if (nmin >= nrow(item_pars)) {
+    warning("The number of items of the test is greater than the number of items in the item bank.")
+  }
   if (is.null(K)) {
     if (length(unique(gsub("[0-9]", "", colnames(item_pars)))) == 2) {
-      stop("You forgot to specifiy the number of thresholds for your items!")
+      stop("You forgot to specifiy the number of thresholds for your polytomous items!")
     }
   }
   theta <- tif_target$theta
@@ -121,6 +128,7 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
   j <- 0
   iif_stf <- matrix(,length(tif_target$theta), 0)
   distance_target_tif = Inf
+  iindexes <- NULL
   iifs <- item_info(item_pars, theta, K = K)
   while (token == TRUE) {
     j = j +1
@@ -136,6 +144,7 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
     }
     # qui trovo l'item che minimizza e lo metto in d
     d_index = which(difference == min(difference, na.rm = T))
+    iindexes <- c(iindexes, d_index)
     iif_stf = data.frame(iif_stf,  iifs[,d_index])
     colnames(iif_stf)[ncol(iif_stf)] = paste("item", d_index, sep = "_")
     # guardo le differenze
@@ -144,7 +153,14 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
       item_pars[d_index, ] = NA
       distance_target_tif = mean(abs(tif_target$tif - rowMeans(iif_stf)))
       # distance_target_tif = mean(abs(((tif_target$mean_tif - rowMeans(iif_stf))/tif_target$mean_tif)))
-
+      if (j == nrow(item_pars)) {
+        token = FALSE
+        temp_item = colnames(iif_stf)
+        temp_item = as.numeric(gsub("item_", "", temp_item))
+        temp_item = temp_item[order(temp_item)]
+        sel_items = paste("item", temp_item, sep = "_")
+        sel_items = paste(sel_items, collapse = " ")
+      }
     } else if (difference[d_index] >= distance_target_tif) {
       token = FALSE
       temp_item = colnames(iif_stf)[-ncol(iif_stf)]
@@ -158,16 +174,16 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
       # distance_target_tif = mean(abs(((tif_target$mean_tif - rowMeans(iif_stf))/tif_target$mean_tif)))
     }
   }
-  iif_stf = data.frame(iif_stf[,-ncol(iif_stf)])
+  iif_stf = data.frame(iif_stf[,iindexes])
   if (ncol(iif_stf) == 1) {
     colnames(iif_stf) = sel_items
   }
-  isel <- as.numeric(gsub("item_", "", colnames(iif_stf)))
-  stf_info = data.frame(isel = rownames(item_pars)[isel], nmin = nmin)
+ # isel <- as.numeric(gsub("item_", "", colnames(iif_stf)))
+  stf_info = data.frame(isel = rownames(item_pars)[iindexes], nmin = nmin)
   rownames(iifs) <- theta
   results <- list(test = stf_info,
                   item_pars  = original_parameters,
-                  selected_items = original_parameters[isel, ],
+                  selected_items = original_parameters[iindexes, ],
                   all_iifs = iifs,
                   tif_target = tif_target,
                   K = K)
