@@ -104,7 +104,7 @@
 #'   sep = ""
 #' )
 #'
-#' resT_poly <- theta_target(c(-1, 0), item_pars, K = 3)
+#' resIsa_poly <- isa(item_pars, tif_target, nmin = 2, K = 3)
 #' str(resT_poly)
 isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = NULL) {
   if ( attributes(tif_target)$source  != "mean") {
@@ -160,10 +160,12 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
         temp_item = temp_item[order(temp_item)]
         sel_items = paste("item", temp_item, sep = "_")
         sel_items = paste(sel_items, collapse = " ")
+        isel <- iindexes
       }
     } else if (difference[d_index] >= distance_target_tif) {
       token = FALSE
       temp_item = colnames(iif_stf)[-ncol(iif_stf)]
+      isel <- temp_item
       temp_item = as.numeric(gsub("item_", "", temp_item))
       temp_item = temp_item[order(temp_item)]
       sel_items = paste("item", temp_item, sep = "_")
@@ -174,7 +176,7 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
       # distance_target_tif = mean(abs(((tif_target$mean_tif - rowMeans(iif_stf))/tif_target$mean_tif)))
     }
   }
-  iif_stf = data.frame(iif_stf[,iindexes])
+  iif_stf = data.frame(iif_stf[,isel])
   if (ncol(iif_stf) == 1) {
     colnames(iif_stf) = sel_items
   }
@@ -183,7 +185,7 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
   rownames(iifs) <- theta
   results <- list(test = stf_info,
                   item_pars  = original_parameters,
-                  selected_items = original_parameters[iindexes, ],
+                  selected_items = original_parameters[isel, ],
                   all_iifs = iifs,
                   tif_target = tif_target,
                   K = K)
