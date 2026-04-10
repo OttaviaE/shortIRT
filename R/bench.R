@@ -1,6 +1,6 @@
 #' Benchmark Procedure
 #'
-#' Develop a test or a short form given the parameters of dichotomous or polytomous items in an item bank/full-length test according to the benchmark procedure. See \code{Details}.
+#' Develop a test or a short form of a test given the parameters of dichotomous or polytomous items in an item bank/full-length test according to the benchmark procedure. See \code{Details}.
 #'
 #' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items.
 #'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
@@ -8,10 +8,10 @@
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters
 #'   \eqn{b_1, \dots, b_K} (must be named "b").
-#' @param iifs \code{data.frame}, dataframe with number of rows equal to the length of the latent trait \eqn{\theta} and number of columns equal to the number of items in the item bank. It contains the item information functions (IIFs) of the items in the full-length test. The arguments \code{item_pars} and \code{iifs} cannot be used together.
-#' @param num_item \code{integer}, the number \eqn{N} of items to include in the short test form
-#' @param theta \code{numeric}, vector with the latent trait values
-#' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of response categorie \eqn{- 1}). Default is \code{NULL} (assumes dichotomous items).
+#' @param iifs \code{data.frame}, dataframe with number of rows equal to the length of the latent trait \eqn{\theta} and number of columns equal to the number of items in the item bank. It contains the item information functions (IIFs) of the items in item bank/the full-length test. The arguments \code{item_pars} and \code{iifs} cannot be used together.
+#' @param num_item \code{integer}, the number \eqn{N} of items to include in the test.
+#' @param theta \code{numeric}, vector with the latent trait values.
+#' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).
 #'
 #' @details
 #' A test composed of \eqn{N} items is constructed from an item bank
@@ -54,33 +54,39 @@
 #' \itemize{
 #'   \item{\code{test}: dataframe with the items selected for inclusion in the test (\code{isel}),
 #'   their maximum information function (\code{maxiif}), for a specific latent trait
-#'   level \eqn{\theta} (column \code{theta})}
-#'   \item{\code{item_pars}: the original dataframe containing the item parameters}
-#'   \item{\code{selected_items}: dataframe with the parameters of the selected items}
+#'   level \eqn{\theta} (column \code{theta}).}
+#'   \item{\code{item_pars}: the original dataframe containing the item parameters.}
+#'   \item{\code{selected_items}: dataframe with the parameters of the selected items.}
 #'   \item{\code{K}: number of thresholds for the response categories of the items. If the items are dichotomous \code{K} is \code{NULL}.}
 #' }
 #'
 #' @export
 #'
 #' @examples
+#' # set a seed for the reproducibility of the results
 #' set.seed(123)
+#' # define the number of items in the item bank
 #' n <- 50
+#' # generate 500 random values of theta from a normal distribution with sd = 2
 #' theta <- rnorm(500, sd = 2)
+#' # generate item parameters  of the items in the item bank according to the 2-PL model
 #' item_pars <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
+#' # apply benchmark procedures
 #' resB <- bench(item_pars, theta = theta, num_item = 5)
 #' str(resB)
-#' # same but with polytomous items
+#' # generate an item bank with 4 polytomous items with K = 3
 #' item_pars <- data.frame(matrix(c(
 #'  1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
 #'  0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
 #'  0.5, 1.5, 1, -1.5, -1.0, 0,
 #'  1, 1, 1, -1.5, -0, 0.5
 #'  ), nrow = 4, byrow = TRUE))
+#' # rename the columns
 #' colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
 #' resB_poly <- bench(item_pars, theta = theta, num_item = 2, K = 3)
 #' str(resB_poly)
