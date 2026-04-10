@@ -7,21 +7,24 @@
 define_targets(theta, num_targets = NULL, method = c("equal", "clusters"))
 }
 \arguments{
-\item{theta}{\code{numeric} vector, define the latent trait \eqn{\theta}}
+\item{theta}{\code{numeric} vector, define the latent trait \eqn{\theta}.}
 
 \item{num_targets}{\code{integer} value, define the number of \eqn{\theta} targets. The number of \eqn{\theta} targets defines the number of items included in the test.}
 
-\item{method}{\code{character}, either \code{equal} (default) or \code{clusters}}
+\item{method}{\code{character}, either \code{equal} (default) or \code{clusters}.}
 }
 \value{
-A vector of length \code{num_targets} with the generated \eqn{\theta} targets. The class can be either \code{equal} or \code{clusters}, depending on the method used for the definition of the \eqn{\theta} targets
+A vector of length \code{num_targets} with the generated \eqn{\theta} targets. The class can be either \code{equal} or \code{clusters}, depending on the method used for the definition of the \eqn{\theta} targets.
 }
 \description{
 Define \eqn{\theta} targets either by considering the midpoints of equal intervals defined on the latent trait (\code{equal}) or the centroids obtained by clustering the latent trait (\code{clusters}). Further details on targets definition can be found in Epifania et al. (2022).
 }
 \examples{
+# set a seed for the reproducibility of the results
 set.seed(123)
+# generate 1000 random values of theta from a normal distribution
 theta <- rnorm(1000)
+# extract theta targets as the centroids of the clusters
 targets <- define_targets(theta, num_targets = 5, method = "clusters")
 }
 \references{

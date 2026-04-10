@@ -70,28 +70,30 @@ For \eqn{t \geq 0},
 Further details on the algorithm can be found in Epifania & Finos (2025), where the algorithm is denoted as Frank.
 }
 \examples{
+
+# set a seed for the reproducibility of the results
 set.seed(123)
-
+# define the number of items in the item bank
 n <- 50
-theta <- rnorm(500)
-
+# generate 500 random values of theta from a normal distribution with sd = 2
+theta <- rnorm(500, sd = 2)
+# generate item parameters  of the items in the item bank according to the 2-PL model
 item_pars <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
-
+# define the tif target as the average tif of the items in the item bank
 tif_target <- tif(
-  item_info(item_pars[-c(3, 5, 10, 14), ]),
+  item_info(item_pars),
   fun = "mean"
 )
-
+# apply ISA with the constraint of selecting at least 4 items
 resIsa <- isa(item_pars, tif_target, nmin = 4)
 str(resIsa)
 
-# Polytomous items with user-defined theta targets
-
+# generate an item bank with 4 polytomous items with K = 3
 item_pars <- data.frame(
   matrix(c(
     1.2, 1.0, 0.8,  -1.0,  0.0,  1.2,
@@ -106,9 +108,10 @@ colnames(item_pars) <- paste(
   1:3,
   sep = ""
 )
-
-resT_poly <- theta_target(c(-1, 0), item_pars, K = 3)
-str(resT_poly)
+# rename the columns
+# apply ISA with the constraint of selecting at least 2 items
+resIsa_poly <- isa(item_pars, tif_target, nmin = 2, K = 3)
+str(resIsa_poly)
 }
 \references{
 Epifania, O. M., & Finos, L. (2025). Nothing lasts forever – only item
