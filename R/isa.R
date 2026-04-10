@@ -108,7 +108,7 @@
 #' # rename the columns
 #' # apply ISA with the constraint of selecting at least 2 items
 #' resIsa_poly <- isa(item_pars, tif_target, nmin = 2, K = 3)
-#' str(resT_poly)
+#' str(resIsa_poly)
 isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = NULL) {
   if ( attributes(tif_target)$source  != "mean") {
     warning("we strongly advise for the use of the mean TIF for the definition of the TIF target")
@@ -183,8 +183,8 @@ isa <- function(item_pars, tif_target, nmin = round(nrow(item_pars)*0.10), K = N
   if (ncol(iif_stf) == 1) {
     colnames(iif_stf) = sel_items
   }
- # isel <- as.numeric(gsub("item_", "", colnames(iif_stf)))
-  stf_info = data.frame(isel = rownames(item_pars)[iindexes], nmin = nmin)
+  isel <- as.numeric(gsub("item_", "", isel))
+  stf_info = data.frame(isel = rownames(item_pars)[isel], nmin = nmin)
   rownames(iifs) <- theta
   results <- list(test = stf_info,
                   item_pars  = original_parameters,
