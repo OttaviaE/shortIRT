@@ -39,17 +39,21 @@ plot.bench <- function(x, fun = "sum",
     stop("I need an object of either class bench or theta target")
   }
   theta <- as.numeric(rownames(x$all_iifs))
-  K <- x$K
-  if (is.null(K)) {
-    if (ncol(x$item_par) > 4) {
-      stop("The items appear to be polytomous but you did not provide the K thresholds!")
+  if (!is.null(x$item_pars)) {
+    K <- x$K
+    if (is.null(K)) {
+      if (ncol(x$item_par) > 4) {
+        stop("The items appear to be polytomous but you did not provide the K thresholds!")
+      } else {
+        stfiif <- item_info(x$selected_items, theta = theta)
+      }
     } else {
-    stfiif <- item_info(x$selected_items, theta = theta)
-    }
-  } else {
       stfiif <- item_info(x$selected_items, theta = theta, K = K)
     }
-  temp <- tif(stfiif, fun = fun)
+    temp <- tif(stfiif, fun = fun)
+  } else {
+    temp <- tif(x$all_iifs, fun = fun)
+  }
   stftif <- data.frame(theta = temp$theta,
                        tif = temp$tif,
                        test = paste("test with",
