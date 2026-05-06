@@ -115,6 +115,7 @@ bench <- function(item_pars = NULL,
         iifs <- item_info(item_pars = item_pars,theta = theta,)
       }
     }
+    rownames(iifs) <- theta
   } else if (is.null(item_pars) == TRUE & is.null(iifs) == FALSE) {
     if (num_item == ncol(iifs)) {
       warning("The number of items is equal to the number of items in the item bank.")
@@ -126,7 +127,6 @@ bench <- function(item_pars = NULL,
   } else {
     stop("Too much")
   }
-  rownames(iifs) <- theta
   maxinfos <- apply(iifs, 2, max)
   maxinfos <- maxinfos[order(maxinfos, decreasing = TRUE)]
   maxinfos <- maxinfos[1:num_item]
@@ -135,7 +135,7 @@ bench <- function(item_pars = NULL,
   sel_items <- item_pars[names(maxinfos), ]
   stf <- data.frame(isel = names(maxinfos),
                     maxiif = maxinfos,
-                    theta = maxthetas[rownames(sel_items)])
+                    theta = maxthetas[names(maxinfos)])
   results <- list(test = stf,
                   item_pars = item_pars,
                   selected_items = sel_items,
