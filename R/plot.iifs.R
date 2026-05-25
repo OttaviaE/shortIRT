@@ -51,5 +51,5 @@ plot.iifs <- function(x, single_panels = TRUE,
       basic_plot <- basic_plot
     }
 
-print(basic_plot)
+  basic_plot
 }

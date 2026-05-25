@@ -64,5 +64,5 @@ plot.theta_target <- function(x, fun = "sum",
     }
   }
 
- print(basic_plot)
+ basic_plot
 }

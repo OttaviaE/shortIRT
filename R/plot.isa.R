@@ -102,5 +102,5 @@ plot.isa <- function(x, fun = "mean",
     }
   }
   basic_plot <- basic_plot + theme(legend.title = element_blank())
-  print(basic_plot)
+  basic_plot
 }

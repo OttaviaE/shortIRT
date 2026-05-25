@@ -33,5 +33,5 @@ plot.tif <- function(x, ...) {
   basic_plot <- ggplot2::ggplot(x,
                   ggplot2::aes(x = .data$theta, y = .data$tif)) +
     ggplot2::geom_line() + ggtitle(title) + theme_light()
-  print(basic_plot)
+  basic_plot
 }

@@ -63,5 +63,5 @@ plot.bench <- function(x, fun = "sum",
                          aes(x = .data$theta, y = .data$tif,
                              group = .data$test, col = .data$test)) +
       geom_line() + theme_light() + theme(legend.title = element_blank())
-  print(basic_plot)
+  basic_plot
 }
