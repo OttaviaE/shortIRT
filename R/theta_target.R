@@ -15,18 +15,15 @@
 #' @param theta \code{numeric} vector with the values of the latent trait \eqn{\theta} (needed for the computation of the IIFs of all items)
 #' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
 #' @details
-#' A test or a short test form composed of \eqn{N} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence the number of items included in the test is determined by the number of defined \eqn{\theta}-targets.
-#' Let \eqn{B} be the set of items in the item bank and
-#' \eqn{N} the desired number of \eqn{\theta}-targets and hence the desired number of items.
-#' Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, with
-#' \eqn{T = N - 1}.
+#' Let \eqn{\Theta} be the set of \eqn{N} \eqn{\theta}-targets (\eqn{\theta'}), i.e., the latent trait levels of interest for the assessment defined as discrete levels of \eqn{\theta}, where \eqn{N} denotes the desired length of \eqn{Q_{\text{target}} \subseteq B}, where \eqn{B} denotes the item bank.
+#' The test \eqn{Q_{\text{target}} \subseteq B} of length \eqn{N} is developed by considering the information \eqn{I_i(\theta_n')} that each item in \eqn{B} provides with respect to each \eqn{\theta' \in \Theta}. Therefore, an optimal item (i.e., the item with the highest information function) is chosen for each \eqn{\theta'}. Given that \eqn{N} is the pre-defined length of test \eqn{Q} and that an optimal item is selected for each \eqn{\theta' \in \Theta}, then \eqn{|\Theta| = N}.
 #'
-#' Define:
+#' Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure and define:
 #' \itemize{
-#'   \item \eqn{Q^t \subseteq \{1, \dots, B\}} as the set of items selected for
-#'   inclusion in the short test form up to iteration \eqn{t};
+#'   \item \eqn{Q^t \subseteq B} as the set of items selected for
+#'   inclusion in the test up to iteration \eqn{t};
 #'
-#'   \item \eqn{S^t \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
+#'   \item \eqn{S^t \subseteq \Theta} as the set of  \eqn{\theta'}s
 #'   satisfied up to iteration \eqn{t}.
 #' }
 #'
@@ -58,6 +55,7 @@
 #'
 #' At iteration \eqn{T}, the procedure yields
 #' \eqn{|Q^{T+1}| = N} and \eqn{|S^{T+1}| = N}. Further details can be found in Epifania et al. (2022).
+#'
 #'
 #' @references Epifania, O. M., Anselmi, P., & Robusto, E. (2022). Item response
 #' theory approaches for test shortening. In M. Wiberg, D. Molenaar,

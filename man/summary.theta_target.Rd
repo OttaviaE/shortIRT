@@ -18,16 +18,35 @@ A summary of the test obtained from the application of the theta target procedur
 The test/short test form is obtained with the theta target procedure implemented with function \code{theta_target()}. Details on the procedure can be found in the documentation of the \code{theta_target()} function.
 }
 \examples{
+# Set random seed for reproducibility
 set.seed(123)
+
+# Define the number of items in the item bank
 n <- 50
+
+# Generate latent trait values for 500 respondents
 theta <- rnorm(500)
+
+# Create item parameter matrix/data frame
+# b = difficulty parameters
+# a = discrimination parameters
+# c = lower asymptote
+# e = upper asymptote
 item_par <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
+
+# Define theta-based target regions
+# splitting the latent trait distribution into 4 segments
 targets <- define_targets(theta, num_targets = 4)
+
+# Perform theta-targeted item selection
+# matching item information to target regions
 resT <- theta_target(targets, item_par)
+
+# Summarize theta-targeted selection results
 summary(resT)
 }

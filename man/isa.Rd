@@ -42,7 +42,7 @@ An object of class \code{isa} of length 6 containing:
 Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the Item Selection Algorithm (ISA, Epifania & Finos, 2025). See \code{Details}.
 }
 \details{
-Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, \eqn{\text{TIF}^*} denote the test information target, and \eqn{\text{TIF}^t} denote the test information function obtained from \eqn{Q^t \subset B} (where \eqn{B} is the item bank and \eqn{Q^t} is the subset of items selected up to iteration \eqn{t}).
+Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, \eqn{\text{TIF}'} denote the test information target, and \eqn{\text{TIF}^t} denote the test information function obtained from \eqn{Q_{\text{isa}}^t \subset B} (where \eqn{B} is the item bank and \eqn{Q^t} is the subset of items selected up to iteration \eqn{t}).
 At \eqn{t = 0}: \eqn{\text{TIF}^0(\theta) = 0}, \eqn{\forall \theta}, \eqn{Q^0 = \emptyset}.
 For \eqn{t \geq 0},
 
@@ -51,7 +51,7 @@ For \eqn{t \geq 0},
 
   \deqn{A^t = B \setminus Q^t}
 
-  \item Compute the provisional TIF (\eqn{\text{pTIF}_i}) for each of the available items
+  \item Compute the provisional TIF (\eqn{\text{pTIF}_i}) considering the available items one at the time
 
   \deqn{\forall i \in A^t, \text{pTIF}_{i} := \frac{\text{TIF}^t + I_{i}(\theta)}{|Q^t|+1}}
 

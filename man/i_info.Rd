@@ -66,17 +66,44 @@ I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
 }
 }
 \examples{
+# Set random seed for reproducibility
+set.seed(123)
 
+# Create a sequence of latent trait values
+# spanning the ability continuum
 theta <- seq(-4, 4, length.out = 200)
 
-# IIF of an item with b = 0
-item_par <- data.frame(b = 0, a = 1.5, c = .10, e = .98)
+# Define parameters for a dichotomous item
+# b = difficulty
+# a = discrimination
+# c = lower asymptote (guessing)
+# e = upper asymptote
+item_par <- data.frame(
+  b = 0,
+  a = 1.5,
+  c = .10,
+  e = .98
+)
+
+# Compute item information function (IIF)
+# across the theta continuum
 info_dichotomous <- i_info(item_par, theta = theta)
 
-# 4-category item (K = 3)
-item_pars <- data.frame(a1 = 1.2, a2 = 1.0, a3= 0.8,
-                        b1 = -1.0, b2 = 0.0, b3 = 1.2)
+# Define parameters for a 4-category item
+# (K = 3 thresholds / category transitions)
+# a's = category discrimination parameters
+# b's = threshold/location parameters
+item_pars <- data.frame(
+  a1 = 1.2,
+  a2 = 1.0,
+  a3 = 0.8,
+  b1 = -1.0,
+  b2 = 0.0,
+  b3 = 1.2
+)
 
+# Compute item information for the polytomous item
+# across the theta continuum
 info <- i_info(item_pars, theta = theta, K = 3)
 }
 \references{

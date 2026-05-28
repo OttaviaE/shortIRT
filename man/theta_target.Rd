@@ -55,18 +55,15 @@ An object of class \code{theta_target} of length 4 containing:
 Develop a test or a short form given the parameters of dichotomous or polytomous in an item bank/full-length test according to the theta target procedure. See \code{Details}.
 }
 \details{
-A test or a short test form composed of \eqn{N} items is constructed with the aim of maximizing the information for \eqn{N} latent trait levels of interest, denoted as \eqn{\theta}-targets. An item for each \eqn{\theta}-target is chosen, hence the number of items included in the test is determined by the number of defined \eqn{\theta}-targets.
-Let \eqn{B} be the set of items in the item bank and
-\eqn{N} the desired number of \eqn{\theta}-targets and hence the desired number of items.
-Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure, with
-\eqn{T = N - 1}.
+Let \eqn{\Theta} be the set of \eqn{N} \eqn{\theta}-targets (\eqn{\theta'}), i.e., the latent trait levels of interest for the assessment defined as discrete levels of \eqn{\theta}, where \eqn{N} denotes the desired length of \eqn{Q_{\text{target}} \subseteq B}, where \eqn{B} denotes the item bank.
+The test \eqn{Q_{\text{target}} \subseteq B} of length \eqn{N} is developed by considering the information \eqn{I_i(\theta_n')} that each item in \eqn{B} provides with respect to each \eqn{\theta' \in \Theta}. Therefore, an optimal item (i.e., the item with the highest information function) is chosen for each \eqn{\theta'}. Given that \eqn{N} is the pre-defined length of test \eqn{Q} and that an optimal item is selected for each \eqn{\theta' \in \Theta}, then \eqn{|\Theta| = N}.
 
-Define:
+Let \eqn{t = 0, \dots, T} denote the iteration index of the procedure and define:
 \itemize{
-  \item \eqn{Q^t \subseteq \{1, \dots, B\}} as the set of items selected for
-  inclusion in the short test form up to iteration \eqn{t};
+  \item \eqn{Q^t \subseteq B} as the set of items selected for
+  inclusion in the test up to iteration \eqn{t};
 
-  \item \eqn{S^t \subseteq \{1, \dots, N\}} as the set of  \eqn{\theta}-targets
+  \item \eqn{S^t \subseteq \Theta} as the set of  \eqn{\theta'}s
   satisfied up to iteration \eqn{t}.
 }
 

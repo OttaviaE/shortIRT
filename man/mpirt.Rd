@@ -34,15 +34,29 @@ and \eqn{e_i} is the upper asymptote (inattention/slip). By constraining \eqn{e_
 is computed according to the 3-PL (Lord, 1980), 2-PL (Birnbaum, 1968) and 1-PL or the Rasch model (Rasch, 1960), respectively.
 }
 \examples{
+# Set random seed for reproducibility
 set.seed(123)
+
+# Define the number of items
 n <- 50
+
+# Generate latent trait values (theta) for 500 respondents
 theta <- rnorm(500)
+
+# Create item parameter matrix/data frame
+# b = item difficulty parameters
+# a = item discrimination parameters
+# c = lower asymptote (guessing parameter)
+# e = upper asymptote
 item_pars <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
+
+# Compute expected response probabilities
+# for each respondent-item combination
 expected_prob <- mpirt(item_pars, theta)
 }
 \references{

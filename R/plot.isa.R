@@ -14,21 +14,45 @@
 #' @export
 #'
 #' @examples
+#' # Set random seed for reproducibility
 #' set.seed(123)
+#'
+#' # Define the number of items in the item bank
 #' n <- 50
+#'
+#' # Generate latent trait values (not directly used here,
+#' # but typically included in IRT simulations)
 #' theta <- rnorm(500)
+#'
+#' # Create item parameter matrix/data frame
+#' # b = difficulty parameters
+#' # a = discrimination parameters
+#' # c = lower asymptote
+#' # e = upper asymptote
 #' item_par <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
+#'
+#' # Compute item information functions for the item bank
+#' # and define a target test information function (TIF)
+#' # as the mean information across items
 #' target <- tif(item_info(item_par), fun = "mean")
+#'
+#' # Run item selection algorithm (ISA)
+#' # selecting a minimum of 5 items
 #' resI <- isa(item_par, target, nmin = 5)
+#'
+#' # Plot selected item set and related results
 #' plot(resI)
-#' # show the TIF of the item bank
+#'
+#' # Show the Test Information Function (TIF)
+#' # of the selected item bank
 #' plot(resI, show_all = TRUE)
-#' # show the distance form the TIF target
+#'
+#' # Show the distance between obtained TIF and target TIF
 #' plot(resI, show_dist = TRUE)
 plot.isa <- function(x, fun = "mean",
                               show_all = FALSE,

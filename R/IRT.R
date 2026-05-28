@@ -96,15 +96,29 @@ IRT <- function(theta,  b = 0, a = 1, c = 0,e = 1) {
 #' @export
 #'
 #' @examples
+#' # Set random seed for reproducibility
 #' set.seed(123)
+#'
+#' # Define the number of items
 #' n <- 50
+#'
+#' # Generate latent trait values (theta) for 500 respondents
 #' theta <- rnorm(500)
+#'
+#' # Create item parameter matrix/data frame
+#' # b = item difficulty parameters
+#' # a = item discrimination parameters
+#' # c = lower asymptote (guessing parameter)
+#' # e = upper asymptote
 #' item_pars <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
+#'
+#' # Compute expected response probabilities
+#' # for each respondent-item combination
 #' expected_prob <- mpirt(item_pars, theta)
 mpirt <- function(item_pars, theta) {
   myp <- (matrix(nrow = length(theta),
@@ -131,16 +145,33 @@ mpirt <- function(item_pars, theta) {
 #' @export
 #'
 #' @examples
+#' # Set random seed for reproducibility
 #' set.seed(123)
+#'
+#' # Define the number of items
 #' n <- 50
+#'
+#' # Generate latent trait values (theta) for 500 respondents
 #' theta <- rnorm(500)
+#'
+#' # Create item parameter matrix/data frame
+#' # b = item difficulty parameters
+#' # a = item discrimination parameters
+#' # c = lower asymptote (guessing parameter)
+#' # e = upper asymptote
 #' item_pars <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
+#'
+#' # Compute expected response probabilities
+#' # for each respondent-item combination
 #' expected_prob <- mpirt(item_pars, theta)
+#'
+#' # Generate observed item responses from the
+#' # expected probabilities
 #' simulated_responses <- obsirt(expected_prob)
 obsirt <- function(myp) {
   if (inherits(myp, "mpirt") == FALSE) {

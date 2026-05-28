@@ -18,18 +18,36 @@ A \code{ggplot} displaying the TIF
 Plot the test information function computed with the \code{tif()} function.
 }
 \examples{
+# Set random seed for reproducibility
 set.seed(123)
+
+# Define the number of items in the item bank
 n <- 5
+
+# Create item parameter matrix/data frame
+# b = difficulty parameters
+# a = discrimination parameters
+# c = lower asymptote
+# e = upper asymptote
 item_par <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
+
+# Compute item information functions (IIFs)
 iifs <- item_info(item_par)
+
+# Compute Test Information Function (TIF)
 test_tif <- tif(iifs)
+
+# Plot the test information function
 plot(test_tif)
-# compute the mean tif
+
+# Compute the mean TIF across items/components
 test_tif_mean <- tif(iifs, fun = "mean")
+
+# Plot the mean test information function
 plot(test_tif_mean)
 }

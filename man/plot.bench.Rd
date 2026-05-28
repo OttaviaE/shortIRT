@@ -20,27 +20,74 @@ A \code{ggplot} showing the TIFs of the test.
 The test/short test form is obtained with the benchmark procedure implemented with function \code{bench()}. Details on the procedure can be found in the documentation of the \code{bench()} function.
 }
 \examples{
+# Set random seed for reproducibility
 set.seed(123)
+
+# Define the number of items
 n <- 50
+
+# Generate latent trait values for 500 respondents
+# using a wider latent distribution (sd = 2)
 theta <- rnorm(500, sd = 2)
+
+# Create item parameter matrix/data frame
+# b = difficulty parameters
+# a = discrimination parameters
+# c = lower asymptote
+# e = upper asymptote
 item_par <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
-resB <- bench(item_par, theta = theta, num_item = 5)
+
+# Run benchmark/selection procedure
+# selecting 5 items from the item pool
+resB <- bench(
+  item_par,
+  theta = theta,
+  num_item = 5
+)
+
+# Plot benchmark results including
+# item-level and test-level information
 plot(resB)
-# plot only the TIF of the test
+
+# Plot only the Test Information Function (TIF)
 plot(resB, show_both = FALSE)
-# same but with polytomous items
-item_pars <- data.frame(matrix(c(
- 1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
- 0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
- 0.5, 1.5, 1, -1.5, -1.0, 0,
- 1, 1, 1, -1.5, -0, 0.5
- ), nrow = 4, byrow = TRUE))
-colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
-resB_poly <- bench(item_pars, theta = theta, num_item = 2, K = 3)
+
+# Define parameters for four polytomous items
+# with four response categories (K = 3 thresholds)
+item_pars <- data.frame(
+  matrix(
+    c(
+      1.2, 1.0, 0.8,  -1.0,  0.0, 1.2,
+      0.9, 1.1, 1.3,  -0.5,  0.7, 1.8,
+      0.5, 1.5, 1.0,  -1.5, -1.0, 0.0,
+      1.0, 1.0, 1.0,  -1.5,  0.0, 0.5
+    ),
+    nrow = 4,
+    byrow = TRUE
+  )
+)
+
+# Assign parameter names
+colnames(item_pars) <- paste(
+  rep(c("a", "b"), each = 3),
+  1:3,
+  sep = ""
+)
+
+# Run benchmark/selection procedure
+# for polytomous items selecting 2 items
+resB_poly <- bench(
+  item_pars,
+  theta = theta,
+  num_item = 2,
+  K = 3
+)
+
+# Plot benchmark results for the polytomous case
 plot(resB_poly)
 }

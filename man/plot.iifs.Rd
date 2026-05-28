@@ -25,14 +25,33 @@ Plot the information functions of polytomous or dichotomous items
 If more there are more than 10 items, the legend associated to the color of the lines is not displayed.
 }
 \examples{
+# Set random seed for reproducibility
 set.seed(123)
-# simulate item parameters according to the 2-PL
-parameters <- data.frame(b = c(-3,-2,0, 2, 3),
-a = runif(5, 1.2, 1.9),
-c = rep(0,5),
-e= rep(1, 5))
+
+# Simulate parameters for five dichotomous items
+# according to a 2-PL specification
+# b = difficulty parameters
+# a = discrimination parameters
+# c = lower asymptote
+# e = upper asymptote
+parameters <- data.frame(
+  b = c(-3, -2, 0, 2, 3),
+  a = runif(5, 1.2, 1.9),
+  c = rep(0, 5),
+  e = rep(1, 5)
+)
+
+# Compute item information functions (IIFs)
 infos <- item_info(parameters)
+
+# Plot information functions for all items
 plot(infos)
-# plot only items 1 and 3 on a single panel
-plot(infos, items = c(1,3), single_panels = FALSE)
+
+# Plot information functions only for items 1 and 3
+# on a single panel
+plot(
+  infos,
+  items = c(1, 3),
+  single_panels = FALSE
+)
 }

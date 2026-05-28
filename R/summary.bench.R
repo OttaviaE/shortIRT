@@ -9,16 +9,36 @@
 #' @export
 #'
 #' @examples
+#' # Set random seed for reproducibility
 #' set.seed(123)
+#'
+#' # Define the number of items in the item bank
 #' n <- 50
+#'
+#' # Generate latent trait values for 500 respondents
 #' theta <- rnorm(500)
+#'
+#' # Create item parameter matrix/data frame
+#' # b = difficulty parameters
+#' # a = discrimination parameters
+#' # c = lower asymptote
+#' # e = upper asymptote
 #' item_par <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
-#' resB <- bench(item_par, theta = theta, num_item = 5)
+#'
+#' # Run benchmark/item selection procedure
+#' # selecting 5 items from the item bank
+#' resB <- bench(
+#'   item_par,
+#'   theta = theta,
+#'   num_item = 5
+#' )
+#'
+#' # Summarize benchmark results
 #' summary(resB)
 summary.bench <- function(object, ...) {
   if (is.null(object$K) & !is.null(object$selected_items)) {

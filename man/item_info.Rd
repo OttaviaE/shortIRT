@@ -62,24 +62,57 @@ I_i(\theta) = \sum_{k=0}^K \frac{[P'_k(\theta)]^2}{P_k(\theta)}
 }
 }
 \examples{
+# Set random seed for reproducibility
 set.seed(123)
-parameters <- data.frame(b = c(-3,-2,0, 2, 3),
-a = runif(5, 1.2, 1.9),
-c = rep(0,5),
-e= rep(1, 5))
-# compute information for dichomtous items with default theta values
+
+# Define parameters for five dichotomous items
+# b = difficulty parameters
+# a = discrimination parameters
+# c = lower asymptote
+# e = upper asymptote
+parameters <- data.frame(
+  b = c(-3, -2, 0, 2, 3),
+  a = runif(5, 1.2, 1.9),
+  c = rep(0, 5),
+  e = rep(1, 5)
+)
+
+# Compute item information functions for
+# dichotomous items using default theta values
 infos <- item_info(parameters)
+
+# Display the first rows of the information matrix
 head(infos)
-# 4 items with 4 response categories (K = 3)
-item_pars <- data.frame(matrix(c(
-        1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
-        0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
-       0.5, 1.5, 1, -1.5, -1.0, 0,
-       1, 1, 1, -1.5, -0, 0.5),
-       nrow = 4,
-       byrow = TRUE))
-colnames(item_pars) <- paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
+
+# Define parameters for four polytomous items
+# with four response categories (K = 3 thresholds)
+item_pars <- data.frame(
+  matrix(
+    c(
+      1.2, 1.0, 0.8,  -1.0,  0.0, 1.2,
+      0.9, 1.1, 1.3,  -0.5,  0.7, 1.8,
+      0.5, 1.5, 1.0,  -1.5, -1.0, 0.0,
+      1.0, 1.0, 1.0,  -1.5,  0.0, 0.5
+    ),
+    nrow = 4,
+    byrow = TRUE
+  )
+)
+
+# Assign parameter names:
+# a1-a3 = discrimination parameters
+# b1-b3 = threshold/location parameters
+colnames(item_pars) <- paste(
+  rep(c("a", "b"), each = 3),
+  1:3,
+  sep = ""
+)
+
+# Compute item information functions
+# for the polytomous items
 info_poly <- item_info(item_pars, K = 3)
+
+# Display the first rows of the information matrix
 head(info_poly)
 }
 \references{

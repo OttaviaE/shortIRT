@@ -38,17 +38,10 @@ An object of class \code{bench} of length 3 with:
 Develop a test or a short form of a test given the parameters of dichotomous or polytomous items in an item bank/full-length test according to the benchmark procedure. See \code{Details}.
 }
 \details{
-A test composed of \eqn{N} items is constructed from an item bank
-\eqn{B} by selecting the items with the highest item information values, with no
-explicit reference to any specific level of the latent trait. The same procedure can be applied
-to obtain a short test form from a full-length test \eqn{B}.
+Let \eqn{N} be the number of items to be included in the test developed from an item bank \eqn{B}.
+The test \eqn{Q_{\text{bench}} \subseteq B} with \eqn{|Q| = N} is constructed by selecting the \eqn{N} items with the highest item information values, with no explicit reference to any specific level of the latent trait.
 
-Let \eqn{I_i(\theta)} denote the item information function (IIF) of item
-\eqn{i}, with \eqn{i = 1, \dots, |B|}, where \eqn{|B|} denotes the
-cardinality of the item bank \eqn{B}.
-
-For each item \eqn{i}, compute the maximum value of its information
-function over \eqn{\theta}. Define the vector
+Given that \eqn{I_i(\theta)} is the IIF for each item \eqn{i \in B}, the maximum value of its information function over \eqn{\theta} is computed, as to define the vector
 
 \deqn{
 \mathbf{m} = (m_1, \dots, m_{|B|}),
@@ -61,7 +54,7 @@ m_i = \max_{\theta} I_i(\theta), \qquad i = 1, \dots, |B|.
 }
 
 The vector \eqn{\mathbf{m}} is then sorted in decreasing order, and the first \eqn{N} items in the ordered vector (i.e., the items with the highest information functions), with
-\eqn{N < |B|}, are selected to form the test.
+\eqn{N \leq |B|}, are selected to form the test.
 
 Further details on the benchmark procedure can be found in Epifania et al. (2022).
 }
@@ -79,7 +72,7 @@ item_pars <- data.frame(
   c = rep(0, n),
   e = rep(1, n)
 )
-# apply benchmark procedures
+# apply benchmark procedure
 resB <- bench(item_pars, theta = theta, num_item = 5)
 str(resB)
 # generate an item bank with 4 polytomous items with K = 3
@@ -91,6 +84,7 @@ item_pars <- data.frame(matrix(c(
  ), nrow = 4, byrow = TRUE))
 # rename the columns
 colnames(item_pars) = paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
+# apply benchmark procedure on polytomous items
 resB_poly <- bench(item_pars, theta = theta, num_item = 2, K = 3)
 str(resB_poly)
 }

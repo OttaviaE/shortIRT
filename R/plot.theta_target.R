@@ -15,19 +15,37 @@
 #' @export
 #'
 #' @examples
+#' # Set random seed for reproducibility
 #' set.seed(123)
+#'
+#' # Define the number of items in the item bank
 #' n <- 50
+#'
+#' # Generate latent trait values for 500 respondents
 #' theta <- rnorm(500)
+#'
+#' # Create item parameter matrix/data frame
+#' # b = difficulty parameters
+#' # a = discrimination parameters
+#' # c = lower asymptote
+#' # e = upper asymptote
 #' item_par <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
+#'
+#' # Define a theta targets
 #' targets <- define_targets(theta, num_targets = 4)
+#'
+#' # Perform theta-targeted item selection
 #' resT <- theta_target(targets, item_par)
+#'
+#' # Plot results of the target-based selection
 #' plot(resT)
-#' # plot without showing the theta targets
+#'
+#' # Plot results without displaying theta target
 #' plot(resT, show_targets = FALSE)
 plot.theta_target <- function(x, fun = "sum",
                               show_targets = TRUE,

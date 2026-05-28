@@ -27,15 +27,32 @@ The test infromation function (TIF) for both polytomous and dichotomous items is
 Where \eqn{B} is the item bank.
 }
 \examples{
+# Set random seed for reproducibility
 set.seed(123)
+
+# Generate latent trait values for 100 respondents
 theta <- rnorm(100)
+
+# Define the number of items
 n <- 5
+
+# Create item parameter matrix/data frame
+# b = difficulty parameters
+# a = discrimination parameters
+# c = lower asymptote
+# e = upper asymptote
 item_par <- data.frame(
   b = runif(n, -3, 3),
   a = runif(n, 1.2, 1.9),
   c = rep(0, n),
   e = rep(1, n)
 )
+
+# Compute item information functions (IIFs)
+# using default theta values
 iifs <- item_info(item_par)
+
+# Compute the test information function (TIF)
+# by combining information across items
 test_tif <- tif(iifs)
 }

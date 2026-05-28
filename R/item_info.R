@@ -76,17 +76,44 @@
 #' @export
 #'
 #' @examples
+#' # Set random seed for reproducibility
+#' set.seed(123)
 #'
+#' # Create a sequence of latent trait values
+#' # spanning the ability continuum
 #' theta <- seq(-4, 4, length.out = 200)
 #'
-#' # IIF of an item with b = 0
-#' item_par <- data.frame(b = 0, a = 1.5, c = .10, e = .98)
+#' # Define parameters for a dichotomous item
+#' # b = difficulty
+#' # a = discrimination
+#' # c = lower asymptote (guessing)
+#' # e = upper asymptote
+#' item_par <- data.frame(
+#'   b = 0,
+#'   a = 1.5,
+#'   c = .10,
+#'   e = .98
+#' )
+#'
+#' # Compute item information function (IIF)
+#' # across the theta continuum
 #' info_dichotomous <- i_info(item_par, theta = theta)
 #'
-#' # 4-category item (K = 3)
-#' item_pars <- data.frame(a1 = 1.2, a2 = 1.0, a3= 0.8,
-#'                         b1 = -1.0, b2 = 0.0, b3 = 1.2)
+#' # Define parameters for a 4-category item
+#' # (K = 3 thresholds / category transitions)
+#' # a's = category discrimination parameters
+#' # b's = threshold/location parameters
+#' item_pars <- data.frame(
+#'   a1 = 1.2,
+#'   a2 = 1.0,
+#'   a3 = 0.8,
+#'   b1 = -1.0,
+#'   b2 = 0.0,
+#'   b3 = 1.2
+#' )
 #'
+#' # Compute item information for the polytomous item
+#' # across the theta continuum
 #' info <- i_info(item_pars, theta = theta, K = 3)
 i_info <- function(item_pars,
                    theta = seq(-5,5,length.out=1000), K = NULL){
@@ -221,24 +248,57 @@ i_info <- function(item_pars,
 #' @export
 #'
 #' @examples
+#' # Set random seed for reproducibility
 #' set.seed(123)
-#' parameters <- data.frame(b = c(-3,-2,0, 2, 3),
-#' a = runif(5, 1.2, 1.9),
-#' c = rep(0,5),
-#' e= rep(1, 5))
-#' # compute information for dichomtous items with default theta values
+#'
+#' # Define parameters for five dichotomous items
+#' # b = difficulty parameters
+#' # a = discrimination parameters
+#' # c = lower asymptote
+#' # e = upper asymptote
+#' parameters <- data.frame(
+#'   b = c(-3, -2, 0, 2, 3),
+#'   a = runif(5, 1.2, 1.9),
+#'   c = rep(0, 5),
+#'   e = rep(1, 5)
+#' )
+#'
+#' # Compute item information functions for
+#' # dichotomous items using default theta values
 #' infos <- item_info(parameters)
+#'
+#' # Display the first rows of the information matrix
 #' head(infos)
-#' # 4 items with 4 response categories (K = 3)
-#' item_pars <- data.frame(matrix(c(
-#'         1.2, 1.0, 0.8,  -1.0, 0.0, 1.2,
-#'         0.9, 1.1, 1.3,  -0.5, 0.7, 1.8,
-#'        0.5, 1.5, 1, -1.5, -1.0, 0,
-#'        1, 1, 1, -1.5, -0, 0.5),
-#'        nrow = 4,
-#'        byrow = TRUE))
-#' colnames(item_pars) <- paste(rep(c("a", "b"), each = 3), 1:3, sep = "")
+#'
+#' # Define parameters for four polytomous items
+#' # with four response categories (K = 3 thresholds)
+#' item_pars <- data.frame(
+#'   matrix(
+#'     c(
+#'       1.2, 1.0, 0.8,  -1.0,  0.0, 1.2,
+#'       0.9, 1.1, 1.3,  -0.5,  0.7, 1.8,
+#'       0.5, 1.5, 1.0,  -1.5, -1.0, 0.0,
+#'       1.0, 1.0, 1.0,  -1.5,  0.0, 0.5
+#'     ),
+#'     nrow = 4,
+#'     byrow = TRUE
+#'   )
+#' )
+#'
+#' # Assign parameter names:
+#' # a1-a3 = discrimination parameters
+#' # b1-b3 = threshold/location parameters
+#' colnames(item_pars) <- paste(
+#'   rep(c("a", "b"), each = 3),
+#'   1:3,
+#'   sep = ""
+#' )
+#'
+#' # Compute item information functions
+#' # for the polytomous items
 #' info_poly <- item_info(item_pars, K = 3)
+#'
+#' # Display the first rows of the information matrix
 #' head(info_poly)
 item_info <- function(item_pars, theta = seq(-5,5,length.out=1000), K = NULL){
   if (is.null(K)) {
@@ -306,16 +366,33 @@ item_info <- function(item_pars, theta = seq(-5,5,length.out=1000), K = NULL){
 #' Where \eqn{B} is the item bank.
 #'
 #' @examples
+#' # Set random seed for reproducibility
 #' set.seed(123)
+#'
+#' # Generate latent trait values for 100 respondents
 #' theta <- rnorm(100)
+#'
+#' # Define the number of items
 #' n <- 5
+#'
+#' # Create item parameter matrix/data frame
+#' # b = difficulty parameters
+#' # a = discrimination parameters
+#' # c = lower asymptote
+#' # e = upper asymptote
 #' item_par <- data.frame(
 #'   b = runif(n, -3, 3),
 #'   a = runif(n, 1.2, 1.9),
 #'   c = rep(0, n),
 #'   e = rep(1, n)
 #' )
+#'
+#' # Compute item information functions (IIFs)
+#' # using default theta values
 #' iifs <- item_info(item_par)
+#'
+#' # Compute the test information function (TIF)
+#' # by combining information across items
 #' test_tif <- tif(iifs)
 tif <- function(iifs, fun = "sum") {
   if (inherits(iifs, "iifs") == FALSE) {
