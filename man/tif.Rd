@@ -9,7 +9,7 @@ tif(iifs, fun = "sum")
 \arguments{
 \item{iifs}{object of class \code{iifs} containing the item information functions}
 
-\item{fun}{\code{character}, defines the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)}
+\item{fun}{\code{character} defining the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)}
 }
 \value{
 A \code{data.frame} of class \code{tif} with two columns: (i) \code{theta} containing the latent trait values, and (ii) \code{tif} containing the TIF values computed as either the sum or the mean of the IIFs

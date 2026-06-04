@@ -2,16 +2,16 @@
 #'
 #' Develop a test or a short form of a test given the parameters of dichotomous or polytomous items in an item bank/full-length test according to the benchmark procedure. See \code{Details}.
 #'
-#' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items.
+#' @param item_pars \code{data.frame} with number of rows equal to the number of items.
 #'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the dataframe has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
+#'    For polytomous items, the dataframe has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categories \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters
 #'   \eqn{b_1, \dots, b_K} (must be named "b").
-#' @param iifs \code{data.frame}, dataframe with number of rows equal to the length of the latent trait \eqn{\theta} and number of columns equal to the number of items in the item bank. It contains the item information functions (IIFs) of the items in item bank/the full-length test. The arguments \code{item_pars} and \code{iifs} cannot be used together.
-#' @param num_item \code{integer}, the number \eqn{N} of items to include in the test.
-#' @param theta \code{numeric}, vector with the latent trait values.
-#' @param K \code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).
+#' @param iifs \code{data.frame} with number of rows equal to the length of the latent trait \eqn{\theta} and number of columns equal to the number of items in the item bank. It contains the item information functions (IIFs) of the items in item bank/the full-length test. The arguments \code{item_pars} and \code{iifs} cannot be used together.
+#' @param num_item \code{integer} defining the number \eqn{N} of items to include in the test.
+#' @param theta \code{numeric} vector with the latent trait values.
+#' @param K \code{integer} defining the number of thresholds for  the categories of the polytoumous items (i.e., number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).
 #'
 #' @details
 #' Let \eqn{N} be the number of items to be included in the test developed from an item bank \eqn{B}.

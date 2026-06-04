@@ -2,8 +2,8 @@
 #'
 #' Define \eqn{\theta} targets either by considering the midpoints of equal intervals defined on the latent trait (\code{equal}) or the centroids obtained by clustering the latent trait (\code{clusters}). Further details on targets definition can be found in Epifania et al. (2022).
 #'
-#' @param theta \code{numeric} vector, define the latent trait \eqn{\theta}.
-#' @param num_targets \code{integer} value, define the number of \eqn{\theta} targets. The number of \eqn{\theta} targets defines the number of items included in the test.
+#' @param theta \code{numeric} vector defining the latent trait \eqn{\theta}.
+#' @param num_targets \code{integer} defining the number of \eqn{\theta} targets. The number of \eqn{\theta} targets defines the number of items included in the test.
 #' @param method \code{character}, either \code{equal} (default) or \code{clusters}.
 #'
 #'

@@ -7,9 +7,9 @@
 mpirt(item_pars, theta)
 }
 \arguments{
-\item{item_pars}{\code{data.frame}, dataframe with number of rows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
+\item{item_pars}{\code{data.frame} with number of rows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.}
 
-\item{theta}{\code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.}
+\item{theta}{\code{numeric} defining the latent trait level of person \eqn{p}, it can be a single value or a vector of values.}
 }
 \value{
 A \eqn{P \times I} (where \eqn{P} is the number of respondents corresponding to the length of \code{theta} and \eqn{I} is the number of items corresponding to the number of rows in \code{item_pars}) matrix of class \code{mpirt} with the expected probability of observing a correct response for respondent \eqn{p} on item \eqn{i}

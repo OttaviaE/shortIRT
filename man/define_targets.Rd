@@ -7,9 +7,9 @@
 define_targets(theta, num_targets = NULL, method = c("equal", "clusters"))
 }
 \arguments{
-\item{theta}{\code{numeric} vector, define the latent trait \eqn{\theta}.}
+\item{theta}{\code{numeric} vector defining the latent trait \eqn{\theta}.}
 
-\item{num_targets}{\code{integer} value, define the number of \eqn{\theta} targets. The number of \eqn{\theta} targets defines the number of items included in the test.}
+\item{num_targets}{\code{integer} defining the number of \eqn{\theta} targets. The number of \eqn{\theta} targets defines the number of items included in the test.}
 
 \item{method}{\code{character}, either \code{equal} (default) or \code{clusters}.}
 }

@@ -1,19 +1,18 @@
 #' Item Information Function (single item, \eqn{I_i(\theta)})
 #'
 #' Compute the item information function \eqn{I_i(\theta)} for a single dichotomous
-#' or polytoumous item under either the 4-PL model (dichotomous item) or  the Generalized Partial Credit (polytomous item).
+#' or polytoumous item under either the 4-PL model (dichotomous item) or  the Generalized Partial Credit model (polytomous item).
 #' Specific models (e.g., 3-PL, 2-PL, 1-PL, or PCM, Rating Scale) are obtained by imposing
 #' constraints on the item parameters.
 #' See \code{Details}.
 #'
-#' @param item_pars dataframe with one row corresponding to one item.
+#' @param item_pars \code{data.frame} with number of rows equal to the number of items.
 #'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the dataframe has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+#'    For polytomous items, the dataframe has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categories \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters
-#'   \eqn{b_1, \dots, b_K} (must be named "b").
-#' @param theta numeric vector of latent trait values. Default is a vector of a thousand values ranging from -5 to +5
-#' @param K integer, number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#' @param theta \code{numeric} vector of latent trait values. Default is a vector of a thousand values ranging from -5 to +5
+#' @param K \code{integer} defining the number of thresholds for  the categories of the polytoumous items (i.e., number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).
 #' @details
 #' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 #' (4-PL; Barton & Lord, 1981) model is defined as:
@@ -177,14 +176,13 @@ i_info <- function(item_pars,
 #'
 #' Computes the item information functions for multiple dichotomous or polytomous items
 #'
-#' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items.
+#' @param item_pars \code{data.frame} with number of rows equal to the number of items.
 #'    For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#'    For polytomous items, the dataframe has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+#'    For polytomous items, the dataframe has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categories \eqn{- 1}). The first \eqn{K} columns correspond to step
 #'   discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
 #'   columns correspond to step difficulty (threshold) parameters
-#'   \eqn{b_1, \dots, b_K} (must be named "b").
-#' @param theta mumeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5
-#' @param K integer, Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).
+#' @param theta \code{numeric} vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5
+#' @param K \code{integer} defining the number of thresholds for  the categories of the polytoumous items (i.e., number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).
 #' @details
 #' Let \eqn{P(\theta)} denote the  probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 #' (4-PL; Barton & Lord, 1981) model is defined as:
@@ -351,7 +349,7 @@ item_info <- function(item_pars, theta = seq(-5,5,length.out=1000), K = NULL){
 #' Compute the test information function of a test given a matrix of item information functions computed with the \code{item_info()} function. See \code{Details}.
 #'
 #' @param iifs object of class \code{iifs} containing the item information functions
-#' @param fun \code{character}, defines the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)
+#' @param fun \code{character} defining the function for the computation of the TIF, either by summing the items (sum) or by computing the mean (mean)
 #'
 #' @returns A \code{data.frame} of class \code{tif} with two columns: (i) \code{theta} containing the latent trait values, and (ii) \code{tif} containing the TIF values computed as either the sum or the mean of the IIFs
 #' @export

@@ -3,11 +3,11 @@
 #' Compute the expected probability for an item \eqn{i} given the latent trait \eqn{\theta} and the item parameters.
 #' Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 #'
-#' @param theta \code{numeric} latent trait level of person \eqn{p}. It can be a single value or a vector of values.
-#' @param b \code{numeric} location of item \eqn{i}. Default is 0.
-#' @param a \code{numeric} discrimination parameter for item \eqn{i}. Default is 1.
-#' @param c \code{numeric} pseudo-guessing parameter of item \eqn{i}. Default is 0.
-#' @param e \code{numeric} upper asymptote of item \eqn{i}. Default is 1.
+#' @param theta \code{numeric} defining the latent trait level of person \eqn{p}. It can be a single value or a vector of values.
+#' @param b \code{numeric} defining the location of item \eqn{i}. Default is 0.
+#' @param a \code{numeric} defining the discrimination parameter of item \eqn{i}. Default is 1.
+#' @param c \code{numeric} defining the lower asymptote (pseudo-guessing parameter ) of item \eqn{i}. Default is 0.
+#' @param e \code{numeric} defining the upper asymptote (inattention) of item \eqn{i}. Default is 1.
 #'
 #' @details
 #' The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
@@ -60,8 +60,8 @@ IRT <- function(theta,  b = 0, a = 1, c = 0,e = 1) {
 #' Compute the expected probability for multiple dichotomous items given the latent trait levels \eqn{\theta} and the item parameters.
 #' Depending on the parameters that are specified, the probability is computed according to the 1-PL, 2-PL, 3-PL, or 4-PL models.
 #'
-#' @param item_pars \code{data.frame}, dataframe with number of rows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
-#' @param theta \code{numeric} latent trait level of person \eqn{p}, it can be a single value or a vector of values.
+#' @param item_pars \code{data.frame} with number of rows equal to the number of items and 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location/difficulty \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
+#' @param theta \code{numeric} defining the latent trait level of person \eqn{p}, it can be a single value or a vector of values.
 #' @details
 #' The probability of a correct response \eqn{x_{pi} = 1} for person \eqn{p} (with latent trait level defined as \eqn{\theta_p}) on item \eqn{i} under the four-parameter logistic
 #' (4-PL; Barton & Lord, 1981) model is defined as:

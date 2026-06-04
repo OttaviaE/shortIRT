@@ -7,16 +7,15 @@
 item_info(item_pars, theta = seq(-5, 5, length.out = 1000), K = NULL)
 }
 \arguments{
-\item{item_pars}{\code{data.frame}, dataframe with number of rows equal to the number of items.
+\item{item_pars}{\code{data.frame} with number of rows equal to the number of items.
  For dichotomous items, the dataframe must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
- For polytomous items, the dataframe has \eqn{2K} columns. The first \eqn{K} columns correspond to step
+ For polytomous items, the dataframe has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categories \eqn{- 1}). The first \eqn{K} columns correspond to step
 discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
-columns correspond to step difficulty (threshold) parameters
-\eqn{b_1, \dots, b_K} (must be named "b").}
+columns correspond to step difficulty (threshold) parameters}
 
-\item{theta}{mumeric vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5}
+\item{theta}{\code{numeric} vector of latent trait values. Default is a vector of A thousand values ranging from -5 to +5}
 
-\item{K}{integer, Number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
+\item{K}{\code{integer} defining the number of thresholds for  the categories of the polytoumous items (i.e., number of response categories minus 1). Default is \code{NULL} (assumes dichotomous items).}
 }
 \value{
 A \code{matrix} of class \code{iifs} with number of rows equal to the length of \code{theta} and number of columns equal to the number of items in \code{item_par}

@@ -7,15 +7,15 @@
 IRT(theta, b = 0, a = 1, c = 0, e = 1)
 }
 \arguments{
-\item{theta}{\code{numeric} latent trait level of person \eqn{p}. It can be a single value or a vector of values.}
+\item{theta}{\code{numeric} defining the latent trait level of person \eqn{p}. It can be a single value or a vector of values.}
 
-\item{b}{\code{numeric} location of item \eqn{i}. Default is 0.}
+\item{b}{\code{numeric} defining the location of item \eqn{i}. Default is 0.}
 
-\item{a}{\code{numeric} discrimination parameter for item \eqn{i}. Default is 1.}
+\item{a}{\code{numeric} defining the discrimination parameter of item \eqn{i}. Default is 1.}
 
-\item{c}{\code{numeric} pseudo-guessing parameter of item \eqn{i}. Default is 0.}
+\item{c}{\code{numeric} defining the lower asymptote (pseudo-guessing parameter ) of item \eqn{i}. Default is 0.}
 
-\item{e}{\code{numeric} upper asymptote of item \eqn{i}. Default is 1.}
+\item{e}{\code{numeric} defining the upper asymptote (inattention) of item \eqn{i}. Default is 1.}
 }
 \value{
 a single value, that is the probability of the correct response for item \eqn{i} given the specified parameters

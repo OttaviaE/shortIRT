@@ -14,10 +14,10 @@ theta_target(
 \arguments{
 \item{targets}{\code{numeric}, either a vector with the discrete values of theta for which the information needs to be
 maximized obtained with the \code{define_targets()} function or a vector with user-defined values.
-If the same theta value is defined and repeated several time, it can be passed as a named list, where \code{value} indicate the value
-that needs to be repeated and \code{num_targets} the number of times it is repeated for.}
+If the same theta value is defined and repeated several time, it can be passed as a named list, where \code{value} indicates the value
+that needs to be repeated and \code{num_targets} defines the number of times it is repeated for.}
 
-\item{item_pars}{\code{data.frame}, dataframe with nrows equal to the number of items.
+\item{item_pars}{\code{data.frame} with nrows equal to the number of items.
  For dichotomous items, the matrix must have 4 columns, one for each of the item parameters. The columns must be named "a", "b", "c", "e" and must contain the respective IRT parameters, namely discrimination \eqn{a_i}, location \eqn{b_i}, pseudo-guessing \eqn{c_i}, and upper asymptote \eqn{e_i}.
  For polytomous items, the matrix has \eqn{2K} columns, where \eqn{K} is the number of thresholds of the items (number of response categorie \eqn{- 1}). The first \eqn{K} columns correspond to step
 discrimination parameters \eqn{a_1, \dots, a_K} (must be named "a"), and the last \eqn{K}
@@ -26,7 +26,7 @@ columns correspond to step difficulty (threshold) parameters (must be named "b")
 
 \item{theta}{\code{numeric} vector with the values of the latent trait \eqn{\theta} (needed for the computation of the IIFs of all items)}
 
-\item{K}{\code{integer}, number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
+\item{K}{\code{integer} defining the number of thresholds for  the categories of the polytoumous items (i.e., number of categories minus one). Default is \code{NULL} (assumes dichotomous items).}
 }
 \value{
 An object of class \code{theta_target} of length 4 containing:
